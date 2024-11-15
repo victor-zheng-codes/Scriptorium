@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Calibri', sans-serif;
+      /* color: #000000; */
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    .header {
+      text-align: left;
+      margin-bottom: 10px;
+    }
+    .content {
+      margin-bottom: 10px;
+    }
+
+   hr.solid {
+     border-top: 3px solid #bbb;
+   }
+
+    .content p {
+      line-height: 1.3; 
+      margin-bottom: 20px; 
+    }
+   
+   .footer {
+    margin-top: 20px;
+    line-height: 1.5; /* Adjusted to ensure better spacing between lines */
+    padding-top: 20px; /* Adds space above the footer content */
+    text-align: center; /* Centers the footer text for a polished look */
+  }
+
+  .footer p {
+    margin: 5px 0; /* Adjusts vertical spacing between footer lines */
+  }
+  </style>
+</head>
+<body>
+   <div class="container">
+    <img src= @{outputs('Compose_logo_file')} alt="" style="width:75%; height:auto;">
+    <div class="content">
+
+      <h3>Request to take PhD Comprehensive Examination for @{outputs('Get_response_details')?['body/re1d5d23ee3bb4add8c6e2bedbab79032']} @{outputs('Get_response_details')?['body/rf2684783a9b242fb893348cafbeaab21']}</h3>
+
+    
+      <p>
+         This is a system-generated PDF for the <strong>PhD Comprehensive Examination</strong> workflow at the Department of Sociology, University of Toronto. An additional PDF with the reading list will be attached for Minor Exams. More information, including reading lists for Major Comprehensive Exams, is available <a href="https://www.sociology.utoronto.ca/graduate/phd-program/comprehensive-exams">here</a>. 
+      </p>
+
+       <hr class="solid">
+
+      <h3>Student Application Information</h3>
+
+      <p>
+         <strong>Student Name:</strong> @{outputs('Get_response_details')?['body/re1d5d23ee3bb4add8c6e2bedbab79032']} @{outputs('Get_response_details')?['body/rf2684783a9b242fb893348cafbeaab21']}
+      </p>
+
+
+      <p>
+         <strong>Student Email:</strong> <a href="mailto:@{outputs('Get_response_details')?['body/responder']}"> @{outputs('Get_response_details')?['body/responder']}</a>
+      </p>
+      
+      
+      <p>
+        <strong>Area of Study:</strong> @{outputs('Get_response_details')?['body/rf11fb7cdc54d47c1a08886bccdae93b0']}
+      </p>
+      
+      <p>
+         <strong>Major or Minor:</strong> @{outputs('Get_response_details')?['body/r90529268d3844f22aea002bd69f0fd37']}
+      </p>
+
+      <p>
+         <strong>Date Submitted:</strong> @{outputs('Compose_Date_')}      
+      </p>
+      
+      <p>
+         <strong>Start Date of Examinations:</strong> @{outputs('Get_response_details')?['body/rd52d79f9182c4b7c8aa183c4186a7ea4']}
+      </p>
+
+      <p>
+         <strong>Graduate Courses Taken:</strong> @{outputs('Get_response_details')?['body/rabd5c45fccb9488aac03bd8d865c037f']}
+      </p>
+      
+
+       <hr class="solid">
+
+      <h3>Committee Information</h3>
+
+      <p>
+         <strong>Committee Chair:</strong> @{outputs('Get_response_details')?['body/r036209e6408e4d9e824a7c1061415f47']}, <a href="mailto:@{variables('PI_Email_Chair')}">@{variables('PI_Email_Chair')}</a>
+      </p>
+      
+      <p>
+         <strong>Committee Member:</strong> @{outputs('Get_response_details')?['body/r463ee2a41e604b0d89d9db149414613c']}, <a href="mailto:@{variables('PI_Email_Commitee_Member_1')}">@{variables('PI_Email_Commitee_Member_1')}</a>
+      </p>
+      
+      <p>
+         <strong>Committee Member:</strong> @{outputs('Get_response_details')?['body/ra02cdc37fc3e4571811e710e60ab1517']}, <a href="mailto:@{variables('PI_Email_Commitee_Member_2')}">@{variables('PI_Email_Commitee_Member_2')}</a>
+      </p>
+
+       <hr class="solid">
+
+       <div class="footer">
+        <p>Department of Sociology</p>
+        <p>700 University Avenue</p>
+        <p>Toronto, ON M5S 2J4</p>
+        <p><a href="mailto:socgrad.assist@utoronto.ca">socgrad.assist@utoronto.ca</a></p>
+       </div>
+      </div>
+  </div>
+</body>
+</html>

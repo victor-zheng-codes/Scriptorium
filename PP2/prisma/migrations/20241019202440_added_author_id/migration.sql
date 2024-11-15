@@ -1,0 +1,25 @@
+/*
+  Warnings:
+
+  - Added the required column `authorId` to the `Blog` table without a default value. This is not possible if the table is not empty.
+
+*/
+-- RedefineTables
+PRAGMA defer_foreign_keys=ON;
+PRAGMA foreign_keys=OFF;
+CREATE TABLE "new_Blog" (
+    "blogId" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "isAppropriate" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    "authorId" INTEGER NOT NULL,
+    CONSTRAINT "Blog_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("userId") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+INSERT INTO "new_Blog" ("blogId", "createdAt", "description", "isAppropriate", "isDeleted", "title", "updatedAt") SELECT "blogId", "createdAt", "description", "isAppropriate", "isDeleted", "title", "updatedAt" FROM "Blog";
+DROP TABLE "Blog";
+ALTER TABLE "new_Blog" RENAME TO "Blog";
+PRAGMA foreign_keys=ON;
+PRAGMA defer_foreign_keys=OFF;

@@ -1,0 +1,179 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+
+}
+
+model User {
+  userId      Int    @id @default(autoincrement())           // Primary key for the user
+  email       String   @unique                               // Unique email field
+  username    String   @unique                               // Unique username field
+  password    String                                         // Password field
+  firstName   String                                         // First name of the user
+  lastName    String                                         // Last name of the user
+  avatar      String?                                        // Optional field for storing a URL or blob for avatar
+  phoneNumber String?   @unique                              // Phone number
+  isAdmin     Boolean   @default(false)                      // Boolean flag to check if the user is an admin
+  refreshToken String?
+  createdAt   DateTime  @default(now())                      // Timestamp for when the user was created
+  updatedAt   DateTime  @updatedAt                           // Timestamp for when the user was last updated
+  templatesLinked   Template[]                                     // can have multiple possible templates linked
+
+  BlogRating BlogRating[]
+
+  UserCommentRating UserCommentRating[]
+
+  CommentReport CommentReport[]
+
+  BlogReport BlogReport[]
+
+  Blog Blog[]
+
+  Comment Comment[]
+}
+
+model Template {
+  templateId  Int  @id @default(autoincrement()) // Generates a unique identifier
+  userId      Int                                // Foreign key to User model
+  owner       User   @relation(fields: [userId], references: [userId]) // Assuming userId is the primary key in Users model
+  content     String
+  title       String    @unique
+  description String?
+  language    String?
+  createdAt   DateTime @default(now())           // Timestamp for when the template was created
+  updatedAt   DateTime @updatedAt                // Timestamp for when the template was last updated
+  templatesTags TemplateTags[]
+  BlogTemplate BlogTemplate[]
+}
+
+model Tag {
+  tagId   Int       @id @default(autoincrement()) // Primary key with a unique identifier
+  tagName String    @unique                       // Name of the tag
+  templatesTag TemplateTags[]                     // opposite relation inside template tags field
+  BlogTags BlogTags[]                             // opposite relation inside blog tags field
+}
+
+model TemplateTags {
+  templateTagId  Int      @id @default(autoincrement()) // Primary key with a unique identifier
+  tagId          Int      // Primary key for the TemplateTags table
+  templateId     Int      // Primary key for the TemplateTags table
+  tag            Tag      @relation(fields: [tagId], references: [tagId], onDelete: Cascade) // Reference to the Tag model
+  template       Template @relation(fields: [templateId], references: [templateId],  onDelete: Cascade) // Reference to the Template model
+}
+
+model Blog {
+  blogId        Int      @id @default(autoincrement()) // Primary key for the blog
+  title         String                                 // Title of the blog
+  description   String                                 // Description of the blog
+  content       String                                 // Content of the blog post
+  isDeleted     Boolean  @default(false)               // Boolean flag to check if the blog is deleted
+  isAppropriate Boolean  @default(true)                // Boolean flag to check if the blog is appropriate
+  upvotes       Int      @default(0)                   // Number of upvotes
+  downvotes     Int      @default(0)                   // Number of downvotes
+  createdAt     DateTime @default(now())               // Timestamp for when the blog was created
+  updatedAt     DateTime @updatedAt                    // Timestamp for when the blog was last updated
+  authorId      Int                                    // Foreign key referencing the User model for the author
+  author        User     @relation(fields: [authorId], references: [userId]) // Relation to User model
+  BlogTags BlogTags[]
+  BlogRating BlogRating[]
+
+  Comment Comment[]
+
+  BlogTemplate BlogTemplate[]
+
+  BlogReport BlogReport[]
+}
+
+model BlogTags {
+  id       Int    @id @default(autoincrement()) // Primary key for the BlogTags table
+  tagId    Int    // Foreign key referencing the Tag model
+  blogId   Int    // Foreign key referencing the Blog model
+  tag      Tag    @relation(fields: [tagId], references: [tagId], onDelete: Cascade) // Reference to the Tag model
+  blog     Blog   @relation(fields: [blogId], references: [blogId], onDelete: Cascade) // Reference to the Blog model
+  @@unique([tagId, blogId]) // Ensure the combination of tagID and blogID is unique
+}
+
+model BlogRating {
+  id      Int    @id @default(autoincrement()) // Primary key for the BlogRating table
+  userId  Int    // Foreign key referencing the User model
+  blogId  Int    // Foreign key referencing the Blog model
+  rating  Int    // Rating value (e.g., 1 for upvote, -1 for downvote)
+  user    User   @relation(fields: [userId], references: [userId], onDelete: Cascade) // Reference to the User model
+  blog    Blog   @relation(fields: [blogId], references: [blogId], onDelete: Cascade) // Reference to the Blog model
+  @@unique([userId, blogId]) // Ensure that each user can rate each blog only once
+}
+
+model Comment {
+  commentId     Int      @id @default(autoincrement()) // Primary key for the Comment table
+  content       String                                 // Content of the comment
+  isAppropriate Boolean  @default(true)                // Boolean flag to check if the comment is appropriate
+  upvotes       Int      @default(0)                   // Number of upvotes
+  downvotes     Int      @default(0)                   // Number of downvotes
+  userId        Int                                    // Foreign key referencing the User model
+  blogId        Int                                    // Foreign key referencing the Blog model
+  user          User     @relation(fields: [userId], references: [userId], onDelete: Cascade) // Reference to the User model
+  blog          Blog     @relation(fields: [blogId], references: [blogId], onDelete: Cascade) // Reference to the Blog model
+  createdAt     DateTime @default(now())               // Timestamp for when the comment was created
+  updatedAt     DateTime @updatedAt                    // Timestamp for when the comment was last updated
+  UserCommentRating UserCommentRating[]
+  CommentReplyParent CommentReply[] @relation("CommentReplies")
+  CommentReplyChild CommentReply[] @relation("Replies")
+
+  CommentReport CommentReport[]
+}
+
+
+model UserCommentRating {
+  id         Int    @id @default(autoincrement()) // Primary key for the UserCommentRating table
+  userId     Int    // Foreign key referencing the User model
+  commentId  Int    // Foreign key referencing the Comment model
+  rating     Int    // Rating value (e.g., 1 for upvote, -1 for downvote)
+  user       User   @relation(fields: [userId], references: [userId], onDelete: Cascade) // Reference to the User model
+  comment    Comment @relation(fields: [commentId], references: [commentId], onDelete: Cascade) // Reference to the Comment model
+  @@unique([userId, commentId]) // Ensure that each user can rate each comment only once
+}
+
+model CommentReply {
+  commentId Int   // Foreign key referencing the Comment model
+  replyId   Int   // Foreign key referencing the Comment model for the reply
+  comment   Comment @relation("CommentReplies", fields: [commentId], references: [commentId], onDelete: Cascade) // Reference to the original comment
+  reply     Comment @relation("Replies", fields: [replyId], references: [commentId], onDelete: Cascade) // Reference to the reply comment
+  @@id([commentId, replyId]) // Composite primary key
+}
+
+model BlogTemplate {
+  id        Int   @id @default(autoincrement()) // Primary key for the BlogTemplate table
+  templateId Int   // Foreign key referencing the Template model
+  blogId    Int    // Foreign key referencing the Blog model
+  template  Template @relation(fields: [templateId], references: [templateId], onDelete: Cascade) // Reference to the Template model
+  blog      Blog     @relation(fields: [blogId], references: [blogId], onDelete: Cascade) // Reference to the Blog model
+  @@unique([templateId, blogId]) // Ensure that each template can be linked to each blog only once
+}
+
+model CommentReport {
+  id        Int    @id @default(autoincrement()) // Primary key for the CommentReport table
+  commentId Int    // Foreign key referencing the Comment model
+  userId    Int    // Foreign key referencing the User model, this is id of the user MAKING the report
+  explanation String // Explanation provided by the user for the report
+  comment   Comment @relation(fields: [commentId], references: [commentId], onDelete: Cascade) // Reference to the Comment model
+  user      User    @relation(fields: [userId], references: [userId], onDelete: Cascade) // Reference to the User model
+}
+
+model BlogReport {
+  id          Int    @id @default(autoincrement()) // Primary key for the BlogReport table
+  blogId      Int    // Foreign key referencing the Blog model
+  userId      Int    // Foreign key referencing the User model, this is id of the user MAKING the report
+  explanation String // Explanation provided by the user for the report
+  blog        Blog    @relation(fields: [blogId], references: [blogId], onDelete: Cascade) // Reference to the Blog model
+  user        User    @relation(fields: [userId], references: [userId], onDelete: Cascade) // Reference to the User model
+}

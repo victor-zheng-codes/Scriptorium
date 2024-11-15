@@ -1,0 +1,87 @@
+[
+    {
+      "userId": 1,
+      "email": "johndoe@example.com",
+      "username": "johndoe",
+      "password": "hashedpassword123!",
+      "firstName": "John",
+      "lastName": "Doe",
+      "avatar": "https://example.com/avatar1.jpg",
+      "phoneNumber": "+1234567890",
+      "isAdmin": false,
+      "refreshToken": "",
+      "createdAt": "2024-01-01T12:00:00.000Z",
+      "updatedAt": "2024-01-01T12:00:00.000Z"
+    },
+    {
+      "userId": 2,
+      "email": "janedoe@example.com",
+      "username": "janedoe",
+      "password": "hashedpassword456!",
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "avatar": "https://example.com/avatar2.jpg",
+      "phoneNumber": "+1234567891",
+      "isAdmin": true,
+      "refreshToken": "",
+      "createdAt": "2024-01-05T10:30:00.000Z",
+      "updatedAt": "2024-01-05T10:30:00.000Z"
+    },
+    {
+        "userId": 3,
+        "email": "bobsmith@example.com",
+      "username": "bobsmith",
+      "password": "hashedpassword789!",
+      "firstName": "Bob",
+      "lastName": "Smith",
+      "avatar": "https://example.com/avatar3.jpg",
+      "phoneNumber": "+1234567892",
+      "isAdmin": false,
+      "refreshToken": "",
+      "createdAt": "2024-02-15T09:00:00.000Z",
+      "updatedAt": "2024-02-15T09:00:00.000Z"
+    },
+    {
+        "userId": 4,
+        "email": "alicebrown@example.com",
+      "username": "alicebrown",
+      "password": "hashedpassword101!",
+      "firstName": "Alice",
+      "lastName": "Brown",
+      "avatar": "https://example.com/avatar4.jpg",
+      "phoneNumber": "+1234567893",
+      "isAdmin": false,
+      "refreshToken": "",
+      "createdAt": "2024-03-20T14:15:00.000Z",
+      "updatedAt": "2024-03-20T14:15:00.000Z"
+    },
+    {
+        "userId": 5,
+        "email": "charliejohnson@example.com",
+      "username": "charliejohnson",
+      "password": "hashedpassword202!",
+      "firstName": "Charlie",
+      "lastName": "Johnson",
+      "avatar": "https://example.com/avatar5.jpg",
+      "phoneNumber": "+1234567894",
+      "isAdmin": false,
+      "refreshToken": "",
+      "createdAt": "2024-04-10T08:45:00.000Z",
+      "updatedAt": "2024-04-10T08:45:00.000Z"
+    },
+    {
+      "userId": 6,
+      "email": "victorzheng@example.com",
+      "username": "victorzheng",
+      "password": "hashedpassword123!",
+      "firstName": "Victor",
+      "lastName": "Zheng",
+      "avatar": "https://example.com/avatar1.jpg",
+      "phoneNumber": "+123458888",
+      "isAdmin": false,
+      "refreshToken": "",
+      "createdAt": "2024-01-01T12:00:00.000Z",
+      "updatedAt": "2024-01-01T12:00:00.000Z"
+    }
+  ]
+  

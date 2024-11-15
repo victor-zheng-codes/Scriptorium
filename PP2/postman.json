@@ -1,0 +1,4839 @@
+{
+	"info": {
+		"_postman_id": "96c45135-de9b-49e1-8a3d-2575571a5a61",
+		"name": "CSC309 Scriptorium",
+		"description": "**By Victor, William, Abdullah**\n\nScriptorium is an innovative online platform where you can write, execute, and share code in multiple programming languages. Inspired by the ancient concept of a scriptorium, a place where manuscripts were crafted and preserved, Scriptorium modernizes this idea for the digital age. It offers a secure environment for geeks, nerds, and coding enthusiasts to experiment, refine, and save their work as reusable templates. Whether you’re testing a quick snippet or building a reusable code example, Scriptorium is what you need to bring your ideas to life.\n\nThis is the **backend** portion of the project.\n\nThere are **three** types of users in the application. The first type is **Visitor** which uses no authentication. **User** and **Admin** roles require authentication and user accounts to be created for each.\n\n**Visitors** to the blog site have no auth and are able to access requests including the endpoints in /api/execute, fork a template, and browse/read blogs.\n\n**User** level users can save templates, create, delete, and edit blog posts, and provide comments/rate content.\n\n**Admin** level permissions allow users to sort by reports and review reported inappropriate content.\n\nTo run:\n\n1. Open the login request\n    \n2. Hit the send button and retrieve the access token\n    \n3. Modify the CSC309 Scriptorium authentication header with the new access token\n    \n4. Send the requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38757327"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Signup",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let uniqueId = Math.floor(Math.random() * 1000000) + 1;",
+									"let rand_user_username = uniqueId + \"_random_username\";",
+									"let rand_user_email = uniqueId + \"_random_email@email.com\";",
+									"let rand_user_password = uniqueId + \"_HelloWorld!1\";",
+									"",
+									"pm.environment.set(\"rand_unique_id\", uniqueId);",
+									"pm.environment.set(\"rand_user_email\", rand_user_email);",
+									"pm.environment.set(\"rand_user_password\", rand_user_password);",
+									"pm.environment.set(\"rand_user_username\", rand_user_username);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"JohnDoe\",\n    \"password\": \"Password1!\",\n    \"email\": \"johndoe@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/user/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"user",
+								"signup"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Signup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"JohnDoe\",\n    \"password\": \"Password1!\",\n    \"email\": \"johndoe@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/signup",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"signup"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"5k4t63w09u78\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "260"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Nov 2024 21:41:18 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User created\",\n    \"user\": {\n        \"userId\": 5,\n        \"email\": \"johndoe@example.com\",\n        \"username\": \"JohnDoe\",\n        \"firstName\": \"John\",\n        \"lastName\": \"Doe\",\n        \"avatar\": null,\n        \"phoneNumber\": null,\n        \"isAdmin\": false,\n        \"createdAt\": \"2024-11-02T21:41:18.665Z\",\n        \"updatedAt\": \"2024-11-02T21:41:18.665Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.collectionVariables.set('refreshToken', response[\"refreshToken\"]);",
+									"pm.collectionVariables.set('accessToken', response[\"accessToken\"]);",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"Password1!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "example login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"Password1!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"seawg7bb3v9r\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "351"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 31 Oct 2024 21:54:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Login successful\",\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTczMDQxMTY4NCwiZXhwIjoxNzMwNDEyNTg0fQ.LqI487wjbkLTXmPvAJckRZsIpZNWfQ-H1YJzeWk1O8M\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTczMDQxMTY4NCwiZXhwIjoxNzMxMDE2NDg0fQ.rNvLgFNsWlE4vT3FOm97CiBpgiYLxM8ooeGp8g1Q6PI\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();",
+									"pm.collectionVariables.set('refreshToken', response[\"refreshToken\"]);",
+									"pm.collectionVariables.set('accessToken', response[\"accessToken\"]);",
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response includes userId, accessToken, and refreshToken\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.include.all.keys('userId', 'accessToken', 'refreshToken');",
+									"});",
+									"",
+									"",
+									"pm.test(\"UserId is a non-negative integer\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.userId).to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"AccessToken and refreshToken are non-empty strings\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.accessToken).to.be.a('string').and.to.have.lengthOf.at.least(1, \"AccessToken should not be empty\");",
+									"  pm.expect(responseData.refreshToken).to.be.a('string').and.to.have.lengthOf.at.least(1, \"RefreshToken should not be empty\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{refreshToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/user/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"user",
+								"refresh"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "example refresh token response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"hello@victorzheng.ca\",\n    \"password\": \"HelloWorld!1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/refresh",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"13z1o6j27jk99\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "333"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 30 Oct 2024 22:42:11 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"userId\": 9,\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTczMDMyODEzMSwiZXhwIjoxNzMwMzI5MDMxfQ.BdJOfBgETYDEARjmXD6kQRYXFf1sAVxV6W3AixsTLks\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTczMDMyODEzMSwiZXhwIjoxNzMwMzMxNzMxfQ.K20JnukUxPNhsMAdW4k3DJJ_8aeRphH-N1_GrBV2X9E\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/user/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "example response logout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/logout",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"mv5c957rck11\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "37"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Nov 2024 20:00:25 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Patch profile get data",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/user/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "example response logout",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/user/logout",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"mv5c957rck11\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "37"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Nov 2024 20:00:25 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out successfully\"\n}"
+						},
+						{
+							"name": "example of patch with content",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{    \n   \"email\": \"newemail@example.com\",\n   \"username\": \"newusername\",    \n   \"phoneNumber\": \"123-458-8888\",    \n   \"avatar\": \"bear.png\"\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/user/profile",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"user",
+										"profile"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"dycky6bb47v\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "283"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Nov 2024 23:37:52 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Profile updated\",\n    \"user\": {\n        \"userId\": 1,\n        \"email\": \"newemail@example.com\",\n        \"username\": \"newusername\",\n        \"firstName\": \"John\",\n        \"lastName\": \"Doe\",\n        \"avatar\": \"bear.png\",\n        \"phoneNumber\": \"123-458-8888\",\n        \"isAdmin\": true,\n        \"createdAt\": \"2024-01-05T10:30:00.000Z\",\n        \"updatedAt\": \"2024-11-02T23:37:52.680Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get profile data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/user/data",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"user",
+								"data"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "get data example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/user/data",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"user",
+										"data"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"13ywkko824n7m\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "274"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 19:21:13 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Profile fetched\",\n    \"user\": {\n        \"userId\": 1,\n        \"email\": \"admin@example.com\",\n        \"username\": \"admin\",\n        \"firstName\": \"John\",\n        \"lastName\": \"Doe\",\n        \"avatar\": \"bear.png\",\n        \"phoneNumber\": \"123-456-6789\",\n        \"isAdmin\": true,\n        \"createdAt\": \"2024-01-05T10:30:00.000Z\",\n        \"updatedAt\": \"2024-11-03T19:20:40.029Z\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "The User API is used for"
+		},
+		{
+			"name": "Execute",
+			"item": [
+				{
+					"name": "Python Scripts",
+					"item": [
+						{
+							"name": "Execute python examples",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"code\": \"print('hello world')\",\n   \"language\": \"python\",\n   \"input\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "syntax error handling",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"code\": \"print('Hello, World!')-\",\n   \"language\": \"python\",\n   \"input\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"sycbrksxm13x\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "141"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:02:43 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"output\": \"\",\n    \"error\": \"  File \\\"<string>\\\", line 1\\n    print('Hello, World!')-\\n                           ^\\nSyntaxError: invalid syntax\\n\"\n}"
+								},
+								{
+									"name": "python runtime error handling",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"code\": \"print(1/0)\",\n   \"language\": \"python\",\n   \"input\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"ayk25gsw53v\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "139"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:03:33 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"output\": \"\",\n    \"error\": \"Traceback (most recent call last):\\n  File \\\"<string>\\\", line 1, in <module>\\nZeroDivisionError: division by zero\\n\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Execute python example execute two lines",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"code\": \"print(1+1)\\nprint(\\\"hello world\\\")\",\n   \"language\": \"python\",\n   \"input\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Execute python examples Copy",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"code\": \"print(1+1)\\nprint(\\\"hello world\\\")\",\n   \"language\": \"python\",\n   \"input\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"mdhnrp1yp14\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "40"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:06:55 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"output\": \"2\\nhello world\\n\",\n    \"error\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "output_1_to_5_python",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"for i in range(1, 6):\\n    print(i)\",\r\n    \"language\": \"python\",\r\n    \"input\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "output_1_to_5_python",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"code\": \"for i in range(1, 6):\\n    print(i)\",\r\n    \"language\": \"python\",\r\n    \"input\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"2qscmcjhxh1l\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "57"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 21:25:02 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"output\": \"1\\n2\\n3\\n4\\n5\\n\",\n    \"warnings\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "test_stdin_python",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"import sys\\ninput_data = sys.stdin.read()\\nprint(f'Received input: {input_data.strip()}')\",\r\n    \"language\": \"python\",\r\n    \"input\": \"Hello, World!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "C Scripts",
+					"item": [
+						{
+							"name": "output_1_to_5_c",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"#include <stdio.h>\\nint main() {\\n    for (int i = 1; i <= 5; i++) {\\n        printf(\\\"%d\\\\n\\\", i);\\n    }\\n    return 0;\\n}\",\r\n    \"language\": \"c\",\r\n    \"input\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "output_1_to_5_c",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"code\": \"#include <stdio.h>\\nint main() {\\n    for (int i = 1; i <= 5; i++) {\\n        printf(\\\"%d\\\\n\\\", i);\\n    }\\n    return 0;\\n}\",\r\n    \"language\": \"c\",\r\n    \"input\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"2qscmcjhxh1l\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "57"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 21:26:01 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"output\": \"1\\n2\\n3\\n4\\n5\\n\",\n    \"warnings\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "example c request",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"code\": \"#include <stdio.h>\\nint main() {\\n    char input[100];\\n    fgets(input, sizeof(input), stdin);\\n    printf(\\\"Received input: %s\\\", input);\\n    return 0;\\n}\",\n   \"language\": \"c\",\n   \"input\": \"hello world\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "example c request",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"code\": \"#include <stdio.h>\\nint main() {\\n    char input[100];\\n    fgets(input, sizeof(input), stdin);\\n    printf(\\\"Received input: %s\\\", input);\\n    return 0;\\n}\",\n   \"language\": \"c\",\n   \"input\": \"hello world\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"52ytchhrb61z\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "71"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 21:18:07 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"output\": \"Received input: hello world\\n\",\n    \"warnings\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "example c program hello world",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"code\": \"#include <stdio.h>\\nint main() {\\n    printf(\\\"Hello world\\\\n\\\");\\n    return 0;\\n}\",\n   \"language\": \"c\",\n   \"input\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "example c request hello world",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"code\": \"#include <stdio.h>\\nint main() {\\n    printf(\\\"Hello world\\\\n\\\");\\n    return 0;\\n}\",\n   \"language\": \"c\",\n   \"input\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"183bsdw1zph1j\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "55"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 21:20:20 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"output\": \"Hello world\\n\",\n    \"warnings\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "test_stdin_c",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"#include <stdio.h>\\nint main() {\\n    char input[100];\\n    fgets(input, sizeof(input), stdin);\\n    printf(\\\"Received input: %s\\\", input);\\n    return 0;\\n}\",\r\n    \"language\": \"c\",\r\n    \"input\": \"Hello, World!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Javascript Scripts",
+					"item": [
+						{
+							"name": "hello world in javascript",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"code\": \"console.log('hello world')\",\n   \"language\": \"javascript\",\n   \"input\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "hello world in javascript",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"code\": \"console.log('hello world')\",\n   \"language\": \"javascript\",\n   \"input\": \"\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"76hpujq6ew1j\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "55"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 21:17:42 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"output\": \"hello world\\n\",\n    \"warnings\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "output_1_to_5_javascript",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"for (let i = 1; i <= 5; i++) {\\n    console.log(i);\\n}\",\r\n    \"language\": \"javascript\",\r\n    \"input\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "output_1_to_5_javascript",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"code\": \"for (let i = 1; i <= 5; i++) {\\n    console.log(i);\\n}\",\r\n    \"language\": \"javascript\",\r\n    \"input\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"code",
+												"execute"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"2qscmcjhxh1l\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "57"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 21:25:15 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"output\": \"1\\n2\\n3\\n4\\n5\\n\",\n    \"warnings\": \"\"\n}"
+								}
+							]
+						},
+						{
+							"name": "test_stdin_javascript",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"process.stdin.on('data', function(input) {\\n    console.log(`Received input: ${input.toString().trim()}`);\\n});\",\r\n    \"language\": \"javascript\",\r\n    \"input\": \"Hello, World!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Java Scripts",
+					"item": [
+						{
+							"name": "java example",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"code\": \"public class HelloWorld { public static void main(String[] args) { System.out.println(\\\"Hello, World!\\\");}}\",\n   \"language\": \"java\",\n   \"input\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "output_1_to_5_java",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"public class LoopNumbers {\\n    public static void main(String[] args) {\\n        for (int i = 1; i <= 5; i++) {\\n            System.out.println(i);\\n        }\\n    }\\n}\",\r\n    \"language\": \"java\",\r\n    \"input\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "test_stdin_java",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"import java.util.Scanner;\\npublic class InputTest {\\n    public static void main(String[] args) {\\n        Scanner scanner = new Scanner(System.in);\\n        String input = scanner.nextLine();\\n        System.out.println(\\\"Received input: \\\" + input);\\n        scanner.close();\\n    }\\n}\",\r\n    \"language\": \"java\",\r\n    \"input\": \"Hello, World!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "C++",
+					"item": [
+						{
+							"name": "output_1_to_5_cpp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"#include <iostream>\\nusing namespace std;\\nint main() {\\n    for (int i = 1; i <= 5; i++) {\\n        cout << i << endl;\\n    }\\n    return 0;\\n}\",\r\n    \"language\": \"cpp\",\r\n    \"input\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "test_stdin_cpp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"#include <iostream>\\nusing namespace std;\\nint main() {\\n    string input;\\n    getline(cin, input);\\n    cout << \\\"Received input: \\\" << input << endl;\\n    return 0;\\n}\",\r\n    \"language\": \"cpp\",\r\n    \"input\": \"Hello, World!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/code/execute",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"code",
+										"execute"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Templates",
+			"item": [
+				{
+					"name": "[templateId]",
+					"item": [
+						{
+							"name": "Get Template by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response Content-Type is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"TemplateId is a non-negative integer\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.templateId).to.be.a('number');",
+											"  pm.expect(responseData.templateId).to.satisfy((templateId) => templateId >= 0, \"TemplateId should be a non-negative integer\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Title and description are non-empty strings\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+											"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Language is a valid language code\", function () {",
+											"    const validLanguageCodes = [\"en\", \"es\", \"fr\", \"de\", \"it\"]; // Example valid language codes",
+											"    const responseData = pm.response.json();",
+											"",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.language).to.exist.and.to.be.oneOf(validLanguageCodes);",
+											"});",
+											"",
+											"",
+											"pm.test(\"CreatedAt and UpdatedAt are in a valid date format\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"CreatedAt should be in valid date format\");",
+											"  pm.expect(responseData.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"UpdatedAt should be in valid date format\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "get template id 1",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/templates/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"templates",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"4609m3ka3p67\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "223"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 31 Oct 2024 22:15:41 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"templateId\": 1,\n    \"userId\": 1,\n    \"content\": \"This is a sample project proposal template.\",\n    \"title\": \"Project Proposal\",\n    \"description\": null,\n    \"language\": null,\n    \"createdAt\": \"2024-10-19T20:24:45.100Z\",\n    \"updatedAt\": \"2024-10-19T20:24:45.100Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete template",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Content-Type header is application/json\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Validate the template object\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    responseData.forEach(function(template) {",
+											"        pm.expect(template).to.be.an('object');",
+											"        pm.expect(template).to.have.property('templateId');",
+											"        pm.expect(template).to.have.property('userId');",
+											"        pm.expect(template).to.have.property('content');",
+											"        pm.expect(template).to.have.property('title');",
+											"        pm.expect(template).to.have.property('description');",
+											"        pm.expect(template).to.have.property('language');",
+											"        pm.expect(template).to.have.property('createdAt');",
+											"        pm.expect(template).to.have.property('updatedAt');",
+											"        pm.expect(template).to.have.property('templatesTags');",
+											"        pm.expect(template.templatesTags).to.be.an('array');",
+											"        template.templatesTags.forEach(function(tag) {",
+											"            pm.expect(tag).to.have.property('templateTagId');",
+											"            pm.expect(tag).to.have.property('tagId');",
+											"            pm.expect(tag).to.have.property('templateId');",
+											"        });",
+											"    });",
+											"});",
+											"",
+											"",
+											"pm.test(\"Title is a non-empty string\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  responseData.forEach(function(template) {",
+											"    pm.expect(template.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+											"  });",
+											"});",
+											"",
+											"",
+											"pm.test(\"TemplatesTags array is present and has expected number of elements\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('array');",
+											"    pm.expect(responseData).to.have.property('templatesTags').that.is.an('array').and.to.have.lengthOf(1);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "example delete tag",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/4",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"templates",
+												"4"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"n1ba4qcrmt8w\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "320"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 03 Nov 2024 20:50:11 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Successfully deleted\",\n    \"deletedTemplate\": {\n        \"templateId\": 4,\n        \"userId\": 1,\n        \"content\": \"print(\\\"hello world\\\")\",\n        \"title\": \"Python Hello World Example 441423\",\n        \"description\": \"This program prints out hello world to users.\",\n        \"language\": \"python3\",\n        \"createdAt\": \"2024-11-03T19:28:20.438Z\",\n        \"updatedAt\": \"2024-11-03T19:28:20.438Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Update a Template",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required fields\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData).to.have.property('updatedTemplate');",
+											"    ",
+											"    const updatedTemplate = responseData.updatedTemplate;",
+											"    pm.expect(updatedTemplate).to.have.property('templateId');",
+											"    pm.expect(updatedTemplate).to.have.property('userId');",
+											"    pm.expect(updatedTemplate).to.have.property('content');",
+											"    pm.expect(updatedTemplate).to.have.property('title');",
+											"    pm.expect(updatedTemplate).to.have.property('description');",
+											"    pm.expect(updatedTemplate).to.have.property('language');",
+											"    pm.expect(updatedTemplate).to.have.property('createdAt');",
+											"    pm.expect(updatedTemplate).to.have.property('updatedAt');",
+											"});",
+											"",
+											"",
+											"pm.test(\"TemplateId and userId are non-negative integers\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.updatedTemplate.templateId).to.be.a('number').and.to.satisfy((val) => val >= 0, \"TemplateId should be a non-negative integer\");",
+											"  pm.expect(responseData.updatedTemplate.userId).to.be.a('number').and.to.satisfy((val) => val >= 0, \"userId should be a non-negative integer\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Title and description are non-empty strings\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+											"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Language is in a valid format\", function () {",
+											"  const responseData = pm.response.json();",
+											"",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.updatedTemplate.language).to.match(/[a-zA-Z]+/);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"print(\\\"hello world\\\")\\nprint(\\\"hello doctor.\\\")\",\n    \"language\": \"python3\",\n    \"description\": \"This program not only prints out hello world to users but also prints out hello doctor.\",\n    \"tags\": [\"new tag\", \"python remaster\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "template update without tags",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"title\": \"Python Hello World Example\",\n    \"content\": \"print(\\\"hello world\\\")\\nprint(\\\"hello doctor.\\\")\",\n    \"language\": \"python3\",\n    \"description\": \"This program not only prints out hello world to users but also prints out hello doctor.\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/templates/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"templates",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"jk2tu2q5yd9o\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "348"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 31 Oct 2024 23:33:22 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"updatedTemplate\": {\n        \"templateId\": 8,\n        \"userId\": 9,\n        \"content\": \"print(\\\"hello world\\\")\\nprint(\\\"hello doctor.\\\")\",\n        \"title\": \"Python Hello World Example\",\n        \"description\": \"This program not only prints out hello world to users but also prints out hello doctor.\",\n        \"language\": \"python3\",\n        \"createdAt\": \"2024-10-31T22:36:42.646Z\",\n        \"updatedAt\": \"2024-10-31T22:33:22.935Z\"\n    }\n}"
+								},
+								{
+									"name": "update template without title updated",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"content\": \"print(\\\"hello world\\\")\\nprint(\\\"hello doctor.\\\")\",\n    \"language\": \"python3\",\n    \"description\": \"This program not only prints out hello world to users but also prints out hello doctor.\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/8",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"templates",
+												"8"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"tcgcgwibj19o\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "348"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 31 Oct 2024 23:48:52 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"updatedTemplate\": {\n        \"templateId\": 8,\n        \"userId\": 9,\n        \"content\": \"print(\\\"hello world\\\")\\nprint(\\\"hello doctor.\\\")\",\n        \"title\": \"Python Hello World Example\",\n        \"description\": \"This program not only prints out hello world to users but also prints out hello doctor.\",\n        \"language\": \"python3\",\n        \"createdAt\": \"2024-10-31T22:36:42.646Z\",\n        \"updatedAt\": \"2024-10-31T22:48:52.682Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Fork a Template",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.to.have.status(201));",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response has the required fields\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData).to.include.all.keys('templateId', 'userId', 'content', 'title', 'description', 'language', 'createdAt', 'updatedAt');",
+											"});",
+											"",
+											"",
+											"pm.test(\"UserId is a non-negative integer\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.userId).to.be.a('number').and.to.be.at.least(0);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Title and description must be non-empty strings\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.be.an('object');",
+											"  pm.expect(responseData.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+											"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+											"});",
+											"",
+											"",
+											"pm.test(\"Language is in a valid format\", function () {",
+											"  const responseData = pm.response.json();",
+											"  ",
+											"  pm.expect(responseData).to.have.property('language').that.is.a('string').and.matches(/^[a-zA-Z]+$/, \"Language should only contain alphabets\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Fork a Template",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/5",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"templates",
+												"5"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"7p0s8s32cv9b\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "335"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 03 Nov 2024 21:35:56 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"templateId\": 19,\n    \"userId\": 1,\n    \"content\": \"print(\\\"hello world\\\")\",\n    \"title\": \"Python Hello World Example 334943 (Forked) Sun Nov 03 2024 16:35:56 GMT-0500 (Eastern Standard Time)\",\n    \"description\": \"This program prints out hello world to users.\",\n    \"language\": \"python3\",\n    \"createdAt\": \"2024-11-03T21:35:56.738Z\",\n    \"updatedAt\": \"2024-11-03T21:35:56.738Z\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create a Template",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let uniqueId = Math.floor(Math.random() * 1000000) + 1;",
+									"pm.environment.set(\"rand_unique_id\", uniqueId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.expect(pm.response.code).to.equal(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.templateId).to.exist;",
+									"    pm.expect(responseData.userId).to.exist;",
+									"    pm.expect(responseData.content).to.exist;",
+									"    pm.expect(responseData.title).to.exist;",
+									"    pm.expect(responseData.description).to.exist;",
+									"    pm.expect(responseData.language).to.exist;",
+									"    pm.expect(responseData.createdAt).to.exist;",
+									"    pm.expect(responseData.updatedAt).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content should not be empty\", function () {",
+									"  const responseData = pm.response.json();",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.content).to.exist.and.to.not.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"CreatedAt and updatedAt are in a valid date format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.createdAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"CreatedAt should be in valid date format\");",
+									"    pm.expect(responseData.updatedAt).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z$/, \"UpdatedAt should be in valid date format\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Language is a valid language code\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.language).to.match(/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/, \"Language code should be a valid language code\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Python Hello World Example {{rand_unique_id}}\",\n    \"content\": \"print(\\\"hello world\\\")\",\n    \"language\": \"python3\",\n    \"description\": \"This program prints out hello world to users.\",\n    \"tags\": [\"hello world\",\"python\", \"test\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"templates",
+								"create"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create a Template",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Python Hello World Example {{rand_unique_id}}\",\n    \"content\": \"print(\\\"hello world\\\")\",\n    \"language\": \"python3\",\n    \"description\": \"This program prints out hello world to users.\",\n    \"tags\": [\"hello world\",\"python\", \"test\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates",
+										"create"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"ykfwowgl6s8v\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "319"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 19:30:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"template\": {\n        \"templateId\": 7,\n        \"userId\": 1,\n        \"content\": \"print(\\\"hello world\\\")\",\n        \"title\": \"Python Hello World Example 661990\",\n        \"description\": \"This program prints out hello world to users.\",\n        \"language\": \"python3\",\n        \"createdAt\": \"2024-11-03T19:30:00.075Z\",\n        \"updatedAt\": \"2024-11-03T19:30:00.075Z\"\n    },\n    \"tags\": [\n        \"hello world\",\n        \"python\",\n        \"test\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get List of Templates",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the template object\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(template) {",
+									"        pm.expect(template).to.be.an('object');",
+									"        pm.expect(template).to.have.property('templateId');",
+									"        pm.expect(template).to.have.property('userId');",
+									"        pm.expect(template).to.have.property('content');",
+									"        pm.expect(template).to.have.property('title');",
+									"        pm.expect(template).to.have.property('description');",
+									"        pm.expect(template).to.have.property('language');",
+									"        pm.expect(template).to.have.property('createdAt');",
+									"        pm.expect(template).to.have.property('updatedAt');",
+									"        pm.expect(template).to.have.property('templatesTags');",
+									"        pm.expect(template.templatesTags).to.be.an('array');",
+									"        template.templatesTags.forEach(function(tag) {",
+									"            pm.expect(tag).to.have.property('templateTagId');",
+									"            pm.expect(tag).to.have.property('tagId');",
+									"            pm.expect(tag).to.have.property('templateId');",
+									"        });",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Title is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  responseData.forEach(function(template) {",
+									"    pm.expect(template.title).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Title should not be empty\");",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"TemplatesTags array is present and has expected number of elements\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    pm.expect(responseData).to.have.property('templatesTags').that.is.an('array').and.to.have.lengthOf(1);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates?page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"templates"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "example get all available templates",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"hhlj6un3dc2rw\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 19:36:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"templates\": [\n        {\n            \"templateId\": 2,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 540956\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:26:58.870Z\",\n            \"updatedAt\": \"2024-11-03T19:26:58.870Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 3,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 564796\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:28:00.625Z\",\n            \"updatedAt\": \"2024-11-03T19:28:00.625Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 4,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 441423\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:28:20.438Z\",\n            \"updatedAt\": \"2024-11-03T19:28:20.438Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 5,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 334943\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:28:40.425Z\",\n            \"updatedAt\": \"2024-11-03T19:28:40.425Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 6,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 920101\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:29:17.341Z\",\n            \"updatedAt\": \"2024-11-03T19:29:17.341Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 1,\n                    \"tagId\": 1,\n                    \"templateId\": 6\n                },\n                {\n                    \"templateTagId\": 2,\n                    \"tagId\": 2,\n                    \"templateId\": 6\n                },\n                {\n                    \"templateTagId\": 3,\n                    \"tagId\": 3,\n                    \"templateId\": 6\n                }\n            ]\n        },\n        {\n            \"templateId\": 7,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 661990\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:30:00.075Z\",\n            \"updatedAt\": \"2024-11-03T19:30:00.075Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 4,\n                    \"tagId\": 1,\n                    \"templateId\": 7\n                },\n                {\n                    \"templateTagId\": 5,\n                    \"tagId\": 2,\n                    \"templateId\": 7\n                },\n                {\n                    \"templateTagId\": 6,\n                    \"tagId\": 3,\n                    \"templateId\": 7\n                }\n            ]\n        },\n        {\n            \"templateId\": 8,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 540956 (Forked)\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:44.535Z\",\n            \"updatedAt\": \"2024-11-03T19:34:44.535Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 9,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 408038\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:51.485Z\",\n            \"updatedAt\": \"2024-11-03T19:34:51.485Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 7,\n                    \"tagId\": 1,\n                    \"templateId\": 9\n                },\n                {\n                    \"templateTagId\": 8,\n                    \"tagId\": 2,\n                    \"templateId\": 9\n                },\n                {\n                    \"templateTagId\": 9,\n                    \"tagId\": 3,\n                    \"templateId\": 9\n                }\n            ]\n        },\n        {\n            \"templateId\": 10,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 86003\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.036Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.036Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 10,\n                    \"tagId\": 1,\n                    \"templateId\": 10\n                },\n                {\n                    \"templateTagId\": 11,\n                    \"tagId\": 2,\n                    \"templateId\": 10\n                },\n                {\n                    \"templateTagId\": 12,\n                    \"tagId\": 3,\n                    \"templateId\": 10\n                }\n            ]\n        },\n        {\n            \"templateId\": 11,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 925456\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.496Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.496Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 13,\n                    \"tagId\": 1,\n                    \"templateId\": 11\n                },\n                {\n                    \"templateTagId\": 14,\n                    \"tagId\": 2,\n                    \"templateId\": 11\n                },\n                {\n                    \"templateTagId\": 15,\n                    \"tagId\": 3,\n                    \"templateId\": 11\n                }\n            ]\n        }\n    ],\n    \"skip\": 0,\n    \"take\": 10\n}"
+						},
+						{
+							"name": "example get all available templates page 2",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates?page=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"xjgazxlurlcv\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "463"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 19:37:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"templates\": [\n        {\n            \"templateId\": 12,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 120757\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:35:08.417Z\",\n            \"updatedAt\": \"2024-11-03T19:35:08.417Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 16,\n                    \"tagId\": 1,\n                    \"templateId\": 12\n                },\n                {\n                    \"templateTagId\": 17,\n                    \"tagId\": 2,\n                    \"templateId\": 12\n                },\n                {\n                    \"templateTagId\": 18,\n                    \"tagId\": 3,\n                    \"templateId\": 12\n                }\n            ]\n        }\n    ],\n    \"skip\": 10,\n    \"take\": 10\n}"
+						},
+						{
+							"name": "example of search with title",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates?title=hello",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "hello"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"fbb08gvstq37a\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 20:16:31 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"templates\": [\n        {\n            \"templateId\": 4,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 441423\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:28:20.438Z\",\n            \"updatedAt\": \"2024-11-03T19:28:20.438Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 5,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 334943\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:28:40.425Z\",\n            \"updatedAt\": \"2024-11-03T19:28:40.425Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 6,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 920101\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:29:17.341Z\",\n            \"updatedAt\": \"2024-11-03T19:29:17.341Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 1,\n                    \"tagId\": 1,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 2,\n                    \"tagId\": 2,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 3,\n                    \"tagId\": 3,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 7,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 661990\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:30:00.075Z\",\n            \"updatedAt\": \"2024-11-03T19:30:00.075Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 4,\n                    \"tagId\": 1,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 5,\n                    \"tagId\": 2,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 6,\n                    \"tagId\": 3,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 8,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 540956 (Forked)\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:44.535Z\",\n            \"updatedAt\": \"2024-11-03T19:34:44.535Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 9,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 408038\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:51.485Z\",\n            \"updatedAt\": \"2024-11-03T19:34:51.485Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 7,\n                    \"tagId\": 1,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 8,\n                    \"tagId\": 2,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 9,\n                    \"tagId\": 3,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 10,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 86003\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.036Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.036Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 10,\n                    \"tagId\": 1,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 11,\n                    \"tagId\": 2,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 12,\n                    \"tagId\": 3,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 11,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 925456\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.496Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.496Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 13,\n                    \"tagId\": 1,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 14,\n                    \"tagId\": 2,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 15,\n                    \"tagId\": 3,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 12,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 120757\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:35:08.417Z\",\n            \"updatedAt\": \"2024-11-03T19:35:08.417Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 16,\n                    \"tagId\": 1,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 17,\n                    \"tagId\": 2,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 18,\n                    \"tagId\": 3,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        }\n    ],\n    \"totalPages\": 1,\n    \"page\": 1,\n    \"limit\": 10\n}"
+						},
+						{
+							"name": "example search with content",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates?content=Hello",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates"
+									],
+									"query": [
+										{
+											"key": "content",
+											"value": "Hello"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"mlxu1egmrt37f\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 20:20:35 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"templates\": [\n        {\n            \"templateId\": 4,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 441423\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:28:20.438Z\",\n            \"updatedAt\": \"2024-11-03T19:28:20.438Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 5,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 334943\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:28:40.425Z\",\n            \"updatedAt\": \"2024-11-03T19:28:40.425Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 6,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\") test\",\n            \"title\": \"Python Hello World Example 920101\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:29:17.341Z\",\n            \"updatedAt\": \"2024-11-03T20:20:22.847Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 1,\n                    \"tagId\": 1,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 2,\n                    \"tagId\": 2,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 3,\n                    \"tagId\": 3,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 7,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 661990\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:30:00.075Z\",\n            \"updatedAt\": \"2024-11-03T19:30:00.075Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 4,\n                    \"tagId\": 1,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 5,\n                    \"tagId\": 2,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 6,\n                    \"tagId\": 3,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 8,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 540956 (Forked)\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:44.535Z\",\n            \"updatedAt\": \"2024-11-03T19:34:44.535Z\",\n            \"templatesTags\": []\n        },\n        {\n            \"templateId\": 9,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 408038\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:51.485Z\",\n            \"updatedAt\": \"2024-11-03T19:34:51.485Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 7,\n                    \"tagId\": 1,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 8,\n                    \"tagId\": 2,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 9,\n                    \"tagId\": 3,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 10,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 86003\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.036Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.036Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 10,\n                    \"tagId\": 1,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 11,\n                    \"tagId\": 2,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 12,\n                    \"tagId\": 3,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 11,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 925456\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.496Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.496Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 13,\n                    \"tagId\": 1,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 14,\n                    \"tagId\": 2,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 15,\n                    \"tagId\": 3,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 12,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 120757\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:35:08.417Z\",\n            \"updatedAt\": \"2024-11-03T19:35:08.417Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 16,\n                    \"tagId\": 1,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 17,\n                    \"tagId\": 2,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 18,\n                    \"tagId\": 3,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        }\n    ],\n    \"totalPages\": 1,\n    \"page\": 1,\n    \"limit\": 10\n}"
+						},
+						{
+							"name": "search by tags",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/templates?tags=test",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"templates"
+									],
+									"query": [
+										{
+											"key": "tags",
+											"value": "test"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"12s4chtyx8y2j9\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 03 Nov 2024 20:22:03 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"templates\": [\n        {\n            \"templateId\": 6,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\") test\",\n            \"title\": \"Python Hello World Example 920101\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:29:17.341Z\",\n            \"updatedAt\": \"2024-11-03T20:20:22.847Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 1,\n                    \"tagId\": 1,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 2,\n                    \"tagId\": 2,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 3,\n                    \"tagId\": 3,\n                    \"templateId\": 6,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 7,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 661990\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:30:00.075Z\",\n            \"updatedAt\": \"2024-11-03T19:30:00.075Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 4,\n                    \"tagId\": 1,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 5,\n                    \"tagId\": 2,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 6,\n                    \"tagId\": 3,\n                    \"templateId\": 7,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 9,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 408038\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:51.485Z\",\n            \"updatedAt\": \"2024-11-03T19:34:51.485Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 7,\n                    \"tagId\": 1,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 8,\n                    \"tagId\": 2,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 9,\n                    \"tagId\": 3,\n                    \"templateId\": 9,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 10,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 86003\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.036Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.036Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 10,\n                    \"tagId\": 1,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 11,\n                    \"tagId\": 2,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 12,\n                    \"tagId\": 3,\n                    \"templateId\": 10,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 11,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 925456\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:34:52.496Z\",\n            \"updatedAt\": \"2024-11-03T19:34:52.496Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 13,\n                    \"tagId\": 1,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 14,\n                    \"tagId\": 2,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 15,\n                    \"tagId\": 3,\n                    \"templateId\": 11,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        },\n        {\n            \"templateId\": 12,\n            \"userId\": 1,\n            \"content\": \"print(\\\"hello world\\\")\",\n            \"title\": \"Python Hello World Example 120757\",\n            \"description\": \"This program prints out hello world to users.\",\n            \"language\": \"python3\",\n            \"createdAt\": \"2024-11-03T19:35:08.417Z\",\n            \"updatedAt\": \"2024-11-03T19:35:08.417Z\",\n            \"templatesTags\": [\n                {\n                    \"templateTagId\": 16,\n                    \"tagId\": 1,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"hello world\"\n                    }\n                },\n                {\n                    \"templateTagId\": 17,\n                    \"tagId\": 2,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"python\"\n                    }\n                },\n                {\n                    \"templateTagId\": 18,\n                    \"tagId\": 3,\n                    \"templateId\": 12,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"test\"\n                    }\n                }\n            ]\n        }\n    ],\n    \"totalPages\": 1,\n    \"page\": 1,\n    \"limit\": 10\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Blogs",
+			"item": [
+				{
+					"name": "Create",
+					"item": [
+						{
+							"name": "Create new blog",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"My First Blog Post\",\n  \"description\": \"This is a detailed description of my first blog post.\",\n  \"tags\": [\"first\", \"blog\", \"post\"],\n  \"content\": \"This is test content for my first blog\",\n  \"templateIds\": [6, 7]\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"create"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "create blog example",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"title\": \"My First Blog Post\",\n  \"description\": \"This is a detailed description of my first blog post.\",\n  \"tags\": [\"first\", \"blog\", \"post\"],\n  \"templateIds\": [1, 2, 3]\n}\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/create",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"create"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"10zppfn2hhj11\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "37"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:36:04 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Blog created\",\n    \"blogId\": 6\n}"
+								}
+							]
+						}
+					],
+					"description": "**Description:** This endpoint allows an authenticated user to create a new blog post. The user must provide a valid Bearer token in the request headers. The request body should include the title, description, tags, and linked template IDs. The title and description must meet specific validation criteria, and tags must be alphanumeric with no spaces. If the provided tags do not exist, they will be created. The specified templates must also exist; otherwise, an error will be returned."
+				},
+				{
+					"name": "[id]",
+					"item": [
+						{
+							"name": "Report",
+							"item": [
+								{
+									"name": "Report blog",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \n    \"explanation\": \"Inappropriate content\" \n}\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/report",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"blogs",
+												"1",
+												"report"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "New Request",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \n    \"explanation\": \"Inappropriate content\" \n}\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:3000/api/blogs/1/report",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"blogs",
+														"1",
+														"report"
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=utf-8"
+												},
+												{
+													"key": "ETag",
+													"value": "\"4zg26zofrv2e\""
+												},
+												{
+													"key": "Content-Length",
+													"value": "86"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 02 Nov 2024 20:39:23 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"newBlogReport\": {\n        \"id\": 5,\n        \"blogId\": 1,\n        \"userId\": 7,\n        \"explanation\": \"Inappropriate content\"\n    }\n}"
+										}
+									]
+								}
+							],
+							"description": "Allows a user to report a specified blog or a comment on the blog (identified by the blog ID in the URL). Users must provide an explanation for the report. The userId is taken from the access token and should not be included in the payload."
+						},
+						{
+							"name": "Comment",
+							"item": [
+								{
+									"name": "Rate",
+									"item": [
+										{
+											"name": "post rating",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{ \n    \"rating\": 1, \n    \"commentId\": 2 \n}\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/comment/rate",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "{{NEXTJS_PORT}}",
+													"path": [
+														"api",
+														"blogs",
+														"1",
+														"comment",
+														"rate"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Replies",
+									"item": [
+										{
+											"name": "get replies",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"commentId\": 2\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/comment/replies",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "{{NEXTJS_PORT}}",
+													"path": [
+														"api",
+														"blogs",
+														"1",
+														"comment",
+														"replies"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "generate reply",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "  {\n    \"content\": \"This is a great blog post!\",\n    \"commentId\": 1\n  }\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/comment/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"blogs",
+												"1",
+												"comment",
+												""
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "example comment response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "  {\n    \"content\": \"This is a great blog post!\",\n    \"commentId\": 2\n  }\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:3000/api/blogs/1/comment/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"blogs",
+														"1",
+														"comment",
+														""
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=utf-8"
+												},
+												{
+													"key": "ETag",
+													"value": "\"16op36n4z4i7a\""
+												},
+												{
+													"key": "Content-Length",
+													"value": "262"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 02 Nov 2024 20:45:39 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"newComment\": {\n        \"commentId\": 6,\n        \"content\": \"This is a great blog post!\",\n        \"isAppropriate\": true,\n        \"upvotes\": 0,\n        \"downvotes\": 0,\n        \"userId\": 7,\n        \"blogId\": 1,\n        \"createdAt\": \"2024-11-02T20:45:39.838Z\",\n        \"updatedAt\": \"2024-11-02T20:45:39.838Z\"\n    },\n    \"newCommentReply\": {\n        \"commentId\": 2,\n        \"replyId\": 6\n    }\n}"
+										}
+									]
+								},
+								{
+									"name": "generate comment without comment id",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "  {\n    \"content\": \"This is a great blog post!\"\n  }\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/comment/",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"blogs",
+												"1",
+												"comment",
+												""
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "example comment response",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "  {\n    \"content\": \"This is a great blog post!\",\n    \"commentId\": 2\n  }\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "http://localhost:3000/api/blogs/1/comment/",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"blogs",
+														"1",
+														"comment",
+														""
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=utf-8"
+												},
+												{
+													"key": "ETag",
+													"value": "\"16op36n4z4i7a\""
+												},
+												{
+													"key": "Content-Length",
+													"value": "262"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 02 Nov 2024 20:45:39 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"newComment\": {\n        \"commentId\": 6,\n        \"content\": \"This is a great blog post!\",\n        \"isAppropriate\": true,\n        \"upvotes\": 0,\n        \"downvotes\": 0,\n        \"userId\": 7,\n        \"blogId\": 1,\n        \"createdAt\": \"2024-11-02T20:45:39.838Z\",\n        \"updatedAt\": \"2024-11-02T20:45:39.838Z\"\n    },\n    \"newCommentReply\": {\n        \"commentId\": 2,\n        \"replyId\": 6\n    }\n}"
+										}
+									]
+								}
+							],
+							"description": "Creates a comment on the specified blog (identified by the blog ID in the URL). Ability to link to another comment by replying to it. The userId is taken from the access token and should not be included in the payload."
+						},
+						{
+							"name": "Rate",
+							"item": [
+								{
+									"name": "post blog rating",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{ \n    \"rating\": 1 \n}\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/rate",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"blogs",
+												"1",
+												"rate"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Ranked",
+							"item": [
+								{
+									"name": "get ranked list of comments",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/ranked",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"blogs",
+												"1",
+												"ranked"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "ranked comments",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:3000/api/blogs/1/ranked",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"blogs",
+														"1",
+														"ranked"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=utf-8"
+												},
+												{
+													"key": "ETag",
+													"value": "\"92v3i05k78ht\""
+												},
+												{
+													"key": "Content-Length",
+													"value": "641"
+												},
+												{
+													"key": "Vary",
+													"value": "Accept-Encoding"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 02 Nov 2024 20:53:15 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"rankedComments\": [\n        {\n            \"commentId\": 6,\n            \"content\": \"This is a great blog post!\",\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"userId\": 7,\n            \"blogId\": 1,\n            \"createdAt\": \"2024-11-02T20:45:39.838Z\",\n            \"updatedAt\": \"2024-11-02T20:45:39.838Z\"\n        },\n        {\n            \"commentId\": 2,\n            \"content\": \"I disagree with some points made here.\",\n            \"isAppropriate\": true,\n            \"upvotes\": 1,\n            \"downvotes\": 3,\n            \"userId\": 1,\n            \"blogId\": 1,\n            \"createdAt\": \"2024-11-02T18:46:34.714Z\",\n            \"updatedAt\": \"2024-11-02T20:46:28.318Z\"\n        },\n        {\n            \"commentId\": 1,\n            \"content\": \"Great post! Very informative.\",\n            \"isAppropriate\": true,\n            \"upvotes\": 5,\n            \"downvotes\": 0,\n            \"userId\": 1,\n            \"blogId\": 1,\n            \"createdAt\": \"2024-11-02T18:46:34.714Z\",\n            \"updatedAt\": \"2024-11-02T18:46:34.714Z\"\n        }\n    ]\n}"
+										}
+									]
+								},
+								{
+									"name": "ranked list of comments with filter",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1/ranked?order=upvotes&ascending=true",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"blogs",
+												"1",
+												"ranked"
+											],
+											"query": [
+												{
+													"key": "order",
+													"value": "upvotes"
+												},
+												{
+													"key": "ascending",
+													"value": "true"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Update blog id 1",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n   \"title\": \"Updated Blog Title\",\n   \"description\": \"This is the updated description of the blog.\",\n   \"tags\": [\"tag1\", \"tag2\"],\n   \"templateIds\": [1, 2, 3]\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "unauthorized author of blog",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n   \"title\": \"Updated Blog Title\",\n   \"description\": \"This is the updated description of the blog.\",\n   \"tags\": [\"tag1\", \"tag2\"],\n   \"templateIds\": [1, 2, 3]\n}\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"1"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"bquq97iei91m\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "58"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:33:03 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"error\": \"Forbidden: You are not the author of this blog\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Get blog by id 1",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "get blog by id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"7frcwfm83eh9\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "621"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 19:51:48 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Successfully retrieved blog\",\n    \"blogDetails\": {\n        \"blogId\": 1,\n        \"title\": \"Understanding JavaScript\",\n        \"description\": \"A comprehensive guide to JavaScript fundamentals.\",\n        \"isDeleted\": false,\n        \"isAppropriate\": true,\n        \"upvotes\": 0,\n        \"downvotes\": 0,\n        \"createdAt\": \"2024-11-02T18:46:34.466Z\",\n        \"updatedAt\": \"2024-11-02T18:46:34.466Z\",\n        \"authorId\": 1,\n        \"Comment\": [\n            {\n                \"commentId\": 1,\n                \"content\": \"Great post! Very informative.\",\n                \"upvotes\": 5,\n                \"downvotes\": 0,\n                \"user\": {\n                    \"username\": \"johndoe\"\n                }\n            },\n            {\n                \"commentId\": 2,\n                \"content\": \"I disagree with some points made here.\",\n                \"upvotes\": 0,\n                \"downvotes\": 3,\n                \"user\": {\n                    \"username\": \"johndoe\"\n                }\n            }\n        ]\n    },\n    \"blogRatingsCount\": {\n        \"upvotes\": 2,\n        \"downvotes\": 0\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete blog",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"4"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Delete blog",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"tzzm2q09508x\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "321"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 23:58:25 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Blog deleted successfully\",\n    \"updatedBlog\": {\n        \"blogId\": 1,\n        \"title\": \"My First Blog Post\",\n        \"description\": \"This is a detailed description of my first blog post.\",\n        \"isDeleted\": true,\n        \"isAppropriate\": false,\n        \"upvotes\": 1,\n        \"downvotes\": 0,\n        \"createdAt\": \"2024-11-02T23:56:41.118Z\",\n        \"updatedAt\": \"2024-11-02T23:58:25.696Z\",\n        \"authorId\": 1\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "get all blogs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/search",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"search"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "get all blogs",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/search",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"search"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"1eih9zm2sq3jx\""
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:50:18 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"blogs\": [\n        {\n            \"blogId\": 1,\n            \"title\": \"Understanding JavaScript\",\n            \"description\": \"A comprehensive guide to JavaScript fundamentals.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 1,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T18:46:34.466Z\",\n            \"updatedAt\": \"2024-11-02T20:49:13.406Z\",\n            \"authorId\": 1,\n            \"BlogTags\": [\n                {\n                    \"id\": 1,\n                    \"tagId\": 1,\n                    \"blogId\": 1,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"Computer Science\"\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"tagId\": 2,\n                    \"blogId\": 1,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"Math\"\n                    }\n                }\n            ],\n            \"BlogTemplate\": [\n                {\n                    \"id\": 1,\n                    \"templateId\": 1,\n                    \"blogId\": 1,\n                    \"template\": {\n                        \"templateId\": 1,\n                        \"userId\": 1,\n                        \"content\": \"This is a sample project proposal template.\",\n                        \"title\": \"Project Proposal\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"templateId\": 2,\n                    \"blogId\": 1,\n                    \"template\": {\n                        \"templateId\": 2,\n                        \"userId\": 1,\n                        \"content\": \"This template outlines the agenda for our meetings.\",\n                        \"title\": \"Meeting Agenda\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                }\n            ]\n        },\n        {\n            \"blogId\": 2,\n            \"title\": \"The Art of Cooking\",\n            \"description\": \"Exploring culinary techniques and recipes from around the world.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T18:46:34.466Z\",\n            \"updatedAt\": \"2024-11-02T18:46:34.466Z\",\n            \"authorId\": 2,\n            \"BlogTags\": [\n                {\n                    \"id\": 3,\n                    \"tagId\": 3,\n                    \"blogId\": 2,\n                    \"tag\": {\n                        \"tagId\": 3,\n                        \"tagName\": \"Physics\"\n                    }\n                }\n            ],\n            \"BlogTemplate\": [\n                {\n                    \"id\": 3,\n                    \"templateId\": 3,\n                    \"blogId\": 2,\n                    \"template\": {\n                        \"templateId\": 3,\n                        \"userId\": 2,\n                        \"content\": \"This template can be used for various reports.\",\n                        \"title\": \"Report\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                }\n            ]\n        },\n        {\n            \"blogId\": 3,\n            \"title\": \"Traveling the World\",\n            \"description\": \"Tips and tricks for traveling on a budget.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T18:46:34.466Z\",\n            \"updatedAt\": \"2024-11-02T18:46:34.466Z\",\n            \"authorId\": 1,\n            \"BlogTags\": [\n                {\n                    \"id\": 4,\n                    \"tagId\": 4,\n                    \"blogId\": 3,\n                    \"tag\": {\n                        \"tagId\": 4,\n                        \"tagName\": \"Python\"\n                    }\n                }\n            ],\n            \"BlogTemplate\": [\n                {\n                    \"id\": 4,\n                    \"templateId\": 4,\n                    \"blogId\": 3,\n                    \"template\": {\n                        \"templateId\": 4,\n                        \"userId\": 2,\n                        \"content\": \"This is a sample invoice template.\",\n                        \"title\": \"Invoice\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                }\n            ]\n        },\n        {\n            \"blogId\": 4,\n            \"title\": \"Health and Wellness\",\n            \"description\": \"How to maintain a healthy lifestyle in a busy world.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T18:46:34.466Z\",\n            \"updatedAt\": \"2024-11-02T18:46:34.466Z\",\n            \"authorId\": 2,\n            \"BlogTags\": [\n                {\n                    \"id\": 5,\n                    \"tagId\": 5,\n                    \"blogId\": 4,\n                    \"tag\": {\n                        \"tagId\": 5,\n                        \"tagName\": \"Java\"\n                    }\n                }\n            ],\n            \"BlogTemplate\": [\n                {\n                    \"id\": 5,\n                    \"templateId\": 5,\n                    \"blogId\": 4,\n                    \"template\": {\n                        \"templateId\": 5,\n                        \"userId\": 1,\n                        \"content\": \"Use this template for email communications.\",\n                        \"title\": \"Email Template\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                }\n            ]\n        },\n        {\n            \"blogId\": 5,\n            \"title\": \"Tech Innovations\",\n            \"description\": \"The latest trends in technology and what they mean for the future.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T18:46:34.466Z\",\n            \"updatedAt\": \"2024-11-02T18:46:34.466Z\",\n            \"authorId\": 1,\n            \"BlogTags\": [\n                {\n                    \"id\": 6,\n                    \"tagId\": 6,\n                    \"blogId\": 5,\n                    \"tag\": {\n                        \"tagId\": 6,\n                        \"tagName\": \"Go\"\n                    }\n                }\n            ],\n            \"BlogTemplate\": []\n        },\n        {\n            \"blogId\": 6,\n            \"title\": \"My First Blog Post\",\n            \"description\": \"This is a detailed description of my first blog post.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T20:36:04.312Z\",\n            \"updatedAt\": \"2024-11-02T20:36:04.312Z\",\n            \"authorId\": 7,\n            \"BlogTags\": [\n                {\n                    \"id\": 7,\n                    \"tagId\": 8,\n                    \"blogId\": 6,\n                    \"tag\": {\n                        \"tagId\": 8,\n                        \"tagName\": \"first\"\n                    }\n                },\n                {\n                    \"id\": 8,\n                    \"tagId\": 9,\n                    \"blogId\": 6,\n                    \"tag\": {\n                        \"tagId\": 9,\n                        \"tagName\": \"blog\"\n                    }\n                },\n                {\n                    \"id\": 9,\n                    \"tagId\": 10,\n                    \"blogId\": 6,\n                    \"tag\": {\n                        \"tagId\": 10,\n                        \"tagName\": \"post\"\n                    }\n                }\n            ],\n            \"BlogTemplate\": [\n                {\n                    \"id\": 6,\n                    \"templateId\": 1,\n                    \"blogId\": 6,\n                    \"template\": {\n                        \"templateId\": 1,\n                        \"userId\": 1,\n                        \"content\": \"This is a sample project proposal template.\",\n                        \"title\": \"Project Proposal\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                },\n                {\n                    \"id\": 7,\n                    \"templateId\": 2,\n                    \"blogId\": 6,\n                    \"template\": {\n                        \"templateId\": 2,\n                        \"userId\": 1,\n                        \"content\": \"This template outlines the agenda for our meetings.\",\n                        \"title\": \"Meeting Agenda\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                },\n                {\n                    \"id\": 8,\n                    \"templateId\": 3,\n                    \"blogId\": 6,\n                    \"template\": {\n                        \"templateId\": 3,\n                        \"userId\": 2,\n                        \"content\": \"This template can be used for various reports.\",\n                        \"title\": \"Report\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                }\n            ]\n        }\n    ],\n    \"totalCount\": 6,\n    \"totalPages\": 1,\n    \"page\": 1,\n    \"limit\": 10\n}"
+								}
+							]
+						},
+						{
+							"name": "get all blogs search params",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/search?page=1&limit=10&title=Understanding",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"search"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "title",
+											"value": "Understanding"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "search for term understanding",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/search?page=1&limit=10&title=Understanding",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"search"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												},
+												{
+													"key": "title",
+													"value": "Understanding"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"178d7ouplmt5\""
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:51:26 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"blogs\": [\n        {\n            \"blogId\": 1,\n            \"title\": \"Understanding JavaScript\",\n            \"description\": \"A comprehensive guide to JavaScript fundamentals.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 1,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T18:46:34.466Z\",\n            \"updatedAt\": \"2024-11-02T20:49:13.406Z\",\n            \"authorId\": 1,\n            \"BlogTags\": [\n                {\n                    \"id\": 1,\n                    \"tagId\": 1,\n                    \"blogId\": 1,\n                    \"tag\": {\n                        \"tagId\": 1,\n                        \"tagName\": \"Computer Science\"\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"tagId\": 2,\n                    \"blogId\": 1,\n                    \"tag\": {\n                        \"tagId\": 2,\n                        \"tagName\": \"Math\"\n                    }\n                }\n            ],\n            \"BlogTemplate\": [\n                {\n                    \"id\": 1,\n                    \"templateId\": 1,\n                    \"blogId\": 1,\n                    \"template\": {\n                        \"templateId\": 1,\n                        \"userId\": 1,\n                        \"content\": \"This is a sample project proposal template.\",\n                        \"title\": \"Project Proposal\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                },\n                {\n                    \"id\": 2,\n                    \"templateId\": 2,\n                    \"blogId\": 1,\n                    \"template\": {\n                        \"templateId\": 2,\n                        \"userId\": 1,\n                        \"content\": \"This template outlines the agenda for our meetings.\",\n                        \"title\": \"Meeting Agenda\",\n                        \"description\": null,\n                        \"language\": null,\n                        \"createdAt\": \"2024-11-02T18:46:34.326Z\",\n                        \"updatedAt\": \"2024-11-02T18:46:34.326Z\"\n                    }\n                }\n            ]\n        }\n    ],\n    \"totalCount\": 1,\n    \"totalPages\": 1,\n    \"page\": 1,\n    \"limit\": 10\n}"
+								}
+							]
+						}
+					],
+					"description": "Searches for blogs based on specified criteria, allowing users to filter results for more relevant content."
+				},
+				{
+					"name": "Reports",
+					"item": [
+						{
+							"name": "get reports",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/reports",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"reports"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "user no access example",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/reports",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"reports"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"119cb1sx4ztl\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "21"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:52:13 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"error\": \"Forbidden\"\n}"
+								},
+								{
+									"name": "get reports success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/reports",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "{{NEXTJS_PORT}}",
+											"path": [
+												"api",
+												"blogs",
+												"reports"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"x2jpp6zyuy8x\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "321"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 22:33:41 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"sortedBlogs\": [\n        {\n            \"blogId\": 1,\n            \"title\": \"My First Blog Post\",\n            \"description\": \"This is a detailed description of my first blog post.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T22:05:00.147Z\",\n            \"updatedAt\": \"2024-11-02T22:05:00.147Z\",\n            \"authorId\": 1,\n            \"BlogReport\": []\n        }\n    ],\n    \"sortedComments\": []\n}"
+								}
+							]
+						},
+						{
+							"name": "update blog report",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 1,\n  \"type\": \"blog\",\n  \"isAppropriate\": false\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/reports",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"reports"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "user no access",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/reports",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"reports"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"119cb1sx4ztl\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "21"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:52:02 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"error\": \"Forbidden\"\n}"
+								}
+							]
+						},
+						{
+							"name": "flag comment report",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": 1,\n  \"type\": \"comment\",\n  \"isAppropriate\": false\n}\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/reports",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{NEXTJS_PORT}}",
+									"path": [
+										"api",
+										"blogs",
+										"reports"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "user no access",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "http://localhost:3000/api/blogs/reports",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"blogs",
+												"reports"
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "\"119cb1sx4ztl\""
+										},
+										{
+											"key": "Content-Length",
+											"value": "21"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 02 Nov 2024 20:52:02 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"error\": \"Forbidden\"\n}"
+								}
+							]
+						}
+					],
+					"description": "Description: This endpoint is only accessible by Admins. Returns blogs and comments sorted by the number of reports (GET). Additionally, this endpoint allows for flagging content as appropriate or inappropriate (PATCH)."
+				},
+				{
+					"name": "Ranked list of all blogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/blogs/ranked?order=upvotes&ascending=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"blogs",
+								"ranked"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "upvotes"
+								},
+								{
+									"key": "ascending",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Ranked list of all blogs",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/blogs/ranked?order=upvotes&ascending=true",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"blogs",
+										"ranked"
+									],
+									"query": [
+										{
+											"key": "order",
+											"value": "upvotes"
+										},
+										{
+											"key": "ascending",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"838bwvw9637x\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "285"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Nov 2024 22:34:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"rankedBlogs\": [\n        {\n            \"blogId\": 1,\n            \"title\": \"My First Blog Post\",\n            \"description\": \"This is a detailed description of my first blog post.\",\n            \"isDeleted\": false,\n            \"isAppropriate\": true,\n            \"upvotes\": 0,\n            \"downvotes\": 0,\n            \"createdAt\": \"2024-11-02T22:05:00.147Z\",\n            \"updatedAt\": \"2024-11-02T22:05:00.147Z\",\n            \"authorId\": 1\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Get items linked to tag id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response must have the required Content-Type header\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tag object is valid\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"  ",
+									"  responseData.forEach(function(tag) {",
+									"    pm.expect(tag).to.be.an('object');",
+									"    pm.expect(tag.tagId).to.exist.and.to.be.a('number');",
+									"    pm.expect(tag.tagName).to.exist.and.to.be.a('string');",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tag ID is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(tag) {",
+									"        pm.expect(tag.tagId).to.be.a('number').and.to.be.at.least(0);",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tag name must be a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(tag) {",
+									"    pm.expect(tag.tagName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Tag name should not be empty\");",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/tags/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "linked tags to tag id 1",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/tags/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"tags",
+										"1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"hyy185hdu71w\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "68"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Nov 2024 23:28:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"linkedBlogs\": [\n        {\n            \"id\": 1,\n            \"tagId\": 1,\n            \"blogId\": 1\n        }\n    ],\n    \"linkedTemplates\": []\n}"
+						}
+					]
+				},
+				{
+					"name": "Get List of Tags",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response must have the required Content-Type header\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tag object is valid\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"  ",
+									"  responseData.forEach(function(tag) {",
+									"    pm.expect(tag).to.be.an('object');",
+									"    pm.expect(tag.tagId).to.exist.and.to.be.a('number');",
+									"    pm.expect(tag.tagName).to.exist.and.to.be.a('string');",
+									"  });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tag ID is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array');",
+									"    responseData.forEach(function(tag) {",
+									"        pm.expect(tag.tagId).to.be.a('number').and.to.be.at.least(0);",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Tag name must be a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('array');",
+									"  responseData.forEach(function(tag) {",
+									"    pm.expect(tag.tagName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Tag name should not be empty\");",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{NEXTJS_PORT}}/api/tags",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{NEXTJS_PORT}}",
+							"path": [
+								"api",
+								"tags"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "get all tags",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/tags",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"tags"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "\"ef2ij1d3d066\""
+								},
+								{
+									"key": "Content-Length",
+									"value": "222"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 31 Oct 2024 05:26:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"tagId\": 1,\n        \"tagName\": \"Computer Science\"\n    },\n    {\n        \"tagId\": 2,\n        \"tagName\": \"Math\"\n    },\n    {\n        \"tagId\": 3,\n        \"tagName\": \"Physics\"\n    },\n    {\n        \"tagId\": 4,\n        \"tagName\": \"Python\"\n    },\n    {\n        \"tagId\": 5,\n        \"tagName\": \"Java\"\n    },\n    {\n        \"tagId\": 6,\n        \"tagName\": \"Go\"\n    },\n    {\n        \"tagId\": 7,\n        \"tagName\": \"Haskell\"\n    }\n]"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "refreshToken",
+			"value": "TEMP -> run Login to set",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "TEMP -> run Login to set"
+		},
+		{
+			"key": "NEXTJS_PORT",
+			"value": "3000",
+			"type": "string"
+		}
+	]
+}
