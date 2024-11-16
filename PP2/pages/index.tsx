@@ -10,7 +10,7 @@ export default function Home() {
           Welcome to Scriptorium
         </h1>
         <p className="text-lg text-gray-600 mb-4 dark:text-gray-300">
-          Where code execution and community innovation meet.
+          Where code execution and community innovation coexist.
         </p>
 
         {/* ShadCN's Button with grey shades */}

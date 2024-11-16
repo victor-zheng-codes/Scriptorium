@@ -5,13 +5,13 @@ import { ModeToggle } from "@/components/ui/theme-mode-toggle";
 
 const Navbar = () => {
   return (
-    <nav className="sticky top-0 z-50 w-full px-4 py-2 bg-gray-100 dark:bg-[#121212] text-black dark:text-white">
+    <nav className="sticky top-0 z-50 w-full px-4 py-2 bg-gray-100 dark:bg-[#191919] text-black dark:text-white">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
         <div className="flex-shrink-0">
           <Link href="/" passHref>
             <Button
               variant="link"
-              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline font-bold"
             >
               Scriptorium
             </Button>

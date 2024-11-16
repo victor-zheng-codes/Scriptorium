@@ -1,32 +1,56 @@
-import Image from 'next/image';
-import Layout from '@/components/ui/layout';
+import { Button } from "@/components/ui/button"; 
+import Image from "next/image"; 
+import Layout from "@/components/ui/layout";
 
-const ProfileTab = () => {
+const Profile = () => {
   return (
     <Layout>
-        <div className="flex items-center space-x-4 p-4 border-b">
-        {/* Profile Picture */}
-        <div className="w-20 h-20 rounded-full overflow-hidden">
-            <Image
-            src="/avatars/bear.png" // Path to your image in the public folder
-            alt="Profile Picture"
-            width={80}
-            height={80}
-            className="object-cover"
-            />
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+      <div className="max-w-screen-xl mx-auto px-6 py-8">
+        {/* Profile Header with Edit button */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Profile</h1>
+          <Button>
+            Edit Profile
+          </Button>
         </div>
 
-        {/* Profile Information */}
-        <div>
-            <h2 className="text-2xl font-semibold">John Doe</h2>
-            <p className="text-sm text-gray-500">Software Developer</p>
-            <p className="text-sm text-gray-700 mt-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.
-            </p>
+        {/* Profile Content */}
+        <div className="flex items-center space-x-8">
+          {/* Profile Picture */}
+          <div className="w-48 h-48 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            <Image
+              src="/avatars/bear.png"
+              alt="Profile Picture"
+              width={192}
+              height={192}
+              className="object-cover"
+            />
+          </div>
+
+          {/* Profile Information */}
+          <div className="flex-1">
+            <div className="space-y-4">
+              <div className="text-lg font-semibold">John Doe</div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                johndoe@example.com
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                Software Developer
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                Location: San Francisco, CA
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                Member since: 2020
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
+      </div>
+    </div>
     </Layout>
   );
 };
 
-export default ProfileTab;
+export default Profile;
