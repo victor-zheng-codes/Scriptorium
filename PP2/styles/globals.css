@@ -64,7 +64,7 @@ body {
   }
 
   .dark {
-    --background: hsl(0, 0%, 20%); /* Dark grey background for dark mode */
+    --background: hsl(0, 0%, 15%); /* Dark grey background for dark mode */
     --foreground: #ededed;
     --card: hsl(0, 0%, 20%);
     --card-foreground: #ededed;
