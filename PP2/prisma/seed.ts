@@ -7,6 +7,18 @@ const prisma = new PrismaClient();
 async function main() {
   try{
     const hashedPassword = await bcrypt.hash("Password1!", 10);
+
+    const user = await prisma.user.findUnique({
+      where: {
+        userId: 1,
+      },
+    })
+
+    if (user){
+      console.log("User id 1 already exists")
+      return 
+    }
+
     await prisma.user.create({
         data: {
             userId: 1,
