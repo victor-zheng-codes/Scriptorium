@@ -6,7 +6,7 @@
     "firstName": "Admin",
     "lastName": "User",
     "avatar": "bear.png",
-    "phoneNumber": "+111111111",
+    "phoneNumber": "111-111-1111",
     "isAdmin": true,
     "refreshToken": ""
   },
@@ -17,7 +17,7 @@
     "firstName": "John",
     "lastName": "Doe",
     "avatar": "bear.png",
-    "phoneNumber": "+1234567890",
+    "phoneNumber": "123-456-7890",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -28,7 +28,7 @@
     "firstName": "Jane",
     "lastName": "Doe",
     "avatar": "cat.png",
-    "phoneNumber": "+1234567891",
+    "phoneNumber": "123-456-7891",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -39,7 +39,7 @@
     "firstName": "Bob",
     "lastName": "Smith",
     "avatar": "dog.png",
-    "phoneNumber": "+1234567892",
+    "phoneNumber": "123-456-7892",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -50,7 +50,7 @@
     "firstName": "Alice",
     "lastName": "Brown",
     "avatar": "duck.png",
-    "phoneNumber": "+1234567893",
+    "phoneNumber": "123-456-7893",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -61,7 +61,7 @@
     "firstName": "Charlie",
     "lastName": "Johnson",
     "avatar": "fox.png",
-    "phoneNumber": "+1234567894",
+    "phoneNumber": "123-456-7894",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -72,7 +72,7 @@
     "firstName": "Victor",
     "lastName": "Zheng",
     "avatar": "koala.png",
-    "phoneNumber": "+1234567895",
+    "phoneNumber": "123-456-7895",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -83,7 +83,7 @@
     "firstName": "Abdullah",
     "lastName": "Safi",
     "avatar": "panda.png",
-    "phoneNumber": "+1234567896",
+    "phoneNumber": "123-456-7896",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -94,7 +94,7 @@
     "firstName": "William",
     "lastName": "Liu",
     "avatar": "rabbit.png",
-    "phoneNumber": "+1234567897",
+    "phoneNumber": "123-456-7897",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -105,7 +105,7 @@
     "firstName": "Non-Admin",
     "lastName": "User",
     "avatar": "seal.png",
-    "phoneNumber": "+1234567898",
+    "phoneNumber": "123-456-7898",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -116,7 +116,7 @@
     "firstName": "Mary",
     "lastName": "Jane",
     "avatar": "bear.png",
-    "phoneNumber": "+1234567899",
+    "phoneNumber": "123-456-7899",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -127,7 +127,7 @@
     "firstName": "Tom",
     "lastName": "Clark",
     "avatar": "cat.png",
-    "phoneNumber": "+1234567800",
+    "phoneNumber": "123-456-7800",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -138,7 +138,7 @@
     "firstName": "Emily",
     "lastName": "Wright",
     "avatar": "dog.png",
-    "phoneNumber": "+1234567801",
+    "phoneNumber": "123-456-7801",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -149,7 +149,7 @@
     "firstName": "Harry",
     "lastName": "Potter",
     "avatar": "duck.png",
-    "phoneNumber": "+1234567802",
+    "phoneNumber": "123-456-7802",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -160,7 +160,7 @@
     "firstName": "Sara",
     "lastName": "Jones",
     "avatar": "fox.png",
-    "phoneNumber": "+1234567803",
+    "phoneNumber": "123-456-7803",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -171,7 +171,7 @@
     "firstName": "Peter",
     "lastName": "Parker",
     "avatar": "koala.png",
-    "phoneNumber": "+1234567804",
+    "phoneNumber": "123-456-7804",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -182,7 +182,7 @@
     "firstName": "Linda",
     "lastName": "Wilson",
     "avatar": "panda.png",
-    "phoneNumber": "+1234567805",
+    "phoneNumber": "123-456-7805",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -193,7 +193,7 @@
     "firstName": "Mike",
     "lastName": "Brown",
     "avatar": "rabbit.png",
-    "phoneNumber": "+1234567806",
+    "phoneNumber": "123-456-7806",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -204,7 +204,7 @@
     "firstName": "Lucas",
     "lastName": "Green",
     "avatar": "seal.png",
-    "phoneNumber": "+1234567807",
+    "phoneNumber": "123-456-7807",
     "isAdmin": false,
     "refreshToken": ""
   },
@@ -215,54 +215,54 @@
     "firstName": "Olivia",
     "lastName": "Blue",
     "avatar": "bear.png",
-    "phoneNumber": "+1234567808",
+    "phoneNumber": "123-456-7808",
     "isAdmin": false,
     "refreshToken": ""
   },
-    {
-      "email": "gracehopper@example.com",
-      "username": "gracehopper",
-      "password": "hashedpassword717!",
-      "firstName": "Grace",
-      "lastName": "Hopper",
-      "avatar": "cat.png",
-      "phoneNumber": "+1234567809",
-      "isAdmin": false,
-      "refreshToken": ""
-    },
-    {
-      "email": "alanmathison@example.com",
-      "username": "alanmathison",
-      "password": "hashedpassword818!",
-      "firstName": "Alan",
-      "lastName": "Turing",
-      "avatar": "dog.png",
-      "phoneNumber": "+1234567810",
-      "isAdmin": false,
-      "refreshToken": ""
-    },
-    {
-      "email": "mariecurie@example.com",
-      "username": "mariecurie",
-      "password": "hashedpassword919!",
-      "firstName": "Marie",
-      "lastName": "Curie",
-      "avatar": "duck.png",
-      "phoneNumber": "+1234567811",
-      "isAdmin": false,
-      "refreshToken": ""
-    },
-    {
-      "email": "nikolatesla@example.com",
-      "username": "nikolatesla",
-      "password": "hashedpassword020!",
-      "firstName": "Nikola",
-      "lastName": "Tesla",
-      "avatar": "fox.png",
-      "phoneNumber": "+1234567812",
-      "isAdmin": false,
-      "refreshToken": ""
-    },
+  {
+    "email": "gracehopper@example.com",
+    "username": "gracehopper",
+    "password": "hashedpassword717!",
+    "firstName": "Grace",
+    "lastName": "Hopper",
+    "avatar": "cat.png",
+    "phoneNumber": "123-456-7809",
+    "isAdmin": false,
+    "refreshToken": ""
+  },
+  {
+    "email": "alanmathison@example.com",
+    "username": "alanmathison",
+    "password": "hashedpassword818!",
+    "firstName": "Alan",
+    "lastName": "Turing",
+    "avatar": "dog.png",
+    "phoneNumber": "123-456-7810",
+    "isAdmin": false,
+    "refreshToken": ""
+  },
+  {
+    "email": "mariecurie@example.com",
+    "username": "mariecurie",
+    "password": "hashedpassword919!",
+    "firstName": "Marie",
+    "lastName": "Curie",
+    "avatar": "duck.png",
+    "phoneNumber": "123-456-7811",
+    "isAdmin": false,
+    "refreshToken": ""
+  },
+  {
+    "email": "nikolatesla@example.com",
+    "username": "nikolatesla",
+    "password": "hashedpassword020!",
+    "firstName": "Nikola",
+    "lastName": "Tesla",
+    "avatar": "fox.png",
+    "phoneNumber": "123-456-7812",
+    "isAdmin": false,
+    "refreshToken": ""
+  }, 
     {
       "email": "adaexample@example.com",
       "username": "adaexample",
@@ -270,7 +270,7 @@
       "firstName": "Ada",
       "lastName": "Lovelace",
       "avatar": "koala.png",
-      "phoneNumber": "+1234567813",
+      "phoneNumber": "123-456-7813",
       "isAdmin": false,
       "refreshToken": ""
     },
@@ -281,7 +281,7 @@
       "firstName": "Steve",
       "lastName": "Jobs",
       "avatar": "panda.png",
-      "phoneNumber": "+1234567814",
+      "phoneNumber": "123-456-7814",
       "isAdmin": false,
       "refreshToken": ""
     },
@@ -292,7 +292,7 @@
       "firstName": "Elon",
       "lastName": "Musk",
       "avatar": "rabbit.png",
-      "phoneNumber": "+1234567815",
+      "phoneNumber": "123-456-7815",
       "isAdmin": false,
       "refreshToken": ""
     },
@@ -303,7 +303,7 @@
       "firstName": "Tim",
       "lastName": "Berners-Lee",
       "avatar": "seal.png",
-      "phoneNumber": "+1234567816",
+      "phoneNumber": "123-456-7816",
       "isAdmin": false,
       "refreshToken": ""
     },
@@ -314,7 +314,7 @@
       "firstName": "Katherine",
       "lastName": "Johnson",
       "avatar": "bear.png",
-      "phoneNumber": "+1234567817",
+      "phoneNumber": "123-456-7817",
       "isAdmin": false,
       "refreshToken": ""
     },
@@ -325,8 +325,9 @@
       "firstName": "Niels",
       "lastName": "Bohr",
       "avatar": "cat.png",
-      "phoneNumber": "+1234567818",
+      "phoneNumber": "123-456-7818",
       "isAdmin": false,
       "refreshToken": ""
     }
-]
+  ]
+  
