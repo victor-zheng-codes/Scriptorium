@@ -26,6 +26,7 @@ const TemplatePage = () => {
   const [templateTags, setTemplateTags] = useState<TemplateTag[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
+  const [success, setSuccess] = useState<string | null>(null); // Error state
 
   // logged in user
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -36,7 +37,27 @@ const TemplatePage = () => {
   useEffect(() => {
     if (!id) return; // If the ID is not available, exit
 
-    const token = localStorage.getItem("token");
+    // only show erorr messages for a few seconds if they do exist
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null); // Hide the error message after 3 seconds
+      }, 3000); // 3 seconds delay
+
+      // Cleanup timeout on component unmount or when error changes
+      return () => clearTimeout(timer);
+    }
+
+    // only show success messages for a few seconds if they do exist
+    if (success) {
+      const timer = setTimeout(() => {
+        setSuccess(null); // Hide the error message after 3 seconds
+      }, 3000); // 3 seconds delay
+
+      // Cleanup timeout on component unmount or when error changes
+      return () => clearTimeout(timer);
+    }
+
+    let token = localStorage.getItem("token");
 
     if (token) {
       setIsLoggedIn(true); // User is logged in, token exists
@@ -69,7 +90,7 @@ const TemplatePage = () => {
     };
 
     fetchTemplate();
-  }, [id]);
+  }, [id, error]);
 
   const handleDelete = async () => {
     if (!id) return;
@@ -77,47 +98,62 @@ const TemplatePage = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this template?");
     if (!confirmDelete) return;
 
+    let token = localStorage.getItem("token");
 
     try {
       const res = await fetch(`/api/templates/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (res.ok) {
+        // setSuccess("Template deleted successfully.");
         alert("Template deleted successfully.");
         router.push("/templates"); // Redirect to templates list page
-      } else {
-        setError("Error deleting template.");
+      } else if (res.status === 401){
+        setError("Unauthorized");
+      }
+      else {
+        setError("Error deleting templates, please contact the system admin");
       }
     } catch (error) {
       console.error("Error deleting template:", error);
       setError("An error occurred while deleting the template.");
     }
   };
-
 
   const handleFork = async () => {
     if (!id) return;
 
+    let token = localStorage.getItem("token");
+
     try {
       const res = await fetch(`/api/templates/${id}`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (res.ok) {
-
         const data = await res.json();
+
         setTemplate(data.template);
-        router.push(`/templates/${data.templateId}`); 
+        setSuccess("Successfully forked template with new template id " + data.templateId);
+
+        router.push(`/templates/${data.templateId}`).then(() => {
+          router.reload(); // Force a full page reload
+        });
       } else {
         setError("Error forking template.");
       }
     } catch (error) {
-      console.error("Error deleting template:", error);
-      setError("An error occurred while deleting the template.");
+      console.error("Error forking template:", error);
+      setError("An error occurred while forking the template.");
     }
   };
-
 
   if (loading) {
     return (
@@ -128,18 +164,6 @@ const TemplatePage = () => {
       </Layout>
     );
   }
-
-
-  // if (error) {
-    // return (
-    //   <Layout>
-    //     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
-    //       <h1 className="text-2xl">{error}</h1>
-    //     </div>
-    //   </Layout>
-    // );
-  // }
-
 
   if (!template) {
     return (
@@ -152,17 +176,19 @@ const TemplatePage = () => {
   }
 
   return (
-
     <Layout>
+      {/* Error Message at the Top */}
+      {error && (<div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+        <p className="font-bold">Error</p>
+        <p>{error}</p>
+      </div>
+      )}
 
-      {/* errors show up here */}
-      { error && 
-            (
-                <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
-                  <h1 className="text-2xl">{error}</h1>
-                </div>
-            )
-      }
+      {success && (<div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+        <p className="font-bold">Success</p>
+        <p>{success}</p>
+      </div>
+      )}
 
       <div className="container mx-auto px-8 py-16">
         {/* Template Title and Metadata */}
@@ -206,19 +232,18 @@ const TemplatePage = () => {
 
         {/* Delete Button */}
         <div className="mt-8">
-        {isLoggedIn && 
-          (
-          <button
-            onClick={handleDelete}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
-            Delete Template
-          </button>
-        )}
+          {isLoggedIn && (
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+            >
+              Delete Template
+            </button>
+          )}
         </div>
 
-           {/* Fork Button, does not need to be authorized */}
-           <div className="mt-8">
+        {/* Fork Button */}
+        <div className="mt-8">
           <button
             onClick={handleFork}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"

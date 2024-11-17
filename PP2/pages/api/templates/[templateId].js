@@ -176,9 +176,10 @@ export default async function handler(req, res) {
 
     const userId = verifyToken(token); // Verify token and get user ID
 
-    if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+    // forking just requires you to login
+    // if (!userId) {
+    //   return res.status(401).json({ message: 'Unauthorized' });
+    // }
 
     try {
       const originalTemplate = await prisma.template.findUnique({
@@ -247,6 +248,8 @@ export default async function handler(req, res) {
     }
 
     const userId = verifyToken(token); // Verify token and get user ID
+
+    console.log(userId)
 
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
