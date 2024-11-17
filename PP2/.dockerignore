@@ -1,0 +1,7 @@
+# Exclude the directory where tar files are stored
+docker_images/
+
+# Exclude other unnecessary files or directories
+*.log
+node_modules
+*.tmp
