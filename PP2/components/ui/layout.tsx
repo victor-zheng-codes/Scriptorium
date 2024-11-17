@@ -17,7 +17,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Navbar />
 
       {/* Ensure the content below the navbar does not shift */}
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <main className="bg-gray-50 dark:bg-gray-900 min-h-screen">
         {children}
       </main>
     </ThemeProvider>
