@@ -98,8 +98,7 @@ const TemplatePage = () => {
             {template.description}
           </p>
           <p className="text-sm text-gray-500">
-            Language: {template.language} | Created:{" "}
-            {new Date(template.createdAt).toLocaleString()}
+            Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} 
           </p>
         </div>
 
