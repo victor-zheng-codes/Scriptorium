@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/ui/layout";
+import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -36,6 +37,10 @@ const Blogs = () => {
   const [title, setTitle] = useState<string>("");
   const [tags, setTags] = useState<string>("");
   const [templates, setTemplates] = useState<string>("");
+  const [activeTitle, setActiveTitle] = useState<string>("");
+  const [activeTags, setActiveTags] = useState<string>("");
+  const [activeTemplates, setActiveTemplates] = useState<string>("");
+  const [activeContent, setActiveContent] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -69,10 +74,10 @@ const Blogs = () => {
 
     try {
       const queryParams = new URLSearchParams({
-        ...(content && { content }),
-        ...(title && { title }),
-        ...(tags && { tags }),
-        ...(templates && { templates }),
+        ...(activeContent && { content: activeContent }),
+        ...(activeTitle && { title: activeTitle }),
+        ...(activeTags && { tags: activeTags }),
+        ...(activeTemplates && { templates: activeTemplates }),
         page: page.toString(),
         limit: limit.toString(),
       });
@@ -98,12 +103,12 @@ const Blogs = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchBlogs();
-  // }, [page]);
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    setActiveContent(content);
+    setActiveTitle(title);
+    setActiveTags(tags);
+    setActiveTemplates(templates);
     setPage(1); // Reset to page 1 when new search criteria are entered
     router.push(
       {
@@ -119,37 +124,40 @@ const Blogs = () => {
     <Layout>
       <div className="p-4 space-y-4">
         <form onSubmit={handleSearch} className="space-y-4">
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 text-gray-600 dark:text-gray-300">
             <input
               type="text"
               placeholder="Search by content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="p-2 border rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md w-1/4"
             />
             <input
               type="text"
               placeholder="Search by title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="p-2 border rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md w-1/4"
             />
             <input
               type="text"
               placeholder="Tags (comma-separated)"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="p-2 border rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md w-1/4"
             />
             <input
               type="text"
               placeholder="Templates (comma-separated)"
               value={templates}
               onChange={(e) => setTemplates(e.target.value)}
-              className="p-2 border rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md w-1/4"
             />
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 text-gray-600 dark:text-gray-300">
+            <Label>
+              Items Per Page:
+            </Label>
             <input
               type="number"
               placeholder="Limit"
@@ -159,9 +167,9 @@ const Blogs = () => {
                 // Enforce minimum limit of 1
                 setLimit(Math.max(newLimit, 1));
               }}
-              className="p-2 border rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md w-1/6"
             />
-            <Button type="submit" disabled={isLoading} className="bg-blue-500 text-white rounded-md px-4 py-2">
+            <Button type="submit" disabled={isLoading} >
               {isLoading ? "Searching..." : "Search"}
             </Button>
           </div>
@@ -169,12 +177,12 @@ const Blogs = () => {
 
         <div className="space-y-4">
           {blogs.length === 0 && !isLoading ? (
-            <div className="text-center text-gray-500">
+            <div className="text-center text-gray-600 dark:text-gray-300">
               No results found for your search.
             </div>
           ) : (
           blogs.map((blog) => (
-            <div key={blog.blogId} className="p-4 border rounded-md">
+            <div key={blog.blogId} className="p-4 border border-gray-500 rounded-md text-gray-600 dark:text-gray-300">
               <h2 className="text-xl font-bold">
                 <Link href={`/blogs/${blog.blogId}`} className="text-blue-500 hover:underline">
                   {blog.title}
@@ -193,7 +201,7 @@ const Blogs = () => {
         </div>
 
         <div className="flex justify-between items-center">
-          <button
+          <Button
             disabled={page === 1 || isLoading || totalPages === 0}
             onClick={() => {
               const newPage = Math.max(page - 1, 1); // Calculate the new page
@@ -207,14 +215,13 @@ const Blogs = () => {
                 { shallow: true } // Avoid full page reload
               );
             }}
-            className="px-4 py-2 bg-gray-300 rounded-md"
           >
             Previous
-          </button>
-          <span className="text-center">
+          </Button>
+          <span className="text-gray-600 dark:text-gray-300">
             Page {totalPages === 0 ? 0 : page} of {totalPages}
           </span>
-          <button
+          <Button
             disabled={page === totalPages || isLoading || totalPages === 0}
             onClick={() => { 
               const newPage = Math.min(page + 1, totalPages); // Calculate the new page
@@ -228,10 +235,9 @@ const Blogs = () => {
                 { shallow: true } // Avoid full page reload
               );
             }}
-            className="px-4 py-2 bg-gray-300 rounded-md"
           >
             Next
-          </button>
+          </Button>
         </div>
       </div>
     </Layout>

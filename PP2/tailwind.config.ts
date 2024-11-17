@@ -43,6 +43,7 @@ const config: Config = {
           900: "hsla(210, 11.73%, 8.05%, 1)", // Your dark mode gray
           950: "rgba(13, 13, 13, 1)",
           150: "rgba(217, 217, 217, 1)",
+          925: "rgba(26, 26, 26, 1)"
         },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
