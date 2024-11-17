@@ -5,7 +5,7 @@ FROM golang:1.21
 WORKDIR /usr/src/app
 
 # Copy the user's Go code into the container
-COPY . .
+COPY tmp .
 
 # Build the Go code (assuming the main file is named `main.go`)
 RUN go build -o main main.go

@@ -5,7 +5,7 @@ FROM openjdk:20
 WORKDIR /usr/src/app
 
 # Copy the user's code into the container
-COPY . .
+COPY tmp .
 
 # Compile Java files (if needed)
 # RUN javac Main.java

@@ -5,7 +5,7 @@ FROM ruby:3.3
 WORKDIR /usr/src/app
 
 # Copy the user's code into the container
-COPY . .
+COPY tmp .
 
 # Install any Ruby dependencies (optional)
 # RUN bundle install

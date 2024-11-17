@@ -5,7 +5,7 @@ FROM rust:1.73
 WORKDIR /usr/src/app
 
 # Copy the user's code into the container
-COPY . .
+COPY tmp .
 
 # Build the Rust project
 RUN cargo build --release
