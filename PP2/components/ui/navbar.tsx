@@ -5,7 +5,7 @@ import { ModeToggle } from "@/components/ui/theme-mode-toggle";
 
 const Navbar = () => {
   return (
-    <nav className="sticky top-0 z-50 w-full px-4 py-2 bg-gray-100 dark:bg-[#191919] text-black dark:text-white">
+    <nav className="sticky top-0 w-full px-4 py-2 bg-gray-100 dark:bg-[#191919] text-black dark:text-white z-10">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
         <div className="flex-shrink-0">
           <Link href="/" passHref>
@@ -20,36 +20,36 @@ const Navbar = () => {
 
         <div className="flex-1 flex justify-center space-x-8">
           <Link href="/code" passHref>
-          <Button
-            variant="link"
-            className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
-          >
-            Code
-          </Button>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Code
+            </Button>
           </Link>
           <Link href="/templates" passHref>
-          <Button
-            variant="link"
-            className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
-          >
-            Templates
-          </Button>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Templates
+            </Button>
           </Link>
           <Link href="/blogs" passHref>
-          <Button
-            variant="link"
-            className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
-          >
-            Blogs
-          </Button>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Blogs
+            </Button>
           </Link>
           <Link href="/create" passHref>
-          <Button
-            variant="link"
-            className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
-          >
-            Create
-          </Button>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Create
+            </Button>
           </Link>
         </div>
 
