@@ -5,7 +5,7 @@ FROM perl:5.36
 WORKDIR /usr/src/app
 
 # Copy the user's code into the container
-COPY . .
+COPY tmp .
 
 # Command to run the Perl file
 CMD ["perl", "main.pl"]

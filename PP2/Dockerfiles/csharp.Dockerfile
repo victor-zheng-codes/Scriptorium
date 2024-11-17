@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0
 WORKDIR /usr/src/app
 
 # Copy the user's C# project files into the container
-COPY . .
+COPY tmp .
 
 # Restore, build, and run the application
 RUN dotnet restore

@@ -5,7 +5,7 @@ FROM gcc:12
 WORKDIR /usr/src/app
 
 # Copy the user's code into the container
-COPY . .
+COPY tmp .
 
 # Compile the C++ code (assuming the main file is named `main.cpp`)
 RUN g++ -o main main.cpp

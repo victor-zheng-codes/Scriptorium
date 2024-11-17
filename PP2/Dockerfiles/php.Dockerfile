@@ -5,7 +5,7 @@ FROM php:8.2-cli
 WORKDIR /usr/src/app
 
 # Copy the user's code into the container
-COPY . .
+COPY tmp .
 
 # Command to run the PHP file
 CMD ["php", "main.php"]

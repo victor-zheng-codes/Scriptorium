@@ -5,7 +5,7 @@ FROM python:3.10
 WORKDIR /usr/src/app
 
 # Copy the user's code into the container
-COPY . .
+COPY tmp .
 
 # Install any Python dependencies (optional)
 # RUN pip install --no-cache-dir -r requirements.txt
