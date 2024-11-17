@@ -28,6 +28,7 @@ const Templates = () => {
   const [languageFilter, setLanguageFilter] = useState<string>("");
   const [titleFilter, setTitleFilter] = useState<string>("");
   const [descriptionFilter, setDescriptionFilter] = useState<string>("");
+  const [contentFilter, setContentFilter] = useState<string>("");
 
   const router = useRouter();
 
@@ -40,6 +41,7 @@ const Templates = () => {
       ...(languageFilter && { language: languageFilter }),
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
+      ...(contentFilter && { content: contentFilter }),
     });
 
     console.log("params " + params)
@@ -89,11 +91,12 @@ const Templates = () => {
   const debouncedLanguageFilter = useDebounce(languageFilter, 500);
   const debouncedTitleFilter = useDebounce(titleFilter, 500);
   const debouncedDescriptionFilter = useDebounce(descriptionFilter, 500);
+  const debouncedContentFilter = useDebounce(contentFilter, 500);
 
   useEffect(() => {
     // Fetch templates whenever the filters or page change
     fetchTemplates(currentPage);
-  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter]);
+  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -114,6 +117,9 @@ const Templates = () => {
       case "description":
         setDescriptionFilter(value);
         break;
+      case "content":
+          setContentFilter(value);
+          break;
       default:
         break;
     }
@@ -139,15 +145,15 @@ const Templates = () => {
     );
   }
 
-  if (!templates.length) {
-    return (
-      <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
-          <h1 className="text-2xl">No templates found.</h1>
-        </div>
-      </Layout>
-    );
-  }
+  // if (!templates.length) {
+  //   return (
+  //     <Layout>
+  //       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+  //         <h1 className="text-2xl">No templates found.</h1>
+  //       </div>
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout>
@@ -185,33 +191,46 @@ const Templates = () => {
                 onChange={(e) => handleFilterChange("description", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-700 dark:text-white"
               />
+              <input
+                type="text"
+                placeholder="Filter by code content"
+                value={contentFilter}
+                onChange={(e) => handleFilterChange("content", e.target.value)}
+                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
             </div>
           </div>
 
-          {/* Templates List */}
-          <div className="container mx-auto px-16">
-            {templates.map((template) => (
-              <div
-                key={template.templateId}
-                className="mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
-              >
-                <h2 className="text-2xl font-bold mb-2">{template.title}</h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {template.description}
-                </p>
-                <SyntaxHighlighter
-                  language={template.language}
-                  style={materialDark}
-                  showLineNumbers
-                >
-                  {template.content}
-                </SyntaxHighlighter>
-                <p className="text-sm text-gray-500 mt-2">
-                  Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
-                </p>
-              </div>
-            ))}
+        {/* Templates List */}
+        <div className="container mx-auto px-16">
+        {templates.length === 0 ? (
+          <div className="text-center text-xl text-gray-600 dark:text-gray-300 mt-8">
+            No results match the applied filter.
           </div>
+        ) : (
+          templates.map((template) => (
+            <div
+              key={template.templateId}
+              className="mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
+            >
+              <h2 className="text-2xl font-bold mb-2">{template.title}</h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                {template.description}
+              </p>
+              <SyntaxHighlighter
+                language={template.language}
+                style={materialDark}
+                showLineNumbers
+              >
+                {template.content}
+              </SyntaxHighlighter>
+              <p className="text-sm text-gray-500 mt-2">
+                Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
 
           {/* Pagination */}
           <div className="flex justify-between items-center mt-8">
