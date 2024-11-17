@@ -135,7 +135,7 @@ const Templates = () => {
     );
   }
 
-  if (error) {
+  if (error !== null) {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
@@ -151,7 +151,7 @@ const Templates = () => {
         {/* Main Content Area */}
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
           {/* Header */}
-          <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
+          <div className="flex justify-between px-8 py-8">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
               Code Templates
             </h1>
@@ -159,7 +159,7 @@ const Templates = () => {
 
           {/* Filters */}
           <div className="container mx-auto px-16 mb-8">
-            <div className="flex space-x-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <input
                 type="text"
                 placeholder="Filter by language"
@@ -235,7 +235,7 @@ const Templates = () => {
       </div>
 
           {/* Pagination */}
-          <div className="flex justify-between items-center mt-8">
+          <div className="flex justify-between items-center mt-10">
             <Button
               disabled={currentPage === 1}
               onClick={() => handlePageChange(currentPage - 1)}
