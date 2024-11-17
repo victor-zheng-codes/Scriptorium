@@ -12,4 +12,4 @@ RUN dotnet restore
 RUN dotnet build
 
 # Command to run the C# application (assuming it's a console app)
-CMD ["dotnet", "run", "<", "input.txt"]
+CMD dotnet run < input.txt

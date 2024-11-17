@@ -11,4 +11,4 @@ COPY . .
 RUN go build -o main main.go
 
 # Command to run the Go executable
-CMD ["./main", "<", "input.txt"]
+CMD ./main < input.txt

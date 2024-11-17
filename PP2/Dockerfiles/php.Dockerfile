@@ -8,4 +8,4 @@ WORKDIR /usr/src/app/tmp
 COPY . .
 
 # Command to run the PHP file
-CMD ["php", "main.php", "<", "input.txt"]
+CMD php main.php < input.txt

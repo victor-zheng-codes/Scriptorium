@@ -8,4 +8,4 @@ WORKDIR /usr/src/app/tmp
 COPY . .
 
 # Command to run the Perl file
-CMD ["perl", "main.pl", "<", "input.txt"]
+CMD perl main.pl < input.txt

@@ -11,4 +11,4 @@ COPY . .
 # RUN bundle install
 
 # Command to run the Ruby file
-CMD ["ruby", "main.rb", "<", "input.txt"]
+CMD ruby main.rb < input.txt

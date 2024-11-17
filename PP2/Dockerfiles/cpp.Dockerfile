@@ -11,4 +11,4 @@ COPY . .
 RUN g++ -o main main.cpp
 
 # Command to run the C++ executable
-CMD ["./main", "<", "input.txt"]
+CMD ./main < input.txt

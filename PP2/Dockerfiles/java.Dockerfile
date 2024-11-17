@@ -11,4 +11,4 @@ COPY . .
 RUN javac Main.java
 
 # Command to run the Java file
-CMD ["java", "Main", "<", "input.txt"]
+CMD java Main < input.txt

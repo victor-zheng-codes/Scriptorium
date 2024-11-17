@@ -11,4 +11,4 @@ COPY . .
 # RUN npm install
 
 # Command to run the Node.js file
-CMD ["node", "main.js", "<", "input.txt"]
+CMD node main.js < input.txt

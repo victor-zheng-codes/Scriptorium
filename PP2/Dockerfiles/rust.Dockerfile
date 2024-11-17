@@ -11,4 +11,4 @@ COPY . .
 RUN cargo build --release
 
 # Command to run the Rust binary
-CMD ["cargo", "run", "<", "input.txt"]
+CMD cargo run < input.txt
