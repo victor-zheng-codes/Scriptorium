@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <Layout>
       {/* Main Content */}
-      <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center vertical-align flex-grow">
         <h1 className="text-4xl font-bold mb-3 text-gray-900 dark:text-gray-100">
           Welcome to Scriptorium
         </h1>

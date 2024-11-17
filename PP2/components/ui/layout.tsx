@@ -14,11 +14,11 @@ const Layout = ({ children }: LayoutProps) => {
       enableSystem
       disableTransitionOnChange
     >
-      <Navbar />
-
-      {/* Ensure the content below the navbar does not shift */}
-      <main className="bg-gray-50 dark:bg-gray-900 min-h-screen">
-        {children}
+      {/* Make the layout a flex container */}
+      <main className="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
+        <Navbar />
+        {/* Ensure the children container grows to fill the remaining space */}
+        <div className="flex-grow flex flex-col">{children}</div>
       </main>
     </ThemeProvider>
   );

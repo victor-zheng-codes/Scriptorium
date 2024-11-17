@@ -173,7 +173,7 @@ const Profile = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen flex">
+      <div className="flex flex-grow">
         {/* Dark Side Bars */}
         <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
 
