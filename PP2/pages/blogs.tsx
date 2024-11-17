@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/ui/layout";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -63,13 +63,22 @@ const Blogs = () => {
       if (Number(limit) < 1) setLimit(1);
       else setLimit(Number(limit));
     }
-    console.log(content)
 
     fetchBlogs();
   }, [router.query]);
 
+  const searchButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    // Trigger the search button click on page load
+    setTimeout( () => {
+      if (searchButtonRef.current) {
+        searchButtonRef.current.click();
+      }
+    }, 100);
+  }, []); // Empty dependency array ensures this runs only once on page load
+
   const fetchBlogs = async () => {
-    console.log("fetchBlogs called")
     setIsLoading(true);
 
     try {
@@ -81,11 +90,6 @@ const Blogs = () => {
         page: page.toString(),
         limit: limit.toString(),
       });
-
-      console.log(content)
-      console.log(title)
-      console.log(tags)
-      console.log(templates)
 
       const response = await fetch(`/api/blogs/search?${queryParams.toString()}`);
       const data: ApiResponse = await response.json();
@@ -169,7 +173,7 @@ const Blogs = () => {
               }}
               className="p-2 border border-gray-500 rounded-md w-1/6"
             />
-            <Button type="submit" disabled={isLoading} >
+            <Button type="submit" disabled={isLoading} ref={searchButtonRef} >
               {isLoading ? "Searching..." : "Search"}
             </Button>
           </div>
