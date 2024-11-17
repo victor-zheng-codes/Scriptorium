@@ -15,7 +15,7 @@ export default function Home() {
 before:absolute before:inset-0 before:animate-typewriter
 before:bg-gray-50
 after:absolute after:inset-0 after:w-[0.125em] after:animate-caret
-after:bg-black"
+after:bg-gray-900 dark:before:bg-gray-900 dark:after:text-gray-100 dark:after:bg-gray-100"
         >
           Where code execution and community innovation coexist.
         </p>
