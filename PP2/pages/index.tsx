@@ -21,12 +21,12 @@ export default function Home() {
   return (
     <Layout>
       {/* Main Content */}
-      <div className="flex flex-col items-center justify-center vertical-align flex-grow">
-        <h1 className="text-4xl font-bold mb-3 text-gray-900 dark:text-gray-100">
+      <div className="flex flex-col items-center justify-center flex-grow text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-3 text-gray-900 dark:text-gray-100">
           Welcome to Scriptorium
         </h1>
         <p
-          className="text-lg text-gray-600 mb-4 dark:text-gray-300 relative w-[max-content] font-mono
+          className="text-lg md:text-xl text-gray-600 mb-4 dark:text-gray-300 relative md:w-[max-content] w-full font-mono
           before:absolute before:inset-0 before:animate-typewriter
           before:bg-gray-50
           after:absolute after:inset-0 after:w-[0.125em] after:animate-caret
