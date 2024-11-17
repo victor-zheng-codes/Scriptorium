@@ -111,14 +111,20 @@ export default async function handler(req, res) {
 
     try {
         // Write code and standard input to corresponding files
-        await exec(`${writeCodeCommand} && ${writeInputCommand}`, { timeout: TIMEOUT });
+        const { stdout, stderr} = await exec(`${writeCodeCommand} && ${writeInputCommand}`, { timeout: TIMEOUT });
+        res.status(200).json({
+            success: true,
+            output: stdout,
+            error: stderr
+        })
+
     } catch (error) {
         const isTimeout = error.signal === "SIGTERM";
 
         return res.status(400).json({
             success: false,
-            error: isTimeout ? "Execution timed out (10 second limit)" : error.stderr || "Runtime error occurred.",
-            // output: error.stdout || "",
+            error: isTimeout ? "Execution timed out (10 second limit)" : error.stderr || "Compilation or runtime error occurred.",
+            output: error.stdout || "",
             // warnings
         });
     }
