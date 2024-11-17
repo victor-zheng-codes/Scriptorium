@@ -138,7 +138,7 @@ const EditProfile = () => {
   return (
     <Layout>
       <div className="min-h-screen flex">
-        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
+      <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
 
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
@@ -268,7 +268,7 @@ const EditProfile = () => {
           </div>
         </div>
 
-    <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
+        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
       </div>
     </Layout>
   );

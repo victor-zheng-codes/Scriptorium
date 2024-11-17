@@ -1,7 +1,7 @@
 import prisma from '../../../utils/prisma-client';
 
 export default async function handler(req, res) {
-  let { title, content, tags, page = 1, limit = 10  } = req.query;
+  let { title, content, language, description, tags, page = 1, limit = 10  } = req.query;
 
   page = Number(page)
   limit = Number(limit)
@@ -17,6 +17,8 @@ export default async function handler(req, res) {
       return [
           content ? { content: { contains: content } } : undefined,
           title ? { title: { contains: title } } : undefined,
+          description ? {description: {contains: description} }: undefined,
+          language ? {language: {contains: language} }: undefined,
           tags && tags.length > 0 ? {
             templatesTags: {
                   some: {

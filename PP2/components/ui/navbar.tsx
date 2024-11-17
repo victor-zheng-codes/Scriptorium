@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react"; // Importing hooks from React
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -6,47 +6,45 @@ import { ModeToggle } from "@/components/ui/theme-mode-toggle";
 
 const Navbar = () => {
   const [avatar, setAvatar] = useState<string | null>(null); // To hold the avatar URL
+  const [isOpen, setIsOpen] = useState(false); // To toggle the mobile menu
 
   useEffect(() => {
     const fetchUserData = async () => {
-      // Retrieve the authentication token (assuming it's stored in localStorage)
-      const token = localStorage.getItem("token"); // Modify this if your token is stored elsewhere
+      const token = localStorage.getItem("token");
 
-      // If the token is not found, we can either redirect or leave avatar as null
       if (!token) {
-        setAvatar(null); // No token means not logged in, no avatar
+        setAvatar(null); 
         return;
       }
 
       try {
-        // Make the API call with the Bearer token in the Authorization header
         const response = await fetch("/api/user/data", {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`, // Add the token here
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (response.ok) {
           const data = await response.json();
-          // If avatar is null or empty, set to default avatar (bear.png)
           setAvatar(data.user.avatar || "bear.png");
         } else {
-          console.error("Failed to fetch user data:", response.status);
-          setAvatar(null); // Fallback in case of an error
+          setAvatar(null);
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        setAvatar(null); // Fallback in case of a fetch error
+        setAvatar(null);
       }
     };
 
     fetchUserData();
   }, []);
 
-  // Determine the avatar link:
-  // If no avatar (null or undefined), use user.png. If avatar is available, use it, otherwise fallback to "bear.png".
   const avatarLink = avatar ? `/avatars/${avatar}` : "/avatars/user.png";
+
+  // Toggle the mobile menu
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <nav className="sticky top-0 w-full px-4 py-2 bg-gray-100 dark:bg-[#191919] text-black dark:text-white z-10">
@@ -62,7 +60,31 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex-1 flex justify-center space-x-8">
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <button
+            onClick={toggleMenu}
+            className="text-black dark:text-white focus:outline-none"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Links for larger screens */}
+        <div className="hidden md:flex flex-1 justify-center space-x-8">
           <Link href="/code" passHref>
             <Button
               variant="link"
@@ -101,7 +123,6 @@ const Navbar = () => {
           <ModeToggle />
           <Link href="/profile">
             <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
-              {/* Dynamically set the avatar image based on the fetched data */}
               <Image
                 src={avatarLink} // Use the avatar from state or fallback to default
                 alt="Profile Picture"
@@ -113,6 +134,44 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {isOpen && (
+        <div className="md:hidden flex flex-col space-y-4 mt-4 text-center">
+          <Link href="/code" passHref>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Code
+            </Button>
+          </Link>
+          <Link href="/templates" passHref>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Templates
+            </Button>
+          </Link>
+          <Link href="/blogs" passHref>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Blogs
+            </Button>
+          </Link>
+          <Link href="/create" passHref>
+            <Button
+              variant="link"
+              className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
+            >
+              Create
+            </Button>
+          </Link>
+        </div>
+      )}
     </nav>
   );
 };
