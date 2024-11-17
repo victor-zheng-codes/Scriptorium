@@ -81,7 +81,14 @@ const Code = () => {
             <option value="java">Java</option>
             <option value="cpp">C++</option>
             <option value="c">C</option>
+            <option value="csharp">C#</option>
+            <option value="go">Golang</option>
+            <option value="ruby">Ruby</option>
+            <option value="perl">Perl</option>
+            <option value="php">PHP</option>
+            <option value="rust">Rust</option>
           </select>
+
           <button
             id="execute-button"
             onClick={handleRunButtonClick} // Call the function to execute the code
@@ -90,6 +97,7 @@ const Code = () => {
           >
             {isLoading ? 'Running...' : 'Run'}
           </button>
+
           <button
             id="clear-output-button"
             onClick={handleClearOutput}
@@ -99,32 +107,36 @@ const Code = () => {
           </button>
         </div>
 
+        <div className="flex gap-1">
         {/* Code textarea */}
         <textarea 
           id="code-editor" 
-          className="w-1/2 h-64 p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
+          className="w-1/2 h-[40rem] p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
           value={code} // Bind code state to textarea value
           onChange={(e) => setCode(e.target.value)} // Update code state on change
           onKeyDown={handleKeyDown}
         />
 
-        {/* Output textarea (top-right corner) */}
+        <div className="flex flex-col w-1/2 gap-1">
+        {/* Output textarea */}
         <textarea
           id="output-editor"
-          className="w-1/2 h-64 p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
+          className="w-full h-[26.75rem] p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
           value={output}
           readOnly
           disabled
         />
 
-        {/* Standard input textarea (bottom-right corner) */}
+        {/* Standard input textarea */}
         <textarea
           id="input-editor"
-          className="w-1/2 h-32 p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
+          className="w-full h-[13rem] p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
           value={standardInput}
           onChange={(e) => setStandardInput(e.target.value)}
           onKeyDown={handleKeyDown}
         />
+        </div>
+        </div>
     </Layout>
   );
 };

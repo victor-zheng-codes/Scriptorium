@@ -2,10 +2,10 @@
 FROM perl:5.36
 
 # Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/tmp
 
 # Copy the user's code into the container
-COPY tmp .
+COPY . .
 
 # Command to run the Perl file
-CMD ["perl", "main.pl"]
+CMD ["perl", "main.pl", "<", "input.txt"]

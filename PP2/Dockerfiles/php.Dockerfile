@@ -2,10 +2,10 @@
 FROM php:8.2-cli
 
 # Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/tmp
 
 # Copy the user's code into the container
-COPY tmp .
+COPY . .
 
 # Command to run the PHP file
-CMD ["php", "main.php"]
+CMD ["php", "main.php", "<", "input.txt"]

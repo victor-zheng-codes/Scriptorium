@@ -2,13 +2,13 @@
 FROM node:20
 
 # Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/tmp
 
 # Copy the user's code into the container
-COPY tmp .
+COPY . .
 
 # Install any Node.js dependencies (optional)
 # RUN npm install
 
 # Command to run the Node.js file
-CMD ["node", "main.js"]
+CMD ["node", "main.js", "<", "input.txt"]
