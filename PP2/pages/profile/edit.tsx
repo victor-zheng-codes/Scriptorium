@@ -84,28 +84,34 @@ const EditProfile = () => {
       setPasswordMatchError("Passwords do not match.");
       return;
     }
-    
+  
     try {
       setLoading(true);
       setError(null);
       setPasswordMatchError(null); // Clear any previous errors
-
+  
       const token = localStorage.getItem("token");
-
+  
       if (!token) {
         router.push("/login");
         return;
       }
-
+  
+      // Create the payload, excluding password if it's empty
+      const payload = {
+        ...editedUser,
+        ...(password && { password }), // Only include password if it's not empty
+      };
+  
       const res = await fetch("/api/user/profile", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...editedUser, password }), // Include password in the request body
+        body: JSON.stringify(payload), // Send the payload with or without password
       });
-
+  
       if (res.ok) {
         router.push("/profile");
       } else {

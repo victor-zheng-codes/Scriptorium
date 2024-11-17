@@ -12,9 +12,9 @@ const Navbar = () => {
       // Retrieve the authentication token (assuming it's stored in localStorage)
       const token = localStorage.getItem("token"); // Modify this if your token is stored elsewhere
 
-      // If the token is not found, redirect to login (or handle as needed)
+      // If the token is not found, we can either redirect or leave avatar as null
       if (!token) {
-        setAvatar(null) // Redirect to the login page if no token is found
+        setAvatar(null); // No token means not logged in, no avatar
         return;
       }
 
@@ -29,24 +29,24 @@ const Navbar = () => {
 
         if (response.ok) {
           const data = await response.json();
-          // If avatar is null, set the default avatar
-          setAvatar(data.avatar || "bear.png");
+          // If avatar is null or empty, set to default avatar (bear.png)
+          setAvatar(data.user.avatar || "bear.png");
         } else {
           console.error("Failed to fetch user data:", response.status);
+          setAvatar(null); // Fallback in case of an error
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setAvatar(null);
+        setAvatar(null); // Fallback in case of a fetch error
       }
     };
 
     fetchUserData();
   }, []);
 
-  let avatarLink = "/avatars/user.png"
-  if (avatar !== null) {
-    avatarLink = "/avatars/" + avatar
-  }
+  // Determine the avatar link:
+  // If no avatar (null or undefined), use user.png. If avatar is available, use it, otherwise fallback to "bear.png".
+  const avatarLink = avatar ? `/avatars/${avatar}` : "/avatars/user.png";
 
   return (
     <nav className="sticky top-0 w-full px-4 py-2 bg-gray-100 dark:bg-[#191919] text-black dark:text-white z-10">

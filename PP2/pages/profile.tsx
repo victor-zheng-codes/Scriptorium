@@ -3,6 +3,7 @@ import Image from "next/image";
 import Layout from "@/components/ui/layout";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { FiEdit } from "react-icons/fi"; // Import the pencil icon
 
 interface User {
   username: string;
@@ -19,6 +20,9 @@ const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State to control modal visibility
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null); // Track selected avatar
+  const [currentAvatar, setCurrentAvatar] = useState<string | null>(null); // Track the current avatar
 
   const router = useRouter();
 
@@ -42,6 +46,8 @@ const Profile = () => {
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
+          setSelectedAvatar(data.user.avatar || "bear.png"); // Preselect current avatar
+          setCurrentAvatar(data.user.avatar || "bear.png"); // Set the current avatar
         } else {
           if (res.status === 401) {
             setError("Unauthorized. Please log in again.");
@@ -78,6 +84,57 @@ const Profile = () => {
       setError("An error occurred while logging out.");
     }
   };
+
+  const handleSaveAvatar = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token || !selectedAvatar) return;
+  
+      const res = await fetch("/api/user/profile", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ avatar: selectedAvatar }),
+      });
+  
+      if (res.ok) {
+        // Reload the page to reflect the updated avatar
+        router.reload();
+      } else {
+        setError("Failed to update avatar.");
+      }
+    } catch (error) {
+      setError("An error occurred while saving the avatar.");
+    }
+  };
+
+  const handleEditAvatar = () => {
+    setIsModalOpen(true); // Open modal on edit icon click
+  };
+
+  const closeModal = () => {
+    setSelectedAvatar(currentAvatar)
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const handleAvatarSelect = (avatar: string) => {
+    setSelectedAvatar(avatar); // Set selected avatar
+  };
+
+  const avatarImages = [
+    "bear.png",
+    "cat.png",
+    "dog.png",
+    "duck.png",
+    "fox.png",
+    "koala.png",
+    "panda.png",
+    "rabbit.png",
+    "seal.png"
+    // Add more avatar names as needed
+  ];
 
   if (loading) {
     return (
@@ -149,14 +206,20 @@ const Profile = () => {
           <div className="container mx-auto px-16">
             {/* Profile Header */}
             <div className="relative flex items-center">
-              <div className="w-40 h-40 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+              <div className="w-40 h-40 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden relative group">
                 <Image
                   src={avatarLink}
                   alt="Profile Picture"
                   width={160}
                   height={160}
-                  className="object-cover"
+                  className="object-cover group-hover:opacity-50 transition-opacity duration-200"
                 />
+                <div
+                  className="absolute cursor-pointer inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  onClick={handleEditAvatar}
+                >
+                  <FiEdit className="text-white text-3xl" />
+                </div>
               </div>
               <div className="flex-grow pl-8">
                 <h1 className="text-4xl font-bold mb-2">
@@ -200,6 +263,56 @@ const Profile = () => {
         {/* Dark Side Bars */}
         <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
       </div>
+
+      {/* Modal for Avatar Edit */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg w-96">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              Edit Avatar
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Choose a new avatar for your profile.
+            </p>
+
+            {/* Avatar grid display */}
+            <div className="grid grid-cols-3 gap-4 mt-4">
+              {avatarImages.map((avatar) => (
+                <div
+                  key={avatar}
+                  className={`cursor-pointer border-2 p-2 rounded-lg hover:border-gray-500 ${
+                    selectedAvatar === avatar ? "border-gray-500" : ""
+                  }`}
+                  onClick={() => handleAvatarSelect(avatar)}
+                >
+                  <Image
+                    src={`/avatars/${avatar}`}
+                    alt={avatar}
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Save button */}
+            <div className="mt-6 flex justify-between">
+              <Button
+                variant="default"
+                onClick={closeModal}
+              >
+                Close
+              </Button>
+              <Button
+                onClick={handleSaveAvatar}
+              >
+                Save Avatar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
