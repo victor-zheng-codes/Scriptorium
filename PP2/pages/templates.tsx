@@ -22,37 +22,50 @@ const Templates = () => {
   const [templates, setTemplates] = useState<Template[]>([]); // Array of templates
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const res = await fetch("/api/templates", {
-          method: "GET",
-        });
+  const fetchTemplates = async (page: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/templates?page=${page}`, {
+        method: "GET",
+      });
 
-        if (res.ok) {
-          const data = await res.json();
-          setTemplates(data.templates); // Update state with the templates array
+      if (res.ok) {
+        const data = await res.json();
+        setTemplates(data.templates);
+        setTotalPages(data.totalPages);
+        setCurrentPage(data.page);
+      } else {
+        if (res.status === 401) {
+          setError("Unauthorized. Please log in again.");
+          router.push("/login");
         } else {
-          if (res.status === 401) {
-            setError("Unauthorized. Please log in again.");
-            router.push("/login");
-          } else {
-            setError("Error fetching templates.");
-          }
+          setError("Error fetching templates.");
         }
-      } catch (error) {
-        setError("An error occurred while fetching templates.");
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      setError("An error occurred while fetching templates.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchTemplates();
-  }, [router]);
+  useEffect(() => {
+    fetchTemplates(currentPage);
+  }, [currentPage]);
 
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      fetchTemplates(newPage);
+    }
+  };
+
+  
   if (loading) {
     return (
       <Layout>
@@ -85,7 +98,7 @@ const Templates = () => {
 
   return (
     <Layout>
-      <div className="flex flex-grow">
+      <div className="flex flex-grow m-5">
         {/* Side Bars */}
         {/* <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div> */}
 
@@ -145,6 +158,25 @@ const Templates = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-between items-center mt-8">
+            <Button
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Previous
+            </Button>
+            <span className="text-gray-600 dark:text-gray-300">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Next
+            </Button>
           </div>
         </div>
 
