@@ -24,12 +24,26 @@ const Templates = () => {
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // Filters
+  const [languageFilter, setLanguageFilter] = useState<string>("");
+  const [titleFilter, setTitleFilter] = useState<string>("");
+  const [descriptionFilter, setDescriptionFilter] = useState<string>("");
+  
   
   const router = useRouter();
 
   const fetchTemplates = async (page: number) => {
     setLoading(true);
     setError(null);
+
+    const params = new URLSearchParams({
+      page: page.toString(),
+      ...(languageFilter && { language: languageFilter }),
+      ...(titleFilter && { title: titleFilter }),
+      ...(descriptionFilter && { description: descriptionFilter }),
+    });
+
     try {
       const res = await fetch(`/api/templates?page=${page}`, {
         method: "GET",
@@ -57,15 +71,19 @@ const Templates = () => {
 
   useEffect(() => {
     fetchTemplates(currentPage);
-  }, [currentPage]);
+  }, [currentPage, languageFilter, titleFilter, descriptionFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       fetchTemplates(newPage);
     }
   };
-
   
+  const handleFilterChange = () => {
+    setCurrentPage(1); // Reset to the first page when filters change
+    fetchTemplates(1);
+  };
+
   if (loading) {
     return (
       <Layout>
@@ -113,6 +131,36 @@ const Templates = () => {
             </div>
           </div>
 
+
+            {/* Filters */}
+            <div className="container mx-auto px-16 mb-8">
+            <div className="flex space-x-4">
+              <input
+                type="text"
+                placeholder="Filter by language"
+                value={languageFilter}
+                onChange={(e) => setLanguageFilter(e.target.value)}
+                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="Filter by title"
+                value={titleFilter}
+                onChange={(e) => setTitleFilter(e.target.value)}
+                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="Filter by description"
+                value={descriptionFilter}
+                onChange={(e) => setDescriptionFilter(e.target.value)}
+                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
+              <Button onClick={handleFilterChange}>Apply Filters</Button>
+            </div>
+          </div>
+
+
           {/* Templates List */}
           <div className="container mx-auto px-16">
             {templates.map((template) => (
@@ -144,7 +192,13 @@ const Templates = () => {
                     Edit
                   </Button>
                   <Button
-                    className="mr-1"
+                    className="mr-2"
+                    onClick={() => router.push(`templates/${template.templateId}`)}
+                  >
+                    Fork
+                  </Button>
+                  <Button
+                    className="mr-2"
                     onClick={() => router.push(`code/${template.templateId}`)}
                   >
                     Run
