@@ -21,42 +21,71 @@ interface TemplateTag {
   templateId: number;
 }
 
-// interface TemplatePageProps {
-//   template: Template;
-//   templateTags: TemplateTag[];
-// }
+const TemplatePage = () => {
+  const [template, setTemplate] = useState<Template | null>(null); // State for template
+  const [templateTags, setTemplateTags] = useState<TemplateTag[]>([]); // State for template tags
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
-const TemplatePage = async () => {
-  const [templateTags, setTemplateTags] = useState<TemplateTag[]>([]); // Array of templates
-  const [template, setTemplates] = useState<Template>(); // Array of templates
+  const router = useRouter();
+  const { id } = router.query; // Get the template ID from the URL
 
-  const router = useRouter()
+  useEffect(() => {
+    if (!id) return; // If the ID is not available, exit
 
-  try {
-    const res = await fetch(`/api/templates/${router.query.id}`, {
-      method: "GET",
-    });
-    if (!res.ok) {
-      return {
-        notFound: true,
-      };
-    }
-    const data = await res.json();
-    
-    setTemplateTags(data.templateTags);
-    setTemplates(data.template);
+    const fetchTemplate = async () => {
+      try {
+        const res = await fetch(`/api/templates/${id}`, {
+          method: "GET",
+        });
 
-    // return {
-    //   props: {
-    //     template: data.template,
-    //     templateTags: data.templateTags,
-    //   },
-    // };
-  } catch (error) {
-    console.error("Error fetching template:", error);
-    return {
-      notFound: true,
+        if (!res.ok) {
+          setError("Error fetching template.");
+          return;
+        }
+
+        const data = await res.json();
+        setTemplate(data.template);
+        setTemplateTags(data.templateTags);
+      } catch (error) {
+        console.error("Error fetching template:", error);
+        setError("An error occurred while fetching template.");
+      } finally {
+        setLoading(false);
+      }
     };
+
+    fetchTemplate();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+          <h1 className="text-2xl">Loading...</h1>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+          <h1 className="text-2xl">{error}</h1>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!template) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+          <h1 className="text-2xl">Template not found.</h1>
+        </div>
+      </Layout>
+    );
   }
 
   return (
