@@ -132,13 +132,17 @@ export default async function handler(req, res) {
         csharp: "mcr.microsoft.com/dotnet/sdk:8.0",
     };
 
-    const image = dockerImages[language];
-    if (!image) return res.status(401).json({error: "Unsupported language"});
+    const imageLanguage = dockerImages[language];
+    if (!imageLanguage) return res.status(404).json({
+            success: false,
+            error: "Unsupported language",
+            output: "",
+        });
 
     codeFilePath = codeFilePath.replace(/^tmp\//, "");
 
     // current directory
-    const command = `docker run --rm -v ${process.cwd()}/tmp:/app -w /app ${image} ${language} ${codeFilePath}`;
+    const command = `docker run --rm -v ${process.cwd()}/tmp:/app -w /app ${imageLanguage} ${language} ${codeFilePath}`;
 
     console.log("running: " + command)
     
