@@ -4,8 +4,9 @@ import { Button } from "../components/ui/button"; // Importing the Button compon
 import Link from "next/link";
 
 export default function Home() {
-  // State to track if the user is logged in
+  // State to track if the user is logged in and for storing the username
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     // Check if the authentication token exists in localStorage (you can replace this with cookies or another method)
@@ -13,6 +14,22 @@ export default function Home() {
 
     if (token) {
       setIsLoggedIn(true); // User is logged in, token exists
+
+      // Fetch the user data (replace this URL with your actual API endpoint)
+      fetch("/api/user/data", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.user.username) {
+            setUsername(data.user.username); // Set the username from the API response
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
     } else {
       setIsLoggedIn(false); // User is not logged in
     }
@@ -23,7 +40,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center flex-grow text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-3 text-gray-900 dark:text-gray-100">
-          Welcome to Scriptorium
+          {isLoggedIn ? `Welcome ${username} to Scriptorium` : "Welcome to Scriptorium"}
         </h1>
         <p
           className="text-lg md:text-xl text-gray-600 mb-4 dark:text-gray-300 relative md:w-[max-content] w-full font-mono

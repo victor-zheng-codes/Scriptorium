@@ -182,7 +182,7 @@ const Profile = () => {
           {/* Top Button Bar (After Sidebars) */}
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
             {/* Title on the left, aligned with profile image */}
-            <div className="flex items-center space-x-4 pl-8">
+            <div className="flex items-center space-x-4 pl-8 pr-16">
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
                 User Profile
               </h1>
