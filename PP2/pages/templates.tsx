@@ -87,7 +87,7 @@ const Templates = () => {
     <Layout>
       <div className="flex flex-grow">
         {/* Side Bars */}
-        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
+        {/* <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div> */}
 
         {/* Main Content Area */}
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
@@ -149,7 +149,7 @@ const Templates = () => {
         </div>
 
         {/* Side Bars */}
-        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
+        {/* <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div> */}
       </div>
     </Layout>
   );
