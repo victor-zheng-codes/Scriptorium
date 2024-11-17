@@ -1,9 +1,53 @@
-import { Button } from "@/components/ui/button"; 
-import Link from "next/link"; 
-import Image from "next/image"; 
-import { ModeToggle } from "@/components/ui/theme-mode-toggle"; 
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
+import { ModeToggle } from "@/components/ui/theme-mode-toggle";
 
 const Navbar = () => {
+  const [avatar, setAvatar] = useState<string | null>(null); // To hold the avatar URL
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      // Retrieve the authentication token (assuming it's stored in localStorage)
+      const token = localStorage.getItem("token"); // Modify this if your token is stored elsewhere
+
+      // If the token is not found, redirect to login (or handle as needed)
+      if (!token) {
+        setAvatar(null) // Redirect to the login page if no token is found
+        return;
+      }
+
+      try {
+        // Make the API call with the Bearer token in the Authorization header
+        const response = await fetch("/api/user/data", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token here
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // If avatar is null, set the default avatar
+          setAvatar(data.avatar || "bear.png");
+        } else {
+          console.error("Failed to fetch user data:", response.status);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setAvatar(null);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  let avatarLink = "/avatars/user.png"
+  if (avatar !== null) {
+    avatarLink = "/avatars/" + avatar
+  }
+
   return (
     <nav className="sticky top-0 w-full px-4 py-2 bg-gray-100 dark:bg-[#191919] text-black dark:text-white z-10">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
@@ -57,8 +101,9 @@ const Navbar = () => {
           <ModeToggle />
           <Link href="/profile">
             <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+              {/* Dynamically set the avatar image based on the fetched data */}
               <Image
-                src="/avatars/bear.png"
+                src={avatarLink} // Use the avatar from state or fallback to default
                 alt="Profile Picture"
                 width={80}
                 height={80}
