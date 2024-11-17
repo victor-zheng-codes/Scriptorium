@@ -122,7 +122,6 @@ const Templates = () => {
                 </SyntaxHighlighter>
                 <p className="text-sm text-gray-500 mt-2">
                 Language: {template.language} | Created:{new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
-                {new Date(template.createdAt).toLocaleString()}
                 </p>
                 <div className="mt-4">
                   <Button
