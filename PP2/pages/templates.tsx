@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Layout from "@/components/ui/layout";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism"; // Or choose another style
 
-// Define the Template interface
 interface Template {
   templateId: number;
   userId: number;
@@ -17,7 +17,7 @@ interface Template {
 }
 
 const Templates = () => {
-  const [templates, setTemplates] = useState<Template[]>([]); // Array of templates
+  const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +32,7 @@ const Templates = () => {
 
         if (res.ok) {
           const data = await res.json();
-          setTemplates(data.templates); // Update state with the templates array
+          setTemplates(data.templates);
         } else {
           if (res.status === 401) {
             setError("Unauthorized. Please log in again.");
@@ -93,7 +93,7 @@ const Templates = () => {
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
             <div className="flex items-center space-x-4 pl-8">
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                Code Templates
+                Templates
               </h1>
             </div>
           </div>
@@ -111,25 +111,25 @@ const Templates = () => {
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                   {template.description}
                 </p>
-                <pre className="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm overflow-x-auto">
+                <SyntaxHighlighter
+                  language={template.language}
+                  style={materialDark}
+                  showLineNumbers
+                >
                   {template.content}
-                </pre>
+                </SyntaxHighlighter>
                 <p className="text-sm text-gray-500 mt-2">
-                  Language: {template.language} | Created:{new Date(template.createdAt).toLocaleString()} | 
-                  AuthorId: {template.userId}
+                  Language: {template.language} | Created:{" "}
+                  {new Date(template.createdAt).toLocaleString()}
                 </p>
                 <div className="mt-4">
                   <Button
                     className="mr-2"
-                    onClick={() => router.push(`/templates/${template.templateId}`)}
+                    onClick={() =>
+                      router.push(`/templates/edit/${template.templateId}`)
+                    }
                   >
                     Edit
-                  </Button>
-                  <Button
-                    className="mr-1"
-                    onClick={() => router.push(`code/${template.templateId}`)}
-                  >
-                    Run
                   </Button>
                   <Button
                     variant="destructive"
