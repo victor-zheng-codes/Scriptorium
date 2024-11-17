@@ -175,7 +175,7 @@ const Profile = () => {
     <Layout>
       <div className="flex flex-grow">
         {/* Dark Side Bars */}
-        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
+        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
 
         {/* Main Content Area */}
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
@@ -189,7 +189,7 @@ const Profile = () => {
             </div>
 
             {/* Buttons (Right Aligned) */}
-            <div className="flex space-x-4 ml-auto">
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 ml-auto">
               <Button className="text-sm py-1 px-4" onClick={handleLogout}>
                 Logout
               </Button>
@@ -205,7 +205,7 @@ const Profile = () => {
           {/* Profile Content */}
           <div className="container mx-auto px-16">
             {/* Profile Header */}
-            <div className="relative flex items-center">
+            <div className="relative flex flex-col md:flex-row items-center">
               <div className="w-40 h-40 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden relative group">
                 <Image
                   src={avatarLink}
@@ -235,7 +235,7 @@ const Profile = () => {
             </div>
 
             {/* Profile Details */}
-            <div className="pl-48">
+              <div className="pl-0 md:pl-48 flex flex-col md:flex-row gap-4 md:justify-start md:items-start justify-center items-center pt-8 md:pt-0">
               <div>
                 <h2 className="text-lg font-semibold">About</h2>
                 <div className="flex flex-wrap gap-8 text-sm text-gray-600 dark:text-gray-300">
@@ -261,7 +261,7 @@ const Profile = () => {
         </div>
 
         {/* Dark Side Bars */}
-        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
+        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
       </div>
 
       {/* Modal for Avatar Edit */}
