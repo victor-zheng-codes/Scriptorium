@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     limit = Number(limit)
 
     if (page < 1) page = 1; // Ensure page is at least 1
-    if (limit < 10) limit = 10; // Ensure limit is at least 10
+    if (limit < 1) limit = 1; // Ensure limit is at least 1
 
     const skip = (page - 1) * limit; // Calculate the number of records to skip
     const take = limit; // The number of records to return
