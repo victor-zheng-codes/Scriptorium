@@ -49,7 +49,7 @@ const Code = () => {
 
       // Handle the response from the backend
       const result = await response.json();
-      setOutput(result.warnings + result.output + result.error); // Set the output in the second textarea
+      setOutput(result.output + result.error); // Set the output in the second textarea
       // You can display the result here, for example, in a message or alert.
     } catch (error) {
       console.error('Error:', error);
