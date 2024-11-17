@@ -1,13 +1,20 @@
 
 import { PrismaClient } from '@prisma/client';
 import * as fs from "fs";
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient()
 
 async function main() {
   try{
     const seededUsers = JSON.parse(fs.readFileSync('prisma/dummy-users.json', 'utf-8'));
+
+    const existsUsers = await prisma.user.count()
+
+    if (existsUsers > 0){
+      console.log("Database already has users. Not seeding.")
+      return
+    }
 
     for (const user of seededUsers) {
           await prisma.user.create({

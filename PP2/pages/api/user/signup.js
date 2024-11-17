@@ -1,5 +1,5 @@
 import prisma from '../../../utils/prisma-client'
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const JWT_SALT = parseInt(process.env.JWT_SALT) || 10; // should be an int
 

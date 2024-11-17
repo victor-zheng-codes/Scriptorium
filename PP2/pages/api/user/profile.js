@@ -1,6 +1,6 @@
 import prisma from '../../../utils/prisma-client'
 import { verifyToken } from '../../../utils/auth'
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import fs from 'fs';
 
 const JWT_SALT = parseInt(process.env.JWT_SALT) || 10; // should be an int
