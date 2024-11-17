@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Layout from "@/components/ui/layout";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism"; // Or choose another style
+import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 // Define the Template interface
 interface Template {
@@ -29,8 +28,8 @@ const Templates = () => {
   const [languageFilter, setLanguageFilter] = useState<string>("");
   const [titleFilter, setTitleFilter] = useState<string>("");
   const [descriptionFilter, setDescriptionFilter] = useState<string>("");
-  
-  
+  const [contentFilter, setContentFilter] = useState<string>("");
+
   const router = useRouter();
 
   const fetchTemplates = async (page: number) => {
@@ -42,10 +41,13 @@ const Templates = () => {
       ...(languageFilter && { language: languageFilter }),
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
+      ...(contentFilter && { content: contentFilter }),
     });
 
+    console.log("params " + params)
+
     try {
-      const res = await fetch(`/api/templates?page=${page}`, {
+      const res = await fetch(`/api/templates?${params.toString()}`, {
         method: "GET",
       });
 
@@ -69,19 +71,58 @@ const Templates = () => {
     }
   };
 
+  // Debounce for filter change
+  const useDebounce = (value: string, delay: number) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [value, delay]);
+
+    return debouncedValue;
+  };
+
+  const debouncedLanguageFilter = useDebounce(languageFilter, 500);
+  const debouncedTitleFilter = useDebounce(titleFilter, 500);
+  const debouncedDescriptionFilter = useDebounce(descriptionFilter, 500);
+  const debouncedContentFilter = useDebounce(contentFilter, 500);
+
   useEffect(() => {
+    // Fetch templates whenever the filters or page change
     fetchTemplates(currentPage);
-  }, [currentPage, languageFilter, titleFilter, descriptionFilter]);
+  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
-      fetchTemplates(newPage);
+      setCurrentPage(newPage);
     }
   };
-  
-  const handleFilterChange = () => {
-    setCurrentPage(1); // Reset to the first page when filters change
-    fetchTemplates(1);
+
+  const handleFilterChange = (filterType: string, value: string) => {
+    console.log(filterType, value)
+
+    switch (filterType) {
+      case "language":
+        setLanguageFilter(value);
+        break;
+      case "title":
+        setTitleFilter(value);
+        break;
+      case "description":
+        setDescriptionFilter(value);
+        break;
+      case "content":
+          setContentFilter(value);
+          break;
+      default:
+        break;
+    }
   };
 
   if (loading) {
@@ -104,104 +145,88 @@ const Templates = () => {
     );
   }
 
-  if (!templates.length) {
-    return (
-      <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
-          <h1 className="text-2xl">No templates found.</h1>
-        </div>
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
       <div className="flex flex-grow m-5">
-        {/* Side Bars */}
-        {/* <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div> */}
-
         {/* Main Content Area */}
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
           {/* Header */}
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
-            <div className="flex items-center space-x-4 pl-8">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                Code Templates
-              </h1>
-            </div>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+              Code Templates
+            </h1>
           </div>
 
-
-            {/* Filters */}
-            <div className="container mx-auto px-16 mb-8">
+          {/* Filters */}
+          <div className="container mx-auto px-16 mb-8">
             <div className="flex space-x-4">
               <input
                 type="text"
                 placeholder="Filter by language"
                 value={languageFilter}
-                onChange={(e) => setLanguageFilter(e.target.value)}
+                onChange={(e) => handleFilterChange("language", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-700 dark:text-white"
               />
               <input
                 type="text"
                 placeholder="Filter by title"
                 value={titleFilter}
-                onChange={(e) => setTitleFilter(e.target.value)}
+                onChange={(e) => handleFilterChange("title", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-700 dark:text-white"
               />
               <input
                 type="text"
                 placeholder="Filter by description"
                 value={descriptionFilter}
-                onChange={(e) => setDescriptionFilter(e.target.value)}
+                onChange={(e) => handleFilterChange("description", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-700 dark:text-white"
               />
-              <Button onClick={handleFilterChange}>Apply Filters</Button>
+              <input
+                type="text"
+                placeholder="Filter by code content"
+                value={contentFilter}
+                onChange={(e) => handleFilterChange("content", e.target.value)}
+                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
             </div>
           </div>
 
-
-          {/* Templates List */}
-          <div className="container mx-auto px-16">
-            {templates.map((template) => (
-              <div
-                key={template.templateId}
-                className="mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
+        {/* Templates List */}
+        <div className="container mx-auto px-16">
+        {templates.length === 0 ? (
+          <div className="text-center text-xl text-gray-600 dark:text-gray-300 mt-8">
+            No results match the applied filter.
+          </div>
+        ) : (
+          templates.map((template) => (
+            <div
+              key={template.templateId}
+              className="mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
+            >
+              <h2 className="text-2xl font-bold mb-2">{template.title}</h2>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                {template.description}
+              </p>
+              <SyntaxHighlighter
+                language={template.language}
+                style={materialDark}
+                showLineNumbers
               >
-                <h2 className="text-2xl font-bold mb-2">
-                  {template.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  {template.description}
-                </p>
-                <SyntaxHighlighter
-                  language={template.language}
-                  style={materialDark}
-                  showLineNumbers
-                >
-                  {template.content}
-                </SyntaxHighlighter>
-                <p className="text-sm text-gray-500 mt-2">
-                Language: {template.language} | Created:{new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
-                </p>
-                <div className="mt-4">
+                {template.content}
+              </SyntaxHighlighter>
+              <p className="text-sm text-gray-500 mt-2">
+                Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
+              </p>
+
+              {/* buttons to edit or delete */}
+              <div className="mt-4">
                   <Button
                     className="mr-2"
-                    onClick={() => router.push(`/templates/${template.templateId}`)}
+                    onClick={() =>
+                      router.push(`/templates/${template.templateId}`)
+                    }
                   >
                     Edit
-                  </Button>
-                  <Button
-                    className="mr-2"
-                    onClick={() => router.push(`templates/${template.templateId}`)}
-                  >
-                    Fork
-                  </Button>
-                  <Button
-                    className="mr-2"
-                    onClick={() => router.push(`code/${template.templateId}`)}
-                  >
-                    Run
                   </Button>
                   <Button
                     variant="destructive"
@@ -210,9 +235,10 @@ const Templates = () => {
                     Delete
                   </Button>
                 </div>
-              </div>
-            ))}
-          </div>
+            </div>
+          ))
+        )}
+      </div>
 
           {/* Pagination */}
           <div className="flex justify-between items-center mt-8">
@@ -233,9 +259,6 @@ const Templates = () => {
             </Button>
           </div>
         </div>
-
-        {/* Side Bars */}
-        {/* <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div> */}
       </div>
     </Layout>
   );
