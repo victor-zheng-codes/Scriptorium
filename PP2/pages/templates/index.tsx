@@ -226,13 +226,7 @@ const Templates = () => {
                       router.push(`/templates/${template.templateId}`)
                     }
                   >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={() => alert("Delete feature coming soon!")}
-                  >
-                    Delete
+                    More details
                   </Button>
                 </div>
             </div>
