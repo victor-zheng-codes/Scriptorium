@@ -49,13 +49,18 @@ const Code = () => {
 
       // Handle the response from the backend
       const result = await response.json();
-      setOutput(output + result.warnings + result.output + result.error); // Set the output in the second textarea
+      setOutput(result.warnings + result.output + result.error); // Set the output in the second textarea
       // You can display the result here, for example, in a message or alert.
     } catch (error) {
       console.error('Error:', error);
     } finally {
       setIsLoading(false); // Reset loading state after request is done
     }
+  };
+
+  // Function to clear the output textarea
+  const handleClearOutput = () => {
+    setOutput(''); // Reset output to an empty string
   };
 
   return (
@@ -85,12 +90,19 @@ const Code = () => {
           >
             {isLoading ? 'Running...' : 'Run'}
           </button>
+          <button
+            id="clear-output-button"
+            onClick={handleClearOutput}
+            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+          >
+            Clear Output
+          </button>
         </div>
 
         {/* Code textarea */}
         <textarea 
           id="code-editor" 
-          className="w-1/2 h-dvh p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
+          className="w-1/2 h-64 p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
           value={code} // Bind code state to textarea value
           onChange={(e) => setCode(e.target.value)} // Update code state on change
           onKeyDown={handleKeyDown}
@@ -99,7 +111,7 @@ const Code = () => {
         {/* Output textarea (top-right corner) */}
         <textarea
           id="output-editor"
-          className="w-1/2 h-dvh p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
+          className="w-1/2 h-64 p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
           value={output}
           readOnly
           disabled
@@ -108,7 +120,7 @@ const Code = () => {
         {/* Standard input textarea (bottom-right corner) */}
         <textarea
           id="input-editor"
-          className="w-1/2 h-64 p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
+          className="w-1/2 h-32 p-4 font-mono text-lg leading-6 bg-gray-100 border border-gray-300 rounded-md resize-none placeholder-gray-400"
           value={standardInput}
           onChange={(e) => setStandardInput(e.target.value)}
           onKeyDown={handleKeyDown}

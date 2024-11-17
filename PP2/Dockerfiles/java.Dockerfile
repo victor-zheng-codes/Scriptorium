@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY tmp .
 
 # Compile Java files (if needed)
-# RUN javac Main.java
+RUN javac Main.java
 
 # Command to run the Java file
 CMD ["java", "Main"]
