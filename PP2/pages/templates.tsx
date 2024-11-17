@@ -3,9 +3,8 @@ import Image from "next/image";
 import Layout from "@/components/ui/layout";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { FiEdit } from "react-icons/fi"; // Import the pencil icon
 
-// define how each template needs to look
+// Define the Template interface
 interface Template {
   templateId: number;
   userId: number;
@@ -13,10 +12,12 @@ interface Template {
   title: string;
   description: string;
   language: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const Templates = () => {
-  const [template, setTemplates] = useState<Template | null>(null);
+  const [templates, setTemplates] = useState<Template[]>([]); // Array of templates
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,18 +32,17 @@ const Templates = () => {
 
         if (res.ok) {
           const data = await res.json();
-          console.log(data)
-          setTemplates(data.templates);
+          setTemplates(data.templates); // Update state with the templates array
         } else {
           if (res.status === 401) {
             setError("Unauthorized. Please log in again.");
             router.push("/login");
           } else {
-            setError("Error fetching profile data.");
+            setError("Error fetching templates.");
           }
         }
       } catch (error) {
-        setError("An error occurred while fetching profile data.");
+        setError("An error occurred while fetching templates.");
       } finally {
         setLoading(false);
       }
@@ -71,76 +71,81 @@ const Templates = () => {
     );
   }
 
-  if (!template) {
+  if (!templates.length) {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
-          <h1 className="text-2xl">No user data found.</h1>
+          <h1 className="text-2xl">No templates found.</h1>
         </div>
       </Layout>
     );
   }
 
-  // const userRole = user.isAdmin ? "Admin" : "User";
-  // const avatarLink = user.avatar
-  //   ? `/avatars/${user.avatar}`
-  //   : "/avatars/bear.png";
-
   return (
     <Layout>
       <div className="flex flex-grow">
-        {/* Dark Side Bars */}
+        {/* Side Bars */}
         <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
 
         {/* Main Content Area */}
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
-          {/* Top Button Bar (After Sidebars) */}
+          {/* Header */}
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
-            {/* Title on the left, aligned with profile image */}
             <div className="flex items-center space-x-4 pl-8">
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                Templates
+                Code Templates
               </h1>
             </div>
-
-            {/* Buttons (Right Aligned) */}
-            {/* <div className="flex space-x-4 ml-auto">
-              <Button className="text-sm py-1 px-4">
-                Logout
-              </Button>
-              <Button
-                className="text-sm py-1 px-4"
-                onClick={() => router.push("/profile/edit")}
-              >
-                Edit Profile
-              </Button>
-            </div> */}
           </div>
 
-          {/* Profile Content */}
+          {/* Templates List */}
           <div className="container mx-auto px-16">
-            {/* Profile Header */}
-            <div className="relative flex items-center">
-              <div className="flex-grow pl-8">
-                <h1 className="text-4xl font-bold mb-2">
-                  {template.title || "No Username"}
-                </h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300">
-                  {template.content || "No Email"}
-                </p>
-                <p className="text-xl text-gray-600 dark:text-gray-300">
+            {templates.map((template) => (
+              <div
+                key={template.templateId}
+                className="mb-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
+              >
+                <h2 className="text-2xl font-bold mb-2">
+                  {template.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
                   {template.description}
                 </p>
+                <pre className="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm overflow-x-auto">
+                  {template.content}
+                </pre>
+                <p className="text-sm text-gray-500 mt-2">
+                  Language: {template.language} | Created:{new Date(template.createdAt).toLocaleString()} | 
+                  AuthorId: {template.userId}
+                </p>
+                <div className="mt-4">
+                  <Button
+                    className="mr-2"
+                    onClick={() => router.push(`/templates/${template.templateId}`)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    className="mr-1"
+                    onClick={() => router.push(`code/${template.templateId}`)}
+                  >
+                    Run
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => alert("Delete feature coming soon!")}
+                  >
+                    Delete
+                  </Button>
+                </div>
               </div>
-            </div>
-
+            ))}
           </div>
         </div>
 
-        {/* Dark Side Bars */}
+        {/* Side Bars */}
         <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64"></div>
       </div>
-
     </Layout>
   );
 };
