@@ -145,16 +145,6 @@ const Templates = () => {
     );
   }
 
-  // if (!templates.length) {
-  //   return (
-  //     <Layout>
-  //       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
-  //         <h1 className="text-2xl">No templates found.</h1>
-  //       </div>
-  //     </Layout>
-  //   );
-  // }
-
   return (
     <Layout>
       <div className="flex flex-grow m-5">
@@ -227,6 +217,24 @@ const Templates = () => {
               <p className="text-sm text-gray-500 mt-2">
                 Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
               </p>
+
+              {/* buttons to edit or delete */}
+              <div className="mt-4">
+                  <Button
+                    className="mr-2"
+                    onClick={() =>
+                      router.push(`/templates/${template.templateId}`)
+                    }
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => alert("Delete feature coming soon!")}
+                  >
+                    Delete
+                  </Button>
+                </div>
             </div>
           ))
         )}
