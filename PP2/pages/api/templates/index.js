@@ -17,8 +17,13 @@ export default async function handler(req, res) {
 
       if (tags){
           console.log("before tags: " + tags)
+          tags = tags.split(",").map(function(item) {
+            return item.trim();
+          }).filter(function(item) {
+            return item !== ''; // Remove empty strings
+          });
+          console.log("after tags: " + tags)
 
-          tags = tags.split(",")
       }
       // tagString = tags ? tags.split(",").map((tag) => tag.trim()).join(",") : "";
 
@@ -30,13 +35,15 @@ export default async function handler(req, res) {
           description ? {description: {contains: description} }: undefined,
           language ? {language: {contains: language} }: undefined,
           tags && tags.length > 0 ? {
-            templatesTags: {
-                  some: {
-                      tag: {
-                        tagName: { in: tags },
-                      },
+            AND: tags.map((tag) => ({
+              templatesTags: {
+                some: {
+                  tag: {
+                    tagName: { equals: tag }, // Case-insensitive match
                   },
+                },
               },
+            })),
           } : undefined,
       ].filter(Boolean); // Remove undefined values (from non-existent parameters)
   };
