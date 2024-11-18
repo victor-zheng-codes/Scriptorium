@@ -26,6 +26,40 @@ const Profile = () => {
 
   const router = useRouter();
 
+
+  const refreshAccessToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!token || !refreshToken) return null;
+
+      const res = await fetch("/api/user/refresh", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          refreshToken: refreshToken,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        return data.token;
+      } else {
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        router.push("/login")
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -50,8 +84,19 @@ const Profile = () => {
           setCurrentAvatar(data.user.avatar || "bear.png"); // Set the current avatar
         } else {
           if (res.status === 401) {
-            setError("Unauthorized. Please log in again.");
-            router.push("/login");
+            const newToken = refreshAccessToken()
+            if (newToken) {
+              const newRes = await fetch("/api/user/data", {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${newToken}`,
+                },
+              });
+              const data = await newRes.json();
+              setUser(data.user);
+              setSelectedAvatar(data.user.avatar || "bear.png"); // Preselect current avatar
+              setCurrentAvatar(data.user.avatar || "bear.png"); // Set the current avatar
+            }
           } else {
             setError("Error fetching profile data.");
           }
@@ -70,20 +115,34 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        await fetch("/api/user/logout", {
+        const res = await fetch("/api/user/logout", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        localStorage.removeItem("token"); // Remove token from local storage
-        router.push("/"); // Redirect to home page
-      }
+        if (res.status === 401) {
+          const newToken = refreshAccessToken()
+          if (newToken) {
+            await fetch("/api/user/logout", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${newToken}`
+              }
+            })
+          }
+        }
+      } 
+      localStorage.removeItem("token"); // Remove token from local storage
+      router.push("/"); // Redirect to home page
     } catch (error) {
+      localStorage.removeItem("token"); // Remove token from local storage
+      router.push("/"); // Redirect to home page
       setError("An error occurred while logging out.");
     }
-  };
+  }
+
 
   const handleSaveAvatar = async () => {
     try {
@@ -102,8 +161,21 @@ const Profile = () => {
       if (res.ok) {
         // Reload the page to reflect the updated avatar
         router.reload();
+      } else if (res.status === 401) {
+        const newToken = await refreshAccessToken();
+        if (newToken) {
+          await fetch("/api/user/profile", {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${newToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ avatar: selectedAvatar }),
+          });
+          router.reload();
+        }
       } else {
-        setError("Failed to update avatar.");
+        setError("An error occurred while saving the avatar.");
       }
     } catch (error) {
       setError("An error occurred while saving the avatar.");
