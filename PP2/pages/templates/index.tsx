@@ -139,7 +139,7 @@ const Templates = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">Loading...</h1>
         </div>
       </Layout>
@@ -149,7 +149,7 @@ const Templates = () => {
   if (error !== null) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">{error}</h1>
         </div>
       </Layout>
@@ -160,10 +160,10 @@ const Templates = () => {
     <Layout>
       <div className="flex flex-grow m-5">
         {/* Main Content Area */}
-        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
+        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
           {/* Header */}
           <div className="flex justify-between px-8 py-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200">
               Code Templates
             </h1>
           </div>
@@ -176,35 +176,35 @@ const Templates = () => {
                 placeholder="Filter by language"
                 value={languageFilter}
                 onChange={(e) => handleFilterChange("language", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
               <input
                 type="text"
                 placeholder="Filter by title"
                 value={titleFilter}
                 onChange={(e) => handleFilterChange("title", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
               <input
                 type="text"
                 placeholder="Filter by description"
                 value={descriptionFilter}
                 onChange={(e) => handleFilterChange("description", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
               <input
                 type="text"
                 placeholder="Filter by code content"
                 value={contentFilter}
                 onChange={(e) => handleFilterChange("content", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
               <input
                 type="text"
                 placeholder="Filter by tags (comma separated)"
                 value={tagFilter}
                 onChange={(e) => handleFilterChange("tags", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
             </div>
           </div>

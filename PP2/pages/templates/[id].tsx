@@ -294,7 +294,7 @@ const TemplatePage = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">Loading...</h1>
         </div>
       </Layout>
@@ -304,7 +304,7 @@ const TemplatePage = () => {
   if (!template) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">Template not found.</h1>
         </div>
       </Layout>
