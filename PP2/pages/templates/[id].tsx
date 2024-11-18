@@ -16,15 +16,16 @@ interface Template {
   owner: { username: string }; // Username of the owner
 }
 
-interface TemplateTag {
+interface TemplatesTags {
   templateTagId: number;
   tagId: number;
   templateId: number;
+  tag: { tagName: string, tagid: number }
 }
 
 const TemplatePage = () => {
   const [template, setTemplate] = useState<Template | null>(null); // State for template
-  const [templateTags, setTemplateTags] = useState<TemplateTag[]>([]); // State for template tags
+  const [templateTags, setTemplateTags] = useState<TemplatesTags[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
   const [success, setSuccess] = useState<string | null>(null); // Success state
@@ -79,6 +80,8 @@ const TemplatePage = () => {
         setTemplate(data.template);
         setEditableTemplate(data.template);
         setTemplateTags(data.templateTags);
+
+        console.log(data.templateTags)
       } catch (error) {
         setError("An error occurred while fetching template: " + error);
       } finally {
@@ -421,12 +424,12 @@ const TemplatePage = () => {
           <div>
             <h2 className="text-2xl font-bold mb-4">Tags</h2>
             <div className="flex space-x-2">
-              {templateTags.map((tag) => (
+              {templateTags.map((tagVal) => (
                 <span
-                  key={tag.templateTagId}
+                  key={tagVal.tag.tagid}
                   className="px-3 py-1 rounded bg-blue-500 text-white"
                 >
-                  Tag ID: {tag.tagId}
+                  {tagVal.tag.tagName}
                 </span>
               ))}
             </div>

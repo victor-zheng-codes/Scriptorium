@@ -15,6 +15,8 @@ interface Template {
   language: string;
   createdAt: string;
   updatedAt: string;
+  owner: {firstName: string, lastName: string, username: string}
+  templatesTags: {tag: {tagName: string, tagId: number}, tagId: number, templateId: number, templateTagId: number}[]
 }
 
 const Templates = () => {
@@ -44,6 +46,7 @@ const Templates = () => {
       ...(contentFilter && { content: contentFilter }),
     });
 
+
     console.log("params " + params)
 
     try {
@@ -53,6 +56,8 @@ const Templates = () => {
 
       if (res.ok) {
         const data = await res.json();
+        console.log("Fetched templates:", data.templates); // Check if templateId exists here
+
         setTemplates(data.templates);
         setTotalPages(data.totalPages);
         setCurrentPage(data.page);
@@ -215,8 +220,22 @@ const Templates = () => {
                 {template.content}
               </SyntaxHighlighter>
               <p className="text-sm text-gray-500 mt-2">
-                Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
+                Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | Author: {template.owner.username}
               </p>
+                {template.templatesTags?.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4">Tags</h2>
+                    <div className="flex space-x-2">
+                      {template.templatesTags.map((tag) => (
+                        <span
+                          className="px-3 py-1 rounded bg-blue-500 text-white"
+                        >
+                          {tag.tag.tagName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
               {/* buttons to edit or delete */}
               <div className="mt-4">

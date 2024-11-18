@@ -17,8 +17,8 @@ export default async function handler(req, res) {
             templateId: templateId},
         include: 
         {
-          owner: true
-        }
+          owner: true,
+        },
       });
 
       if (!template) {
@@ -29,9 +29,9 @@ export default async function handler(req, res) {
         where: { 
           templateId,
         },
-        // include: {
-        //   tag
-        // }
+        include: {
+          tag: true
+        },
         // select: {
         //   tag: {
         //     select: {

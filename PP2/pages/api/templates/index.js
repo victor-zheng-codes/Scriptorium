@@ -44,7 +44,13 @@ export default async function handler(req, res) {
               tag: true, // Include tag info
             },
           },
-          owner: true, // Include the owner information
+          owner: {
+            select: {
+              firstName: true,
+              lastName: true, // Include only firstName and lastName
+              username: true,
+            },
+          },
         },
         skip: skip,
         take: take,
