@@ -39,6 +39,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -52,15 +53,47 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.user && data.user.username) {
-            setUsername(data.user.username);
-          }
+          if (data.user) {
+            if (data.user.username) {
+              setUsername(data.user.username);
+            }
+            if (data.user.userId) {
+              setUserId(data.user.userId);
+            }
+          } 
         })
         .catch((error) => console.error("Error fetching user data:", error));
     } else {
       setIsLoggedIn(false);
     }
   }, []);
+
+  const hasRatedBlog = (userId: number): boolean => {
+    // Check if the user has rated the blog
+    return currentBlog.BlogRating.some(rating => rating.userId === userId);
+  };
+  
+  const getCurrentBlogRating = (userId: number): number | null => {
+    // Check what rating the user has given (1 = upvote, -1 = downvote, or null if no rating)
+    const rating = currentBlog.BlogRating.find(rating => rating.userId === userId);
+    return rating ? rating.rating : null;  // return the rating value or null if not rated
+  };
+
+  const hasRatedComment = (userId: number, commentId: number): boolean => {
+    // Check if the user has rated the comment
+    const comment = currentBlog.Comment.find(c => c.commentId === commentId);
+    return comment ? comment.UserCommentRating.some(rating => rating.userId === userId) : false;
+  };
+  
+  const getCurrentCommentRating = (userId: number, commentId: number): number | null => {
+    // Check what rating the user has given to the comment
+    const comment = currentBlog.Comment.find(c => c.commentId === commentId);
+    if (comment) {
+      const rating = comment.UserCommentRating.find(rating => rating.userId === userId);
+      return rating ? rating.rating : null;  // return the rating value or null if not rated
+    }
+    return null;
+  };
 
   const handleVote = async (
     rating: number, // 1 = upvote, -1 = downvote, 0 = remove vote
@@ -71,6 +104,19 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     if (!token) {
       setError("You must be logged in to rate.");
       return;
+    }
+  
+    let currentRating: number | null = null;
+  
+    if (isComment) {
+      currentRating = getCurrentCommentRating(userId, id);
+    } else {
+      currentRating = getCurrentBlogRating(userId);
+    }
+  
+    // If user already has the same rating, remove the vote
+    if (currentRating === rating) {
+      rating = 0; // Remove vote
     }
   
     const endpoint = isComment
@@ -102,7 +148,6 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       }
       const updatedBlog = await updatedBlogResponse.json();
       setCurrentBlog(updatedBlog.blogDetails);
-  
     } catch (error) {
       setError("Error voting. Please try again.");
     }
@@ -153,6 +198,16 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     }
   };
 
+  const getButtonClass = (rating: number | null, action: number) => {
+    if (rating === action) {
+      return action === 1 ? 'bg-blue-500 text-white' : 'bg-red-500 text-white';
+    } else if (rating === 0) {
+      return 'bg-gray-200 text-gray-800';
+    } else {
+      return 'bg-gray-200 text-gray-600';
+    }
+  };
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8 text-gray-600 dark:text-gray-300">
@@ -165,8 +220,18 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
         {/* Upvote/Downvote/Remove Vote for Blog */}
         <div className="flex gap-2 mb-8">
-          <Button onClick={() => handleVote(1, currentBlog.blogId, false)}>Upvote</Button>
-          <Button onClick={() => handleVote(-1, currentBlog.blogId, false)}>Downvote</Button>
+          <Button
+            onClick={() => handleVote(1, currentBlog.blogId, false)}
+            className={getButtonClass(getCurrentBlogRating(userId), 1)}
+          >
+            Upvote
+          </Button>
+          <Button
+            onClick={() => handleVote(-1, currentBlog.blogId, false)}
+            className={getButtonClass(getCurrentBlogRating(userId), -1)}
+          >
+            Downvote
+          </Button>
         </div>
 
         {/* Comments Section */}
@@ -191,14 +256,20 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                     </p>
                   </div>
                   <div className="flex gap-2 mt-2">
-                    <Button onClick={() => handleVote(1, comment.commentId, true)} size="sm">
+                    <Button
+                      onClick={() => handleVote(1, comment.commentId, true)}
+                      size="sm"
+                      className={getButtonClass(getCurrentCommentRating(userId, comment.commentId), 1)}
+                    >
                       Upvote
                     </Button>
-                    <Button onClick={() => handleVote(-1, comment.commentId, true)} size="sm" variant="secondary">
+                    <Button
+                      onClick={() => handleVote(-1, comment.commentId, true)}
+                      size="sm"
+                      variant="secondary"
+                      className={getButtonClass(getCurrentCommentRating(userId, comment.commentId), -1)}
+                    >
                       Downvote
-                    </Button>
-                    <Button onClick={() => handleVote(0, comment.commentId, true)} size="sm" variant="outline">
-                      Remove Vote
                     </Button>
                   </div>
                 </li>
