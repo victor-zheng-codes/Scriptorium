@@ -94,7 +94,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 w-full px-4 py-2 bg-gray-100 dark:bg-[#191919] text-black dark:text-white z-10">
+    <nav className="sticky top-0 w-full px-4 py-2 bg-gray-200 dark:bg-[#191919] text-black dark:text-white z-10">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
         <div className="flex-shrink-0">
           <Link href="/" passHref>
