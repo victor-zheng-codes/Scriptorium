@@ -63,13 +63,20 @@ const Code = () => {
     setOutput(""); // Reset output to an empty string
   };
 
+  const handleSaveAsTemplate = () => {
+    // Logic to save the code as a template
+    console.log("Saving as template...");
+    // You can implement the actual save logic here (e.g., sending the code to the backend)
+  };
+
   return (
     <Layout>
       <div className="m-4 flex items-center space-x-2 text-gray-900 dark:text-gray-300 pl-8 pt-4 font-bold text-lg my-0">
         Code Execution
       </div>
+
       <div className="m-4 flex flex-col md:flex-row items-center space-x-2 text-gray-800 dark:text-gray-300 md:pl-8 pt-2 my-0 pb-2">
-        <Label htmlFor="language-select" className="block text-md font-medium ">
+        <Label htmlFor="language-select" className="block text-md font-medium">
           Programming Language:
         </Label>
         <select
@@ -90,9 +97,8 @@ const Code = () => {
           <option value="php">PHP</option>
           <option value="rust">Rust</option>
         </select>
-        
-        <div className="pt-2 md:pt-0">
-          <span className="pr-1 pl-1">
+
+        <div className="pt-2 md:pt-0 flex items-center space-x-2">
           <Button
             onClick={handleRunButtonClick} // Call the function to execute the code
             disabled={isLoading} // Disable button while loading
@@ -100,12 +106,18 @@ const Code = () => {
           >
             {isLoading ? "Running..." : "Run"}
           </Button>
-          </span>
-          <span className="pr-1 pl-1">
-          <Button onClick={handleClearOutput} className={`text-sm py-1 px-4 pr-4 pl-4`}>
+
+          <Button onClick={handleClearOutput} className={`text-sm py-1 px-4`}>
             Clear Output
           </Button>
-          </span>
+
+          {/* Save as Template Button */}
+          <Button
+            onClick={handleSaveAsTemplate}
+            className="text-sm py-1 px-4"
+          >
+            Save as Template
+          </Button>
         </div>
       </div>
 
