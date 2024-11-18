@@ -48,7 +48,6 @@ export default function Home() {
       } else {
         localStorage.removeItem("token")
         localStorage.removeItem("refreshToken")
-        router.push("/login")
         return null;
       }
     } catch (error) {

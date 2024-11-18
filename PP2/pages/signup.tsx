@@ -66,7 +66,7 @@ const Signup = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-white"
+                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -77,7 +77,7 @@ const Signup = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Choose a username"
                   required
-                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-white"
+                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -88,7 +88,7 @@ const Signup = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Choose a password"
                   required
-                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-white"
+                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -99,7 +99,7 @@ const Signup = () => {
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Enter your first name"
                   required
-                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-white"
+                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -110,13 +110,13 @@ const Signup = () => {
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Enter your last name"
                   required
-                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-white"
+                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-gray-200"
                 />
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex flex-col items-center space-y-4">
-            <Button onClick={handleSignup} disabled={loading} className="w-full dark:bg-[#4a4a4a] dark:text-white">
+            <Button onClick={handleSignup} disabled={loading} className="w-full dark:bg-[#4a4a4a] dark:text-gray-200">
               {loading ? "Signing up..." : "Sign Up"}
             </Button>
 
