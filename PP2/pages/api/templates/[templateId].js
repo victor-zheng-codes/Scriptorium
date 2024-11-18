@@ -15,6 +15,10 @@ export default async function handler(req, res) {
       const template = await prisma.template.findUnique({
         where: { 
             templateId: templateId},
+        include: 
+        {
+          owner: true
+        }
       });
 
       if (!template) {
@@ -23,8 +27,19 @@ export default async function handler(req, res) {
 
       const templateTags = await prisma.templateTags.findMany({
         where: { 
-            templateId
-          },
+          templateId,
+        },
+        // include: {
+        //   tag
+        // }
+        // select: {
+        //   tag: {
+        //     select: {
+        //       tagName: true, // Select only the tagName field from the related Tag model
+        //       tagId: true,
+        //     },
+        //   },
+        // },
       });
 
       res.status(200).json({template, templateTags}); // Returns template along with associated blogs
