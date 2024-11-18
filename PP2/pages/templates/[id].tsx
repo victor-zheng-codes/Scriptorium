@@ -16,15 +16,6 @@ interface Template {
   owner: { username: string };
 }
 
-// format for sending patch for the templates
-interface PatchTemplate {
-  content: string;
-  title: string;
-  description: string;
-  language: string;
-  tags: string[];
-}
-
 interface TemplatesTags {
   templateTagId: number;
   tagId: number;
