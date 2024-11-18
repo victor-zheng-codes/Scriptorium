@@ -32,6 +32,7 @@ const Templates = () => {
   const [descriptionFilter, setDescriptionFilter] = useState<string>("");
   const [contentFilter, setContentFilter] = useState<string>("");
   const [tagFilter, setTagFilter] = useState<string>("");
+  const [limitFilter, setLimitFilter] = useState<number>(10);
 
   const router = useRouter();
 
@@ -43,13 +44,14 @@ const Templates = () => {
 
     const params = new URLSearchParams({
       page: page.toString(),
+      limit: limitFilter.toString(),
       ...(languageFilter && { language: languageFilter }),
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
       ...(contentFilter && { content: contentFilter }),
-      // ...(tagFilter && { tags: tagFilter}),
     });
 
+    // this can be combined with above 
     if(tagFilter){
         params.append("tags", tagFilter.toString())
     }
@@ -82,7 +84,7 @@ const Templates = () => {
   };
 
   // Debounce for filter change
-  const useDebounce = (value: string, delay: number) => {
+  const useDebounce = (value: any, delay: number) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
 
     useEffect(() => {
@@ -103,11 +105,18 @@ const Templates = () => {
   const debouncedDescriptionFilter = useDebounce(descriptionFilter, 500);
   const debouncedContentFilter = useDebounce(contentFilter, 500);
   const debouncedTagFilter = useDebounce(tagFilter, 500);
+  const debouncedLimitFilter = useDebounce(limitFilter, 1000);
 
   useEffect(() => {
+    // set the filter limit
+    if (limitFilter) {
+      if (Number(limitFilter) < 1) setLimitFilter(1);
+      else setLimitFilter(Number(limitFilter));
+    }
+
     // Fetch templates whenever the filters or page change
     fetchTemplates(currentPage);
-  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter, debouncedTagFilter]);
+  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter, debouncedTagFilter, debouncedLimitFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -206,7 +215,7 @@ const Templates = () => {
                 value={tagFilter}
                 onChange={(e) => handleFilterChange("tags", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              />
+              />            
             </div>
           </div>
 
@@ -266,9 +275,22 @@ const Templates = () => {
           ))
         )}
       </div>
+        {/* Pagination */}
+        <div className="mb-4 flex justify-center items-center mt-10">
+            <input
+              type="number"
+              placeholder="Limit"
+              value={limitFilter}
+              onChange={(e) => {
+                const newLimit = Number(e.target.value);
+                // Enforce minimum limit of 1
+                setLimitFilter(Math.max(newLimit, 1));
+              }}
+              className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500 w-16"
+            />
+          </div>
 
-          {/* Pagination */}
-          <div className="flex justify-between items-center mt-10">
+          <div className="flex justify-between items-center mt-10 m-20">
             <Button
               disabled={currentPage === 1}
               onClick={() => handlePageChange(currentPage - 1)}
