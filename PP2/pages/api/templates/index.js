@@ -14,6 +14,16 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     const buildWhereConditions = () => {
+
+      if (tags){
+          console.log("before tags: " + tags)
+
+          tags = tags.split(",")
+      }
+      // tagString = tags ? tags.split(",").map((tag) => tag.trim()).join(",") : "";
+
+      // console.log("stringified tags: " + tagString)
+
       return [
           content ? { content: { contains: content } } : undefined,
           title ? { title: { contains: title } } : undefined,
@@ -23,7 +33,7 @@ export default async function handler(req, res) {
             templatesTags: {
                   some: {
                       tag: {
-                          tagName: { in: tags.split(',') },
+                        tagName: { in: tags },
                       },
                   },
               },
@@ -67,7 +77,8 @@ export default async function handler(req, res) {
     } 
     catch (error) 
     {
-      return res.status(500).json({ message: 'Internal server error' , error});
+      console.log("Error " + error)
+      return res.status(500).json({ message: 'Internal server error'});
     }
   }
   return res.status(405).end(`Method ${req.method} Not Allowed`);

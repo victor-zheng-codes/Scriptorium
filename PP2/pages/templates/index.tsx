@@ -39,15 +39,20 @@ const Templates = () => {
     setLoading(true);
     setError(null);
 
+    console.log("tags " + tagFilter)
+
     const params = new URLSearchParams({
       page: page.toString(),
       ...(languageFilter && { language: languageFilter }),
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
       ...(contentFilter && { content: contentFilter }),
-      ...(tagFilter && { tags: tagFilter }),
+      // ...(tagFilter && { tags: tagFilter}),
     });
 
+    if(tagFilter){
+        params.append("tags", tagFilter.toString())
+    }
 
     console.log("params " + params)
 
@@ -58,8 +63,6 @@ const Templates = () => {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("Fetched templates:", data.templates); // Check if templateId exists here
-
         setTemplates(data.templates);
         setTotalPages(data.totalPages);
         setCurrentPage(data.page);
@@ -113,8 +116,6 @@ const Templates = () => {
   };
 
   const handleFilterChange = (filterType: string, value: string) => {
-    console.log(filterType, value)
-
     switch (filterType) {
       case "language":
         setLanguageFilter(value);
@@ -201,7 +202,7 @@ const Templates = () => {
               />
               <input
                 type="text"
-                placeholder="Filter by tags (comma separated)"
+                placeholder="Filter by tags"
                 value={tagFilter}
                 onChange={(e) => handleFilterChange("tags", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
