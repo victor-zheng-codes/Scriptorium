@@ -57,7 +57,8 @@ export default async function handler(req, res) {
       res.status(200).json({ 
         message: 'Login successful', 
         accessToken, 
-        refreshToken
+        refreshToken,
+        userId: user.userId
       });
     } catch (error) {
       console.error(error);

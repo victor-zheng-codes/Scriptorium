@@ -156,12 +156,12 @@ const Navbar = () => {
               Blogs
             </Button>
           </Link>
-          <Link href="/create" passHref>
+          <Link href="/studio" passHref>
             <Button
               variant="link"
               className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
             >
-              Create
+              Creator Studio
             </Button>
           </Link>
         </div>
@@ -209,12 +209,12 @@ const Navbar = () => {
               Blogs
             </Button>
           </Link>
-          <Link href="/create" passHref>
+          <Link href="/studio" passHref>
             <Button
               variant="link"
               className="text-black dark:text-white hover:text-gray-500 dark:hover:text-gray-400 no-underline"
             >
-              Create
+              Creator Studio
             </Button>
           </Link>
         </div>

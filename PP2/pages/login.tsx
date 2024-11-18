@@ -37,14 +37,14 @@ const Login = () => {
       }
 
       const data = await response.json();
-      const { accessToken, refreshToken } = data;
+      const { accessToken, refreshToken, userId } = data;
 
       // Store tokens in local storage (or you could use cookies)
       localStorage.setItem("token", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
       // Redirect to profile or another page after login
-      router.push("/profile");
+      router.push("/");
     } catch (err) {
       setError("An error occurred during login.");
       setLoading(false);

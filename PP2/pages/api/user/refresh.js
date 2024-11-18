@@ -4,7 +4,7 @@ import prisma from '../../../utils/prisma-client'
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    // const { userId } = req.body; // also sends the refreshToken in the body in case refreshing is needed
+    const { refreshToken } = req.body; 
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     }
   
     // Proceed with token verification
-    let tokenVerificationResult = await refreshAccessToken(token);
+    let tokenVerificationResult = await refreshAccessToken(refreshToken);
 
     // Check if the token is valid
     if (tokenVerificationResult === null) {
