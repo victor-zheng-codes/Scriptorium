@@ -326,6 +326,7 @@ const TemplatePage = () => {
       </div>
       )}
 
+      <div className="bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
         {isEditMode ? (
           <div className="container mx-auto px-8 py-16">
             <div className="mb-4">
@@ -481,6 +482,7 @@ const TemplatePage = () => {
           </div>)}
         </div>
       </div>)}
+      </div>
     </Layout>
   );
 };
