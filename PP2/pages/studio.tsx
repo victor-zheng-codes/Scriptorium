@@ -111,7 +111,7 @@ const Studio = () => {
 
   const handleOptionClick = (option: string) => {
     if (option === "template") {
-      router.push("/create/template"); // Redirect to create template page
+      router.push("/code"); // Redirect to create template page
     } else if (option === "blog") {
       router.push("/create/blog"); // Redirect to create blog page
     }

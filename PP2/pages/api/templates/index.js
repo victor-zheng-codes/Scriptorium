@@ -14,19 +14,36 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     const buildWhereConditions = () => {
+
+      if (tags){
+          console.log("before tags: " + tags)
+          tags = tags.split(",").map(function(item) {
+            return item.trim();
+          }).filter(function(item) {
+            return item !== ''; // Remove empty strings
+          });
+          console.log("after tags: " + tags)
+
+      }
+      // tagString = tags ? tags.split(",").map((tag) => tag.trim()).join(",") : "";
+
+      // console.log("stringified tags: " + tagString)
+
       return [
           content ? { content: { contains: content } } : undefined,
           title ? { title: { contains: title } } : undefined,
           description ? {description: {contains: description} }: undefined,
           language ? {language: {contains: language} }: undefined,
           tags && tags.length > 0 ? {
-            templatesTags: {
-                  some: {
-                      tag: {
-                          tagName: { in: tags.split(',') },
-                      },
+            AND: tags.map((tag) => ({
+              templatesTags: {
+                some: {
+                  tag: {
+                    tagName: { equals: tag }, // Case-insensitive match
                   },
+                },
               },
+            })),
           } : undefined,
       ].filter(Boolean); // Remove undefined values (from non-existent parameters)
   };
@@ -67,7 +84,8 @@ export default async function handler(req, res) {
     } 
     catch (error) 
     {
-      return res.status(500).json({ message: 'Internal server error' , error});
+      console.log("Error " + error)
+      return res.status(500).json({ message: 'Internal server error'});
     }
   }
   return res.status(405).end(`Method ${req.method} Not Allowed`);

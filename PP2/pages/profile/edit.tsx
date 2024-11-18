@@ -196,7 +196,7 @@ const EditProfile = () => {
   return (
     <Layout>
       <div className="min-h-screen flex">
-      <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
+      <div className="bg-gray-150 dark:bg-gray-950 w-16 md:w-32 hidden md:block"></div>
 
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
@@ -239,7 +239,7 @@ const EditProfile = () => {
                   name="username"
                   value={editedUser.username || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-925 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -252,7 +252,7 @@ const EditProfile = () => {
                   name="email"
                   value={editedUser.email || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-925 text-black dark:text-gray-200"
                 />
               </div>
               {/* Password Field */}
@@ -266,7 +266,7 @@ const EditProfile = () => {
                   name="password"
                   value={password} // Bind password state
                   onChange={(e) => setPassword(e.target.value)} // Update password state
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-925 text-black dark:text-gray-200"
                 />
               </div>
               {/* Confirm Password Field */}
@@ -280,7 +280,7 @@ const EditProfile = () => {
                   name="confirmPassword"
                   value={confirmPassword} // Bind confirm password state
                   onChange={(e) => setConfirmPassword(e.target.value)} // Update confirm password state
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-925 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -293,7 +293,7 @@ const EditProfile = () => {
                   name="firstName"
                   value={editedUser.firstName || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-925 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -306,7 +306,7 @@ const EditProfile = () => {
                   name="lastName"
                   value={editedUser.lastName || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-925 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -319,14 +319,14 @@ const EditProfile = () => {
                   name="phoneNumber" // Update this to match the state property
                   value={editedUser.phoneNumber || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-925 text-black dark:text-gray-200"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
+        <div className="bg-gray-150 dark:bg-gray-950 w-16 md:w-32 hidden md:block"></div>
       </div>
     </Layout>
   );
