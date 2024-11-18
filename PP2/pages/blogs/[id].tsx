@@ -10,7 +10,16 @@ type Comment = {
   downvotes: number;
   user: { username: string };
   UserCommentRating: { userId: number, rating: number }[];
+  CommentReplyChild: CommentReply[];
+  CommentReplyParent: CommentReply[];
 };
+
+type CommentReply = {
+  commentId: number;
+  replyId: number;
+  comment: Comment;
+  reply: Comment;
+}
 
 type Blog = {
   blogId: number;
@@ -34,12 +43,13 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   }
 
   const [currentBlog, setCurrentBlog] = useState<Blog>(blog);
-  const [commentContent, setCommentContent] = useState('');
+  const [commentContents, setCommentContents] = useState<{ [key: number]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState(0);
+  const [replies, setReplies] = useState<{ [commentId: number]: Comment[] | null }>({}); // Store replies for each comment (null means hidden)
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -159,7 +169,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       setError("Must be logged in to comment");
       return;
     }
-    if (!commentContent.trim()) {
+    if (!commentContents[0].trim()) {
       setError("Cannot write empty comment");
       return;
     }
@@ -175,7 +185,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ content: commentContent }),
+        body: JSON.stringify({ content: commentContents[0] }),
       });
   
       if (!response.ok) {
@@ -190,7 +200,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       const updatedBlog = await updatedBlogResponse.json();
       setCurrentBlog(updatedBlog.blogDetails);
   
-      setCommentContent("");
+      handleCommentChange(0, "");
     } catch (error: any) {
       setError(error.message || "Error adding comment");
     } finally {
@@ -206,6 +216,160 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     } else {
       return 'bg-gray-200 text-gray-600';
     }
+  };
+
+  const fetchReplies = async (commentId: number) => {
+    try {
+      const response = await fetch(`/api/blogs/${currentBlog.blogId}/comment/replies?commentId=${commentId}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setReplies((prevReplies) => ({
+          ...prevReplies,
+          [commentId]: data.replies.map((commentReply: CommentReply) => commentReply.reply), // Update state with fetched replies
+        }));
+      } else {
+        console.error("Failed to fetch replies:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching replies:", error);
+    }
+  };
+
+  const toggleReplies = (commentId: number) => {
+    if (replies[commentId]) {
+      // If replies are already fetched, toggle visibility (set to null to hide them)
+      setReplies((prevReplies) => ({
+        ...prevReplies,
+        [commentId]: null, // Hide the replies
+      }));
+    } else {
+      fetchReplies(commentId); // Fetch replies if they are not yet loaded
+      console.log(replies);
+    }
+  };
+
+  const handleReplySubmit = async (e: React.FormEvent, parentId: number) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      setError("Must be logged in to reply");
+      return;
+    }
+    if (!commentContents[parentId].trim()) {
+      setError("Cannot write empty reply");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`/api/blogs/${currentBlog.blogId}/comment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content: commentContents[parentId], commentId: parentId }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add reply");
+      }
+
+      // Fetch updated blog data
+      const updatedBlogResponse = await fetch(`/api/blogs/${currentBlog.blogId}`);
+      if (!updatedBlogResponse.ok) {
+        throw new Error("Failed to fetch updated blog data");
+      }
+      const updatedBlog = await updatedBlogResponse.json();
+      setCurrentBlog(updatedBlog.blogDetails);
+      handleCommentChange(parentId, "");
+
+      fetchReplies(parentId);
+    } catch (error: any) {
+      setError(error.message || "Error adding reply");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCommentChange = (commentId: number, value: string) => {
+    setCommentContents((prevContents) => ({
+      ...prevContents,
+      [commentId]: value,
+    }));
+  };
+
+  const renderReplies = (thisReplies: Comment[], depth: number = 0) => {
+    const maxDepth = 5; // Limit nesting to 5 levels
+  
+    if (depth > maxDepth) {
+      return <p>Replies are too deep to display.</p>; // Optionally show a message
+    }
+    return (
+      <ul className="ml-8 space-y-4">
+        {thisReplies.map((reply) => (
+          <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <p className="mb-2">{reply.content}</p>
+            <div className="flex justify-between items-center text-sm">
+              <p>
+                By: <span className="font-medium">{reply.user?.username || "Unknown"}</span>
+              </p>
+              <p>
+                Upvotes: {reply.upvotes} | Downvotes: {reply.downvotes}
+              </p>
+            </div>
+
+            {/* Upvote/downvote reply */}
+            <div className="flex gap-2 mb-8">
+            <Button
+              onClick={() => handleVote(1, currentBlog.blogId, false)}
+              className={getButtonClass(getCurrentBlogRating(userId), 1)}
+            >
+              Upvote
+            </Button>
+            <Button
+              onClick={() => handleVote(-1, currentBlog.blogId, false)}
+              className={getButtonClass(getCurrentBlogRating(userId), -1)}
+            >
+              Downvote
+            </Button>
+          </div>
+
+            {/* Button to show/hide replies for this reply */}
+            <Button
+              onClick={() => toggleReplies(reply.commentId)}
+              size="sm"
+              variant="link"
+            >
+              {replies[reply.commentId] ? "Hide Replies" : "Show Replies"}
+            </Button>
+
+            {replies[reply.commentId] && renderReplies(replies[reply.commentId]!, depth + 1)}
+            {/* Render replies for this reply */}
+
+            {/* Only show reply button if depth is within the max limit */}
+            {depth < maxDepth && (
+              <form onSubmit={(e) => handleReplySubmit(e, reply.commentId)} className="mt-4">
+                <textarea
+                  value={commentContents[reply.commentId]}
+                  onChange={(e) => handleCommentChange(reply.commentId, e.target.value)}
+                  rows={3}
+                  className="w-full p-2 border rounded-md"
+                  placeholder="Write your reply..."
+                />
+                <Button type="submit" disabled={isSubmitting} className="mt-2 px-4 py-2">
+                  {isSubmitting ? "Submitting..." : "Add Reply"}
+                </Button>
+              </form>
+            )}
+          
+          </li>
+        ))}
+      </ul>
+    );
   };
 
   return (
@@ -241,7 +405,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
             <p>No comments yet.</p>
           ) : (
             <ul className="space-y-4">
-              {currentBlog.Comment.map((comment) => (
+              {currentBlog.Comment.filter((comment) => comment.CommentReplyChild === null || comment.CommentReplyChild.length === 0).map((comment) => (
                 <li
                   key={comment.commentId}
                   className="border border-gray-200 rounded-lg p-4 bg-gray-50"
@@ -272,6 +436,30 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                       Downvote
                     </Button>
                   </div>
+
+                  {/* Button to show/hide replies */}
+                  <Button
+                    onClick={() => toggleReplies(comment.commentId)}
+                    size="sm"
+                    variant="link"
+                  >
+                    {replies[comment.commentId] ? "Hide Replies" : "Show Replies"}
+                  </Button>
+
+                  {/* Render replies */}
+                  {replies[comment.commentId] && renderReplies(replies[comment.commentId]!)}
+                  <form onSubmit={(e) => handleReplySubmit(e, comment.commentId)} className="mt-4">
+                    <textarea
+                      value={commentContents[comment.commentId]}
+                      onChange={(e) => handleCommentChange(comment.commentId, e.target.value)}
+                      rows={3}
+                      className="w-full p-2 border rounded-md"
+                      placeholder="Write your reply..."
+                    />
+                    <Button type="submit" disabled={isSubmitting} className="mt-2 px-4 py-2">
+                      {isSubmitting ? "Submitting..." : "Add Reply"}
+                    </Button>
+                  </form>
                 </li>
               ))}
             </ul>
@@ -280,8 +468,8 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
           {/* Add Comment */}
           <form onSubmit={handleCommentSubmit} className="mt-6">
             <textarea
-              value={commentContent}
-              onChange={(e) => setCommentContent(e.target.value)}
+              value={commentContents[0]}
+              onChange={(e) => handleCommentChange(0, e.target.value)}
               rows={4}
               className="w-full p-2 border rounded-md"
               placeholder="Write your comment here..."

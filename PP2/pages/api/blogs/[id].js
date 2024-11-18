@@ -320,9 +320,34 @@ export default async function handler(req, res) {
                                 username: true // Select the username field from the User model
                             }
                         },
-                        CommentReplyChild: { // Fetch the parent comment by finding where current comment is a reply
-                            select: {
-                                commentId: true // This gives the commentId of the parent comment this one is replying to
+                        CommentReplyChild: { // Fetch the child comments
+                            include: {
+                                reply: {
+                                    select: {
+                                        commentId: true,
+                                        content: true,
+                                        upvotes: true,
+                                        downvotes: true,
+                                        user: {
+                                            select: { username: true }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        CommentReplyParent: { // Fetch the parent comment by finding where current comment is a reply
+                            include: {
+                                comment: {
+                                    select: {
+                                        commentId: true,
+                                        content: true,
+                                        upvotes: true,
+                                        downvotes: true,
+                                        user: {
+                                            select: { username: true }
+                                        }
+                                    }
+                                }
                             }
                         },
                         UserCommentRating: {
