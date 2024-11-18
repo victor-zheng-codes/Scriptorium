@@ -324,6 +324,12 @@ export default async function handler(req, res) {
                             select: {
                                 commentId: true // This gives the commentId of the parent comment this one is replying to
                             }
+                        },
+                        UserCommentRating: {
+                            select: {
+                                userId: true,
+                                rating: true,
+                            }
                         }
                     }
                 }, // Include the Blog's tags and templates when returning it
@@ -337,6 +343,12 @@ export default async function handler(req, res) {
                         template: true, // Include template info
                     },
                 },
+                BlogRating: {
+                    select: {
+                        userId: true,
+                        rating: true,
+                    }
+                }
             }
         });
 

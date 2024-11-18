@@ -9,6 +9,7 @@ type Comment = {
   upvotes: number;
   downvotes: number;
   user: { username: string };
+  UserCommentRating: { userId: number, rating: number }[];
 };
 
 type Blog = {
@@ -16,8 +17,11 @@ type Blog = {
   title: string;
   content: string;
   description: string;
+  upvotes: number;
+  downvotes: number;
   tags: { tag: { tagName: string } }[];
   Comment: Comment[];
+  BlogRating: { userId: number, rating: number }[];
 };
 
 type BlogPageProps = {
@@ -29,7 +33,6 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     return <p className="text-center text-gray-600 dark:text-gray-300 mt-8">Blog not found</p>;
   }
 
-  // Add state for the blog and comments
   const [currentBlog, setCurrentBlog] = useState<Blog>(blog);
   const [commentContent, setCommentContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,8 +52,8 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          if (data.user.username) {
-            setUsername(data.user.username); // Set the username from the API response
+          if (data.user && data.user.username) {
+            setUsername(data.user.username);
           }
         })
         .catch((error) => console.error("Error fetching user data:", error));
@@ -59,7 +62,52 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     }
   }, []);
 
-  // Handle comment form submission
+  const handleVote = async (
+    rating: number, // 1 = upvote, -1 = downvote, 0 = remove vote
+    id: number,
+    isComment: boolean
+  ) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("You must be logged in to rate.");
+      return;
+    }
+  
+    const endpoint = isComment
+      ? `/api/blogs/${currentBlog.blogId}/comment/rate`
+      : `/api/blogs/${currentBlog.blogId}/rate`;
+  
+    const body = isComment
+      ? JSON.stringify({ commentId: id, rating })
+      : JSON.stringify({ rating });
+  
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body,
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to register vote");
+      }
+  
+      // Fetch updated blog data
+      const updatedBlogResponse = await fetch(`/api/blogs/${currentBlog.blogId}`);
+      if (!updatedBlogResponse.ok) {
+        throw new Error("Failed to fetch updated blog data");
+      }
+      const updatedBlog = await updatedBlogResponse.json();
+      setCurrentBlog(updatedBlog.blogDetails);
+  
+    } catch (error) {
+      setError("Error voting. Please try again.");
+    }
+  };
+  
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
@@ -70,39 +118,36 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       setError("Cannot write empty comment");
       return;
     }
-
+  
     setIsSubmitting(true);
     setError(null);
-
+  
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(`/api/blogs/${currentBlog.blogId}/comment`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ content: commentContent }),
       });
-
+  
       if (!response.ok) {
-        throw new Error('Failed to add comment');
+        throw new Error("Failed to add comment");
       }
-
-      const newComment = await response.json();
-      console.log(newComment);
-      newComment.content = commentContent;
-      newComment.upvotes = 0;
-      newComment.downvotes = 0;
-      newComment.user = {};
-      newComment.user.username = username;
-      setCommentContent(''); // Reset input
-      setCurrentBlog((prevBlog) => ({
-        ...prevBlog,
-        Comment: [...prevBlog.Comment, newComment], // Add new comment to the state
-      }));
+  
+      // Fetch updated blog data
+      const updatedBlogResponse = await fetch(`/api/blogs/${currentBlog.blogId}`);
+      if (!updatedBlogResponse.ok) {
+        throw new Error("Failed to fetch updated blog data");
+      }
+      const updatedBlog = await updatedBlogResponse.json();
+      setCurrentBlog(updatedBlog.blogDetails);
+  
+      setCommentContent("");
     } catch (error: any) {
-      setError(error.message || 'Error adding comment');
+      setError(error.message || "Error adding comment");
     } finally {
       setIsSubmitting(false);
     }
@@ -111,20 +156,24 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8 text-gray-600 dark:text-gray-300">
-        {/* Blog Title */}
-        <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
-        <p className="text-lg mb-8">{currentBlog.description}</p>
-
         {/* Blog Content */}
-        <div className="prose lg:prose-xl mb-12">
-          {currentBlog.content}
+        <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
+        <p className="text-lg mb-4">{currentBlog.description}</p>
+        <div className="prose lg:prose-xl mb-12">{currentBlog.content}</div>
+
+        <p className="text-sm mb-8">Upvotes: {currentBlog.upvotes} | Downvotes: {currentBlog.downvotes}</p>
+
+        {/* Upvote/Downvote/Remove Vote for Blog */}
+        <div className="flex gap-2 mb-8">
+          <Button onClick={() => handleVote(1, currentBlog.blogId, false)}>Upvote</Button>
+          <Button onClick={() => handleVote(-1, currentBlog.blogId, false)}>Downvote</Button>
         </div>
 
         {/* Comments Section */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Comments</h2>
           {!currentBlog.Comment || currentBlog.Comment.length === 0 ? (
-            <p className="">No comments yet.</p>
+            <p>No comments yet.</p>
           ) : (
             <ul className="space-y-4">
               {currentBlog.Comment.map((comment) => (
@@ -134,14 +183,30 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                 >
                   <p className="mb-2">{comment.content}</p>
                   <div className="flex justify-between items-center text-sm">
-                    <p>By: <span className="font-medium">{comment.user.username}</span></p>
-                    <p>Upvotes: {comment.upvotes} | Downvotes: {comment.downvotes}</p>
+                    <p>
+                      By: <span className="font-medium">{comment.user.username}</span>
+                    </p>
+                    <p>
+                      Upvotes: {comment.upvotes} | Downvotes: {comment.downvotes}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <Button onClick={() => handleVote(1, comment.commentId, true)} size="sm">
+                      Upvote
+                    </Button>
+                    <Button onClick={() => handleVote(-1, comment.commentId, true)} size="sm" variant="secondary">
+                      Downvote
+                    </Button>
+                    <Button onClick={() => handleVote(0, comment.commentId, true)} size="sm" variant="outline">
+                      Remove Vote
+                    </Button>
                   </div>
                 </li>
               ))}
             </ul>
           )}
-          {/* Add Comment Form */}
+
+          {/* Add Comment */}
           <form onSubmit={handleCommentSubmit} className="mt-6">
             <textarea
               value={commentContent}
@@ -150,35 +215,11 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
               className="w-full p-2 border rounded-md"
               placeholder="Write your comment here..."
             />
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-2 px-4 py-2"
-            >
-              {isSubmitting ? 'Submitting...' : 'Add Comment'}
+            <Button type="submit" disabled={isSubmitting} className="mt-2 px-4 py-2">
+              {isSubmitting ? "Submitting..." : "Add Comment"}
             </Button>
           </form>
-
           {error && <p className="mt-2 text-red-500">{error}</p>}
-        </section>
-
-        {/* Tags Section */}
-        <section>
-          <h3 className="text-2xl font-semibold mb-4">Tags</h3>
-          <ul className="flex flex-wrap gap-2">
-            {!currentBlog.tags || currentBlog.tags.length === 0 ? (
-              <li>No tags available.</li>
-            ) : (
-              currentBlog.tags.map((tag, index) => (
-                <li
-                  key={index}
-                  className="px-3 py-1 bg-blue-100 rounded-full text-sm"
-                >
-                  {tag.tag.tagName}
-                </li>
-              ))
-            )}
-          </ul>
         </section>
       </div>
     </Layout>
