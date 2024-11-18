@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import Layout from "@/components/ui/layout";
+import { useRouter } from "next/router"; // Import the router for redirection
 
 const Code = () => {
   const [code, setCode] = useState<string>(""); // State to hold code from the textarea
@@ -9,6 +10,14 @@ const Code = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false); // State for loading status
   const [output, setOutput] = useState<string>(""); // State to hold code execution output
   const [standardInput, setStandardInput] = useState<string>(""); // State to hold standard input
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false); // State for popup visibility
+  const [templateData, setTemplateData] = useState({
+    title: "",
+    tags: "",
+    description: "",
+  }); // State to store form data
+  const [error, setError] = useState<string>(""); // State to store error messages
+  const router = useRouter(); // Initialize the router
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Tab") {
@@ -64,9 +73,68 @@ const Code = () => {
   };
 
   const handleSaveAsTemplate = () => {
-    // Logic to save the code as a template
-    console.log("Saving as template...");
-    // You can implement the actual save logic here (e.g., sending the code to the backend)
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // If the user is not logged in, redirect to the login page
+      router.push("/login"); // Redirect to the login page (adjust path if needed)
+      return;
+    }
+
+    setIsPopupOpen(true); // Open the popup form
+    setError(""); // Reset any previous errors when opening the popup
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setTemplateData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmitTemplate = async () => {
+    const { title, tags, description } = templateData;
+
+    // Split tags by comma and trim extra spaces
+    const tagsArray = tags.split(",").map(tag => tag.trim());
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // If no token is found, redirect to login
+      router.push("/login");
+      return; // Stop the function execution
+    }
+
+    try {
+      const response = await fetch("/api/templates/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          content: code, // This is the code content
+          tags: tagsArray,
+          language: selectedLanguage,
+          description,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Handle successful template creation
+        setIsPopupOpen(false); // Close the popup
+        router.push(`/templates/${result.template.templateId}`);
+      } else {
+        // If the response is not OK, show the error from the API
+        setError(result.message || "Failed to save template");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while saving the template.");
+    }
   };
 
   return (
@@ -154,6 +222,54 @@ const Code = () => {
           />
         </div>
       </div>
+
+      {/* Popup Form for Saving Template */}
+      {isPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded-md shadow-md dark:bg-gray-925 dark:text-gray-200 w-96">
+            <h2 className="text-xl font-bold mb-4">Save as Template</h2>
+            {error && (
+              <div className="text-red-600 mb-4">{error}</div>
+            )}
+            <div>
+              <label className="block mb-2">Title:</label>
+              <input
+                type="text"
+                name="title"
+                value={templateData.title}
+                onChange={handleInputChange}
+                className="w-full p-2 border border-gray-500 rounded-md"
+                placeholder="Enter template title"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block mb-2">Tags:</label>
+              <input
+                type="text"
+                name="tags"
+                value={templateData.tags}
+                onChange={handleInputChange}
+                className="w-full p-2 border border-gray-500 rounded-md"
+                placeholder="Enter tags (comma separated)"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block mb-2">Description:</label>
+              <textarea
+                name="description"
+                value={templateData.description}
+                onChange={handleInputChange}
+                className="w-full p-2 border border-gray-500 rounded-md"
+                placeholder="Enter description"
+              />
+            </div>
+            <div className="mt-6 flex justify-end space-x-4">
+              <Button onClick={() => setIsPopupOpen(false)} className="">Cancel</Button>
+              <Button onClick={handleSubmitTemplate} className="">Save</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };
