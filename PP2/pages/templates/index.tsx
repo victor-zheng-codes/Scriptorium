@@ -15,6 +15,8 @@ interface Template {
   language: string;
   createdAt: string;
   updatedAt: string;
+  owner: {firstName: string, lastName: string, username: string}
+  templatesTags: {tag: {tagName: string, tagId: number}, tagId: number, templateId: number, templateTagId: number}[]
 }
 
 const Templates = () => {
@@ -29,6 +31,7 @@ const Templates = () => {
   const [titleFilter, setTitleFilter] = useState<string>("");
   const [descriptionFilter, setDescriptionFilter] = useState<string>("");
   const [contentFilter, setContentFilter] = useState<string>("");
+  const [tagFilter, setTagFilter] = useState<string>("");
 
   const router = useRouter();
 
@@ -42,7 +45,9 @@ const Templates = () => {
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
       ...(contentFilter && { content: contentFilter }),
+      ...(tagFilter && { tags: tagFilter }),
     });
+
 
     console.log("params " + params)
 
@@ -53,6 +58,8 @@ const Templates = () => {
 
       if (res.ok) {
         const data = await res.json();
+        console.log("Fetched templates:", data.templates); // Check if templateId exists here
+
         setTemplates(data.templates);
         setTotalPages(data.totalPages);
         setCurrentPage(data.page);
@@ -92,11 +99,12 @@ const Templates = () => {
   const debouncedTitleFilter = useDebounce(titleFilter, 500);
   const debouncedDescriptionFilter = useDebounce(descriptionFilter, 500);
   const debouncedContentFilter = useDebounce(contentFilter, 500);
+  const debouncedTagFilter = useDebounce(tagFilter, 500);
 
   useEffect(() => {
     // Fetch templates whenever the filters or page change
     fetchTemplates(currentPage);
-  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter]);
+  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter, debouncedTagFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -120,6 +128,9 @@ const Templates = () => {
       case "content":
           setContentFilter(value);
           break;
+      case "tags":
+          setTagFilter(value);
+          break;
       default:
         break;
     }
@@ -128,7 +139,7 @@ const Templates = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">Loading...</h1>
         </div>
       </Layout>
@@ -138,7 +149,7 @@ const Templates = () => {
   if (error !== null) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">{error}</h1>
         </div>
       </Layout>
@@ -149,10 +160,10 @@ const Templates = () => {
     <Layout>
       <div className="flex flex-grow m-5">
         {/* Main Content Area */}
-        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
+        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
           {/* Header */}
           <div className="flex justify-between px-8 py-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200">
               Code Templates
             </h1>
           </div>
@@ -165,28 +176,35 @@ const Templates = () => {
                 placeholder="Filter by language"
                 value={languageFilter}
                 onChange={(e) => handleFilterChange("language", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
               <input
                 type="text"
                 placeholder="Filter by title"
                 value={titleFilter}
                 onChange={(e) => handleFilterChange("title", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
               <input
                 type="text"
                 placeholder="Filter by description"
                 value={descriptionFilter}
                 onChange={(e) => handleFilterChange("description", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
               <input
                 type="text"
                 placeholder="Filter by code content"
                 value={contentFilter}
                 onChange={(e) => handleFilterChange("content", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
+              />
+              <input
+                type="text"
+                placeholder="Filter by tags (comma separated)"
+                value={tagFilter}
+                onChange={(e) => handleFilterChange("tags", e.target.value)}
+                className="p-2 border rounded dark:bg-gray-700 dark:text-gray-200"
               />
             </div>
           </div>
@@ -215,8 +233,22 @@ const Templates = () => {
                 {template.content}
               </SyntaxHighlighter>
               <p className="text-sm text-gray-500 mt-2">
-                Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | AuthorId: {template.userId}
+                Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | Author: {template.owner.username}
               </p>
+                {template.templatesTags?.length > 0 && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4">Tags</h2>
+                    <div className="flex space-x-2">
+                      {template.templatesTags.map((tag) => (
+                        <span
+                          className="px-3 py-1 rounded bg-blue-500 text-white"
+                        >
+                          {tag.tag.tagName}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
               {/* buttons to edit or delete */}
               <div className="mt-4">
