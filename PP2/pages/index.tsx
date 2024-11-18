@@ -13,7 +13,7 @@ export default function Home() {
 
   useEffect(() => {
     // Get the access token and refresh token from localStorage
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("token");
     const refreshToken = localStorage.getItem("refreshToken");
 
     if (accessToken && refreshToken) {
