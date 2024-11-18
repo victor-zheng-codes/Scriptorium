@@ -24,6 +24,8 @@ type Blog = {
   content: string;
   BlogTags: BlogTag[];
   BlogTemplate: BlogTemplate[];
+  upvotes: number;
+  downvotes: number;
 };
 
 type ApiResponse = {
@@ -198,6 +200,12 @@ const Blogs = () => {
               </div>
               <div>
                 <strong>Templates:</strong> {blog.BlogTemplate.map((tmpl) => tmpl.template.title).join(", ")}
+              </div>
+              <div>
+                <strong>Upvotes:</strong> {blog.upvotes} 
+              </div>
+              <div>
+                <strong>Downvotes:</strong> {blog.downvotes}
               </div>
             </div>
           ))
