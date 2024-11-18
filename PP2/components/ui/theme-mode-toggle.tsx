@@ -11,7 +11,7 @@ export function ModeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+      className="p-2 rounded-full hover:bg-gray-300 dark:hover:bg-gray-700"
     >
       {theme === "dark" ? (
         <Moon className="h-5 w-5" />

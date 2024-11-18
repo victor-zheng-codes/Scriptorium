@@ -43,11 +43,10 @@ const EditProfile = () => {
       const res = await fetch("/api/user/refresh", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Assuming token exists
+          "Content-Type": "application/json", // Ensure JSON content-type is set
         },
-        body: JSON.stringify({
-          refreshToken: refreshToken,
-        }),
+        body: JSON.stringify({ refreshToken }),
       });
 
       if (res.ok) {
@@ -187,7 +186,7 @@ const EditProfile = () => {
   if (!user) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">No user data found.</h1>
         </div>
       </Layout>
@@ -199,7 +198,7 @@ const EditProfile = () => {
       <div className="min-h-screen flex">
       <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
 
-        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
+        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
             <div className="flex space-x-4 ml-auto">
               <Button
@@ -240,7 +239,7 @@ const EditProfile = () => {
                   name="username"
                   value={editedUser.username || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -253,7 +252,7 @@ const EditProfile = () => {
                   name="email"
                   value={editedUser.email || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
                 />
               </div>
               {/* Password Field */}
@@ -267,7 +266,7 @@ const EditProfile = () => {
                   name="password"
                   value={password} // Bind password state
                   onChange={(e) => setPassword(e.target.value)} // Update password state
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
                 />
               </div>
               {/* Confirm Password Field */}
@@ -281,7 +280,7 @@ const EditProfile = () => {
                   name="confirmPassword"
                   value={confirmPassword} // Bind confirm password state
                   onChange={(e) => setConfirmPassword(e.target.value)} // Update confirm password state
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -294,7 +293,7 @@ const EditProfile = () => {
                   name="firstName"
                   value={editedUser.firstName || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -307,7 +306,7 @@ const EditProfile = () => {
                   name="lastName"
                   value={editedUser.lastName || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -320,7 +319,7 @@ const EditProfile = () => {
                   name="phoneNumber" // Update this to match the state property
                   value={editedUser.phoneNumber || ""}
                   onChange={handleChange}
-                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white"
+                  className="w-full p-2 mt-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-black dark:text-gray-200"
                 />
               </div>
             </div>

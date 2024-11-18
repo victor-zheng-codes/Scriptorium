@@ -13,17 +13,19 @@ interface Template {
   language: string;
   createdAt: string;
   updatedAt: string;
+  owner: { username: string }; // Username of the owner
 }
 
-interface TemplateTag {
+interface TemplatesTags {
   templateTagId: number;
   tagId: number;
   templateId: number;
+  tag: { tagName: string, tagid: number }
 }
 
 const TemplatePage = () => {
   const [template, setTemplate] = useState<Template | null>(null); // State for template
-  const [templateTags, setTemplateTags] = useState<TemplateTag[]>([]); // State for template tags
+  const [templateTags, setTemplateTags] = useState<TemplatesTags[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
   const [success, setSuccess] = useState<string | null>(null); // Success state
@@ -62,15 +64,6 @@ const TemplatePage = () => {
       return () => clearTimeout(timer);
     }
 
-    let token = localStorage.getItem("token");
-
-    if (token) {
-      setIsLoggedIn(true); // User is logged in, token exists
-    } else {
-      setIsLoggedIn(false); // User is not logged in
-    }
-
-    console.log("User is logged in " + isLoggedIn)
 
     const fetchTemplate = async () => {
       try {
@@ -87,6 +80,8 @@ const TemplatePage = () => {
         setTemplate(data.template);
         setEditableTemplate(data.template);
         setTemplateTags(data.templateTags);
+
+        console.log(data.templateTags)
       } catch (error) {
         setError("An error occurred while fetching template: " + error);
       } finally {
@@ -95,7 +90,53 @@ const TemplatePage = () => {
     };
 
     fetchTemplate();
+
+    // only get the local storage status after fetching templates
+    let token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLoggedIn(true); // User is logged in, token exists
+    } else {
+      setIsLoggedIn(false); // User is not logged in
+    }
+
   }, [id, error]);
+
+
+  // helper function for refreshing tokens
+  const refreshAccessToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!token || !refreshToken) return null;
+
+      const res = await fetch("/api/user/refresh", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          refreshToken: refreshToken,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        return data.token;
+      } else {
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        router.push("/login")
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
+
 
   const handleDelete = async () => {
     if (!id) return;
@@ -106,7 +147,7 @@ const TemplatePage = () => {
     let token = localStorage.getItem("token");
 
     try {
-      const res = await fetch(`/api/templates/${id}`, {
+      let res = await fetch(`/api/templates/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -117,10 +158,23 @@ const TemplatePage = () => {
         // setSuccess("Template deleted successfully.");
         alert("Template deleted successfully.");
         router.push("/templates"); // Redirect to templates list page
-      } else if (res.status === 401){
-        setError("Unauthorized: " +  + (await res.json())?.error || " Unknown error");
       }
-      else {
+      
+      // first check if status is 401
+      if (res.status === 401){
+        // handle refresh token failure
+        token = await refreshAccessToken()
+
+        // reattempt with new token
+        res =  await fetch(`/api/templates/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+
+      if (!res.ok) {
         setError("Error deleting templates: " + (await res.json())?.error || " contact sysadmin");
       }
     } catch (error) {
@@ -135,7 +189,7 @@ const TemplatePage = () => {
     let token = localStorage.getItem("token");
 
     try {
-      const res = await fetch(`/api/templates/${id}`, {
+      let res = await fetch(`/api/templates/${id}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -151,9 +205,24 @@ const TemplatePage = () => {
         router.push(`/templates/${data.templateId}`).then(() => {
           router.reload(); // Force a full page reload
         });
-      } else {
+      }
+
+      // handle refresh token failure
+      if (res.status === 401) {
+        token = await refreshAccessToken()
+
+        // reattempt with new token
+        res = await fetch(`/api/templates/${id}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },});
+      }
+      
+      if (!res.ok) {
         setError("Error forking template: " + (await res.json())?.error || " contact sysadmin");
       }
+
     } catch (error) {
       console.error("Error forking template:", error);
       setError("An error occurred while forking the template: " + error);
@@ -166,8 +235,8 @@ const TemplatePage = () => {
     console.log("sending" + JSON.stringify(editableTemplate))
 
     try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/templates/${id}`, {
+      let token = localStorage.getItem("token");
+      let res = await fetch(`/api/templates/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -183,7 +252,24 @@ const TemplatePage = () => {
         setSuccess("Template updated successfully.");
         router.reload()
       }
-      else
+
+      // handle refresh token failure
+      if (res.status === 401) {
+        token = await refreshAccessToken()
+
+        // reattempt with new token
+        res = await fetch(`/api/templates/${id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(editableTemplate),
+        });
+      }
+
+      // check if result is OK
+      if (!res.ok)
       {
         setError("Error saving template: " + (await res.json())?.error || " contact sysadmin");
       }
@@ -208,7 +294,7 @@ const TemplatePage = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">Loading...</h1>
         </div>
       </Layout>
@@ -218,7 +304,7 @@ const TemplatePage = () => {
   if (!template) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">Template not found.</h1>
         </div>
       </Layout>
@@ -240,6 +326,7 @@ const TemplatePage = () => {
       </div>
       )}
 
+      <div className="bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
         {isEditMode ? (
           <div className="container mx-auto px-8 py-16">
             <div className="mb-4">
@@ -311,8 +398,14 @@ const TemplatePage = () => {
           <p className="text-gray-600 dark:text-gray-300 mb-4">
             {template.description}
           </p>
-          <p className="text-sm text-gray-500">
-            Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | Author: {template.userId}
+          <p className="text-sm text-gray-500 mb-2">
+          Language: {template.language} | Author: {template.owner?.username || "Unknown"}
+          </p>
+          <p className="text-sm text-gray-500 mb-2">
+            Created: {new Date(template.createdAt).toLocaleString()} 
+          </p>
+          <p className="text-sm text-gray-500 mb-2">
+            Updated: {new Date(template.updatedAt).toLocaleString()}
           </p>
         </div>
 
@@ -332,17 +425,18 @@ const TemplatePage = () => {
           <div>
             <h2 className="text-2xl font-bold mb-4">Tags</h2>
             <div className="flex space-x-2">
-              {templateTags.map((tag) => (
+              {templateTags.map((tagVal) => (
                 <span
-                  key={tag.templateTagId}
+                  key={tagVal.tag.tagid}
                   className="px-3 py-1 rounded bg-blue-500 text-white"
                 >
-                  Tag ID: {tag.tagId}
+                  {tagVal.tag.tagName}
                 </span>
               ))}
             </div>
           </div>
         )}
+
 
         <h2 className="text-2xl font-bold mt-5">Actions</h2>
 
@@ -388,8 +482,11 @@ const TemplatePage = () => {
           </div>)}
         </div>
       </div>)}
+      </div>
     </Layout>
   );
 };
+
+
 
 export default TemplatePage;

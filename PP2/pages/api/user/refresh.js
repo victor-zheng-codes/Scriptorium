@@ -17,7 +17,10 @@ export default async function handler(req, res) {
     if (scheme !== 'Bearer' || !token) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-  
+    
+    if (!refreshToken) {
+      return res.status(400).json({error: 'Missing refresh token'})
+    }
     // Proceed with token verification
     let tokenVerificationResult = await refreshAccessToken(refreshToken);
 
