@@ -37,14 +37,14 @@ const Login = () => {
       }
 
       const data = await response.json();
-      const { accessToken, refreshToken } = data;
+      const { accessToken, refreshToken, userId } = data;
 
       // Store tokens in local storage (or you could use cookies)
       localStorage.setItem("token", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
       // Redirect to profile or another page after login
-      router.push("/profile");
+      router.push("/");
     } catch (err) {
       setError("An error occurred during login.");
       setLoading(false);
@@ -69,7 +69,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-white"
+                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-gray-200"
                 />
               </div>
               <div>
@@ -80,13 +80,13 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-white"
+                  className="dark:bg-[#2e2e2e] dark:border-[#3a3a3a] text-black dark:text-gray-200"
                 />
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex flex-col items-center space-y-4">
-            <Button onClick={handleLogin} disabled={loading} className="w-full dark:bg-[#4a4a4a] dark:text-white">
+            <Button onClick={handleLogin} disabled={loading} className="w-full dark:bg-[#4a4a4a] dark:text-gray-200">
               {loading ? "Logging in..." : "Login"}
             </Button>
 

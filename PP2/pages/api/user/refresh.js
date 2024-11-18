@@ -4,7 +4,7 @@ import prisma from '../../../utils/prisma-client'
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    // const { userId } = req.body; // also sends the refreshToken in the body in case refreshing is needed
+    const { refreshToken } = req.body; 
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -17,9 +17,12 @@ export default async function handler(req, res) {
     if (scheme !== 'Bearer' || !token) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-  
+    
+    if (!refreshToken) {
+      return res.status(400).json({error: 'Missing refresh token'})
+    }
     // Proceed with token verification
-    let tokenVerificationResult = await refreshAccessToken(token);
+    let tokenVerificationResult = await refreshAccessToken(refreshToken);
 
     // Check if the token is valid
     if (tokenVerificationResult === null) {

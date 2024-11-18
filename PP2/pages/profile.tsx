@@ -211,7 +211,7 @@ const Profile = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">Loading...</h1>
         </div>
       </Layout>
@@ -221,7 +221,7 @@ const Profile = () => {
   if (error) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">{error}</h1>
         </div>
       </Layout>
@@ -231,7 +231,7 @@ const Profile = () => {
   if (!user) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
           <h1 className="text-2xl">No user data found.</h1>
         </div>
       </Layout>
@@ -250,12 +250,12 @@ const Profile = () => {
         <div className="bg-gray-150 dark:bg-gray-950 w-32 md:w-64 hidden md:block"></div>
 
         {/* Main Content Area */}
-        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-white py-4">
+        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
           {/* Top Button Bar (After Sidebars) */}
           <div className="flex justify-between items-center px-8 py-8 bg-gray-50 dark:bg-gray-900">
             {/* Title on the left, aligned with profile image */}
             <div className="flex items-center space-x-4 pl-8 pr-16">
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200">
                 User Profile
               </h1>
             </div>
@@ -340,7 +340,7 @@ const Profile = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-200">
               Edit Avatar
             </h2>
             <p className="text-gray-600 dark:text-gray-300">
