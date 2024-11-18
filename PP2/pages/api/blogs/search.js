@@ -65,6 +65,10 @@ export default async function handler(req, res) {
             where: {
                 AND: whereConditions
             },
+            orderBy: [ // Order by upvotes first and then downvotes
+                { upvotes: 'desc' },
+                { downvotes: 'desc' },
+            ],
             include: { // Include the Blog's tags and templates when returning it
                 BlogTags: {
                     include: {

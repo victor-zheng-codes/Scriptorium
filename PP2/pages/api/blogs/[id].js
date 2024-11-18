@@ -356,8 +356,13 @@ export default async function handler(req, res) {
                                 rating: true,
                             }
                         }
-                    }
-                }, // Include the Blog's tags and templates when returning it
+                    },
+                    orderBy: [ // Order by upvotes first and then downvotes
+                        { upvotes: 'desc' },
+                        { downvotes: 'desc' },
+                    ],
+                }, 
+                // Include the Blog's tags and templates when returning it
                 BlogTags: {
                     include: {
                         tag: true, // Include tag info

@@ -36,9 +36,13 @@ export default async function handler(req, res) {
                                     username: true // Include username from the User model
                                 }
                             }
-                        }
+                        },
                     }
-                }
+                },
+                orderBy: [
+                    { reply: { upvotes: 'desc' } },  // First sort by reply's upvotes in descending order
+                    { reply: { downvotes: 'desc' } }, // Then sort by reply's downvotes in descending order
+                ],
             });
 
             // Check if there are no replies
