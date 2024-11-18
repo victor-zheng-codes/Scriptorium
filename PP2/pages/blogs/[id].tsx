@@ -50,6 +50,8 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   const [username, setUsername] = useState("");
   const [userId, setUserId] = useState(0);
   const [replies, setReplies] = useState<{ [commentId: number]: Comment[] | null }>({}); // Store replies for each comment (null means hidden)
+  const [reportReasons, setReportReasons] = useState<{ [key: number]: string }>({});
+  const [isReporting, setIsReporting] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -302,9 +304,8 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     }));
   };
 
+  const maxDepth = 5; // Limit nesting to 5 levels
   const renderReplies = (thisReplies: Comment[], depth: number = 0) => {
-    const maxDepth = 5; // Limit nesting to 5 levels
-  
     if (depth > maxDepth) {
       return <p>Replies are too deep to display.</p>; // Optionally show a message
     }
@@ -339,15 +340,17 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
           </div>
 
             {/* Button to show/hide replies for this reply */}
+            { depth < maxDepth && (
             <Button
               onClick={() => toggleReplies(reply.commentId)}
               size="sm"
               variant="link"
             >
               {replies[reply.commentId] ? "Hide Replies" : "Show Replies"}
-            </Button>
+            </Button>)
+            }
 
-            {replies[reply.commentId] && renderReplies(replies[reply.commentId]!, depth + 1)}
+            {replies[reply.commentId] && depth < maxDepth && renderReplies(replies[reply.commentId]!, depth + 1)}
             {/* Render replies for this reply */}
 
             {/* Only show reply button if depth is within the max limit */}
@@ -365,12 +368,95 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                 </Button>
               </form>
             )}
+
+            <div className="mt-2">
+              <Button
+                onClick={() => handleReportChange(reply.commentId, "")}
+                size="sm"
+                variant="link"
+              >
+                Report
+              </Button>
+              {reportReasons[reply.commentId] !== undefined && (
+                <form
+                  onSubmit={(e) => handleReportSubmit(e, reply.commentId)}
+                  className="mt-2"
+                >
+                  <textarea
+                    value={reportReasons[reply.commentId]}
+                    onChange={(e) =>
+                      handleReportChange(reply.commentId, e.target.value)
+                    }
+                    rows={2}
+                    className="w-full p-2 border rounded-md"
+                    placeholder="Provide a reason for the report..."
+                  />
+                  <Button
+                    type="submit"
+                    disabled={isReporting}
+                    className="mt-2 px-4 py-2"
+                  >
+                    {isReporting ? "Reporting..." : "Submit Report"}
+                  </Button>
+                </form>
+              )}
+            </div>
+
           
           </li>
         ))}
       </ul>
     );
   };
+
+  const handleReportSubmit = async (e: React.FormEvent, commentId?: number) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      setError("You must be logged in to report.");
+      return;
+    }
+  
+    const explanation = reportReasons[commentId || 0]?.trim();
+    if (!explanation) {
+      setError("Please provide a reason for the report.");
+      return;
+    }
+  
+    const endpoint = `/api/blogs/${currentBlog.blogId}/report`;
+    const body = commentId
+      ? JSON.stringify({ explanation, commentId })
+      : JSON.stringify({ explanation });
+  
+    try {
+      setIsReporting(true);
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body,
+      });
+  
+      if (!response.ok) throw new Error("Failed to submit the report");
+  
+      setReportReasons((prev) => ({ ...prev, [commentId || 0]: "" }));
+    } catch (error) {
+      setError("Error submitting report. Please try again.");
+    } finally {
+      setIsReporting(false);
+    }
+  };
+
+  const handleReportChange = (commentId: number | 0, value: string) => {
+    setReportReasons((prev) => ({
+      ...prev,
+      [commentId]: value,
+    }));
+  };
+    
 
   return (
     <Layout>
@@ -460,6 +546,39 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                       {isSubmitting ? "Submitting..." : "Add Reply"}
                     </Button>
                   </form>
+                  <div className="mt-2">
+                    <Button
+                      onClick={() => handleReportChange(comment.commentId, "")}
+                      size="sm"
+                      variant="link"
+                    >
+                      Report
+                    </Button>
+                    {reportReasons[comment.commentId] !== undefined && (
+                      <form
+                        onSubmit={(e) => handleReportSubmit(e, comment.commentId)}
+                        className="mt-2"
+                      >
+                        <textarea
+                          value={reportReasons[comment.commentId]}
+                          onChange={(e) =>
+                            handleReportChange(comment.commentId, e.target.value)
+                          }
+                          rows={2}
+                          className="w-full p-2 border rounded-md"
+                          placeholder="Provide a reason for the report..."
+                        />
+                        <Button
+                          type="submit"
+                          disabled={isReporting}
+                          className="mt-2 px-4 py-2"
+                        >
+                          {isReporting ? "Reporting..." : "Submit Report"}
+                        </Button>
+                      </form>
+                    )}
+                  </div>
+
                 </li>
               ))}
             </ul>
@@ -467,6 +586,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
           {/* Add Comment */}
           <form onSubmit={handleCommentSubmit} className="mt-6">
+            <h2>Comment on Blog</h2>
             <textarea
               value={commentContents[0]}
               onChange={(e) => handleCommentChange(0, e.target.value)}
@@ -480,6 +600,30 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
           </form>
           {error && <p className="mt-2 text-red-500">{error}</p>}
         </section>
+        <div className="mt-4">
+          <Button onClick={() => handleReportChange(0, "")} size="sm" variant="link">
+            Report Blog
+          </Button>
+          {reportReasons[0] !== undefined && (
+            <form onSubmit={(e) => handleReportSubmit(e)}>
+              <textarea
+                value={reportReasons[0]}
+                onChange={(e) => handleReportChange(0, e.target.value)}
+                rows={3}
+                className="w-full p-2 border rounded-md mt-2"
+                placeholder="Provide a reason for the report..."
+              />
+              <Button
+                type="submit"
+                disabled={isReporting}
+                className="mt-2 px-4 py-2"
+              >
+                {isReporting ? "Reporting..." : "Submit Report"}
+              </Button>
+            </form>
+          )}
+        </div>
+
       </div>
     </Layout>
   );
