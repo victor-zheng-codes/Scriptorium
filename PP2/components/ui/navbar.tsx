@@ -8,6 +8,37 @@ const Navbar = () => {
   const [avatar, setAvatar] = useState<string | null>(null); // To hold the avatar URL
   const [isOpen, setIsOpen] = useState(false); // To toggle the mobile menu
 
+  const refreshAccessToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!token || !refreshToken) return null;
+
+      const res = await fetch("/api/user/refresh", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          refreshToken: refreshToken,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        return data.token;
+      } else {
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
@@ -28,6 +59,22 @@ const Navbar = () => {
         if (response.ok) {
           const data = await response.json();
           setAvatar(data.user.avatar || "bear.png");
+        } else if (response.status === 401) {
+          const newToken = await refreshAccessToken();
+          if (newToken) {
+            const response = await fetch("/api/user/data", {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            if (response.ok) {
+              const data = await response.json();
+              setAvatar(data.user.avatar || "bear.png");
+            } else {
+              setAvatar(null);
+            }
+          }
         } else {
           setAvatar(null);
         }

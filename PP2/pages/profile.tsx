@@ -84,7 +84,7 @@ const Profile = () => {
           setCurrentAvatar(data.user.avatar || "bear.png"); // Set the current avatar
         } else {
           if (res.status === 401) {
-            const newToken = refreshAccessToken()
+            const newToken = await refreshAccessToken()
             if (newToken) {
               const newRes = await fetch("/api/user/data", {
                 method: "GET",
@@ -123,7 +123,7 @@ const Profile = () => {
         });
 
         if (res.status === 401) {
-          const newToken = refreshAccessToken()
+          const newToken = await refreshAccessToken()
           if (newToken) {
             await fetch("/api/user/logout", {
               method: "POST",

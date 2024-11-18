@@ -34,6 +34,38 @@ const EditProfile = () => {
 
   const router = useRouter();
 
+  const refreshAccessToken = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!token || !refreshToken) return null;
+
+      const res = await fetch("/api/user/refresh", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          refreshToken: refreshToken,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        return data.token;
+      } else {
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        router.push("/login")
+        return null;
+      }
+    } catch (error) {
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -57,8 +89,20 @@ const EditProfile = () => {
           setEditedUser(data.user);
         } else {
           if (res.status === 401) {
-            setError("Unauthorized. Please log in again.");
-            router.push("/login");
+            const newToken = await refreshAccessToken()
+            if (newToken) {
+              const res = await fetch("/api/user/data", {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              if (res.ok) {
+                const data = await res.json();
+                setUser(data.user);
+                setEditedUser(data.user);
+              }
+            }
           } else {
             setError("Error fetching profile data.");
           }
@@ -114,6 +158,21 @@ const EditProfile = () => {
   
       if (res.ok) {
         router.push("/profile");
+      } else if (res.status === 401) {
+        const newToken = await refreshAccessToken()
+        if (newToken) {
+          const res = await fetch("/api/user/profile", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload), // Send the payload with or without password
+          });
+          if (res.ok) {
+            router.push("/profile");
+          }
+        }
       } else {
         const result = await res.json();
         setError(result.error || "Failed to save changes.");
