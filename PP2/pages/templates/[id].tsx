@@ -79,7 +79,7 @@ const TemplatePage = () => {
         });
 
         if (!res.ok) {
-          setError("Error fetching template.");
+          setError("Error fetching template " +  + (await res.json())?.error || " Unknown error");
           return;
         }
 
@@ -88,8 +88,7 @@ const TemplatePage = () => {
         setEditableTemplate(data.template);
         setTemplateTags(data.templateTags);
       } catch (error) {
-        console.error("Error fetching template:", error);
-        setError("An error occurred while fetching template.");
+        setError("An error occurred while fetching template: " + error);
       } finally {
         setLoading(false);
       }
@@ -119,10 +118,10 @@ const TemplatePage = () => {
         alert("Template deleted successfully.");
         router.push("/templates"); // Redirect to templates list page
       } else if (res.status === 401){
-        setError("Unauthorized");
+        setError("Unauthorized: " +  + (await res.json())?.error || " Unknown error");
       }
       else {
-        setError("Error deleting templates, please contact the system admin");
+        setError("Error deleting templates: " + (await res.json())?.error || " contact sysadmin");
       }
     } catch (error) {
       console.error("Error deleting template:", error);
@@ -153,7 +152,7 @@ const TemplatePage = () => {
           router.reload(); // Force a full page reload
         });
       } else {
-        setError("Error forking template: " + (await res.json())?.error || " Unknown error");
+        setError("Error forking template: " + (await res.json())?.error || " contact sysadmin");
       }
     } catch (error) {
       console.error("Error forking template:", error);
@@ -176,16 +175,21 @@ const TemplatePage = () => {
         },
         body: JSON.stringify(editableTemplate),
       });
+      if (res.ok) {
+        const updatedTemplate = await res.json();
 
-      if (!res.ok) throw new Error("Error updating template.");
-      const updatedTemplate = await res.json();
+        setTemplate(updatedTemplate);
+        setIsEditMode(false);
+        setSuccess("Template updated successfully.");
+        router.reload()
+      }
+      else
+      {
+        setError("Error saving template: " + (await res.json())?.error || " contact sysadmin");
+      }
 
-      setTemplate(updatedTemplate);
-      setIsEditMode(false);
-      setSuccess("Template updated successfully.");
-      router.reload()
     } catch (err) {
-      setError("An error occurred while updating the template.");
+      setError("An error occurred while updating the template: " + err);
     }
   };
 
@@ -197,7 +201,7 @@ const TemplatePage = () => {
       router.push(`/code/${id}`)
     } catch (error) {
       console.error("Error forking template:", error);
-      setError("An error occurred while forking the template.");
+      setError("An error occurred while forking the template: " + error);
     }
   };
 

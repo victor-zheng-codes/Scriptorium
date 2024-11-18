@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       });
 
       if (!template) {
-        return res.status(404).json({ message: `Template with templateId ${templateId} not found` });
+        return res.status(404).json({ error: `Template with templateId ${templateId} not found` });
       }
 
       const templateTags = await prisma.templateTags.findMany({
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       res.status(200).json({template, templateTags}); // Returns template along with associated blogs
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+      return res.status(500).json({ error: 'Internal server error' });
     }
   }
   // handle patch request to the template
@@ -38,19 +38,19 @@ export default async function handler(req, res) {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const userId = verifyToken(token); // Verify token and get user ID
 
     if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     let { title, content, tags, language, description} = req.body;
 
     if (!title && !content && !tags && !language && !description){
-      return res.status(400).json({ message: 'Missing at least one of title, content, tags, language, or description.' });
+      return res.status(400).json({ error: 'Missing at least one of title, content, tags, language, or description.' });
     }
 
     const existingTemplate = await prisma.template.findUnique({
@@ -61,12 +61,12 @@ export default async function handler(req, res) {
 
     // check if the template with id already exists
     if (!existingTemplate){
-      return res.status(400).json({ message: 'Template with id does not exist.' });
+      return res.status(400).json({ error: 'Template with id does not exist.' });
     }
 
     // check if the user is the owner of the template
     if (existingTemplate.userId !== userId){
-      return res.status(400).json({ message: 'Only owners of template can modify template.' });
+      return res.status(400).json({ error: 'Only owners of template can modify template.' });
     }
 
     // check if the title is empty
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
   
       // if there are more than zero titles with same title, then return error message
       if (existingTitle.length !== 0){
-        return res.status(400).json({ message: 'Template with provided title already exists.' });
+        return res.status(400).json({ error: 'Template with provided title already exists.' });
       }
     }
     
@@ -264,14 +264,14 @@ export default async function handler(req, res) {
       return res.status(201).json(newTemplate);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Error forking template' });
+      return res.status(500).json({ error: 'Error forking template' });
     }
   }
   else if (req.method === 'DELETE') {
     const token = req.headers.authorization?.split(' ')[1];
   
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const userId = verifyToken(token); // Verify token and get user ID
@@ -293,7 +293,7 @@ export default async function handler(req, res) {
 
     // check if the user is the owner of the template
     if (originalTemplate.userId !== userId){
-      return res.status(400).json({ message: 'Only owners of template can delete the template.' });
+      return res.status(400).json({ error: 'Only owners of template can delete the template.' });
     }
 
       try {
