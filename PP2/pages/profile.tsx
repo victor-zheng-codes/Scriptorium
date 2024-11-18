@@ -36,11 +36,10 @@ const Profile = () => {
       const res = await fetch("/api/user/refresh", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Assuming token exists
+          "Content-Type": "application/json", // Ensure JSON content-type is set
         },
-        body: JSON.stringify({
-          refreshToken: refreshToken,
-        }),
+        body: JSON.stringify({ refreshToken }),
       });
 
       if (res.ok) {

@@ -17,11 +17,10 @@ const Navbar = () => {
       const res = await fetch("/api/user/refresh", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Assuming token exists
+          "Content-Type": "application/json", // Ensure JSON content-type is set
         },
-        body: JSON.stringify({
-          refreshToken: refreshToken,
-        }),
+        body: JSON.stringify({ refreshToken }),
       });
 
       if (res.ok) {
@@ -167,7 +166,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <ModeToggle />
+          <ModeToggle/>
           <Link href="/profile">
             <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
               <Image
