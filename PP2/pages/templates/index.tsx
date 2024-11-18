@@ -31,6 +31,7 @@ const Templates = () => {
   const [titleFilter, setTitleFilter] = useState<string>("");
   const [descriptionFilter, setDescriptionFilter] = useState<string>("");
   const [contentFilter, setContentFilter] = useState<string>("");
+  const [tagFilter, setTagFilter] = useState<string>("");
 
   const router = useRouter();
 
@@ -44,6 +45,7 @@ const Templates = () => {
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
       ...(contentFilter && { content: contentFilter }),
+      ...(tagFilter && { tags: tagFilter }),
     });
 
 
@@ -97,11 +99,12 @@ const Templates = () => {
   const debouncedTitleFilter = useDebounce(titleFilter, 500);
   const debouncedDescriptionFilter = useDebounce(descriptionFilter, 500);
   const debouncedContentFilter = useDebounce(contentFilter, 500);
+  const debouncedTagFilter = useDebounce(tagFilter, 500);
 
   useEffect(() => {
     // Fetch templates whenever the filters or page change
     fetchTemplates(currentPage);
-  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter]);
+  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter, debouncedTagFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -124,6 +127,9 @@ const Templates = () => {
         break;
       case "content":
           setContentFilter(value);
+          break;
+      case "tags":
+          setTagFilter(value);
           break;
       default:
         break;
@@ -191,6 +197,13 @@ const Templates = () => {
                 placeholder="Filter by code content"
                 value={contentFilter}
                 onChange={(e) => handleFilterChange("content", e.target.value)}
+                className="p-2 border rounded dark:bg-gray-700 dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="Filter by tags (comma separated)"
+                value={tagFilter}
+                onChange={(e) => handleFilterChange("tags", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-700 dark:text-white"
               />
             </div>
