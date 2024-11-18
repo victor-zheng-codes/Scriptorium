@@ -94,7 +94,22 @@ export default async function handler(req, res) {
 
     // update title, content, language, description if they are provided
     if (title || content || language || description){
+      
+      // already exists template
+      const alreadyExistsTemplate = await prisma.template.findUnique({
+        where: {
+          title, // Check if the title matches
+          AND: {
+            templateId: {
+              not: templateId, // Exclude the current template ID
+            },
+          },
+        },
+      });
 
+      if (alreadyExistsTemplate){
+        return res.status(400).json({ error: 'Title requested already exists' });
+      }
 
       const date = new Date()
       const estOffset = -5 * 60;
@@ -118,7 +133,7 @@ export default async function handler(req, res) {
 
       }catch (error) {
         console.error(error);
-        return res.status(400).json({ message: 'Error updating template' });
+        return res.status(404).json({ message: 'Error updating template' });
       }
     }
 
@@ -168,6 +183,8 @@ export default async function handler(req, res) {
     return res.status(200).json(returnJson);
   }
   else if (req.method === 'POST') { // forking templates
+    console.log("Forking template")
+
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -191,14 +208,24 @@ export default async function handler(req, res) {
       }
 
       // fork ensure that it is unique
-      const date = new Date()
-      const estOffset = -5 * 60;
-      const utcOffset = date.getTimezoneOffset(); 
-      const estDate = new Date(date.getTime() + (estOffset + utcOffset) * 60 * 1000); 
+      // const date = new Date()
+      // const estOffset = -5 * 60;
+      // const utcOffset = date.getTimezoneOffset(); 
+      // const estDate = new Date(date.getTime() + (estOffset + utcOffset) * 60 * 1000); 
+      
+      const newTemplateNameExists = await prisma.template.findUnique({
+        where: {
+          title: `${originalTemplate.title} (Forked)`
+        }
+      })
+
+      if (newTemplateNameExists){
+        return res.status(404).json({ error: 'Template has already been forked with name ' + `${originalTemplate.title} (Forked)`});
+      }
 
       const newTemplate = await prisma.template.create({
         data: {
-          title: `${originalTemplate.title} (Forked) ${estDate}`,
+          title: `${originalTemplate.title} (Forked)`,
           content: originalTemplate.content,
           userId,
           description: originalTemplate.description,
