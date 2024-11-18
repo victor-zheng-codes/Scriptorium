@@ -13,7 +13,16 @@ interface Template {
   language: string;
   createdAt: string;
   updatedAt: string;
-  owner: { username: string }; // Username of the owner
+  owner: { username: string };
+}
+
+// format for sending patch for the templates
+interface PatchTemplate {
+  content: string;
+  title: string;
+  description: string;
+  language: string;
+  tags: string[];
 }
 
 interface TemplatesTags {
@@ -33,7 +42,7 @@ const TemplatePage = () => {
   // editable mode
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [editableTemplate, setEditableTemplate] = useState<Template | null>(null);
-
+  const [editableTags, setEditableTags] = useState<TemplatesTags[]>([]); // State for template tags
 
   // logged in user
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -64,7 +73,6 @@ const TemplatePage = () => {
       return () => clearTimeout(timer);
     }
 
-
     const fetchTemplate = async () => {
       try {
         const res = await fetch(`/api/templates/${id}`, {
@@ -80,6 +88,7 @@ const TemplatePage = () => {
         setTemplate(data.template);
         setEditableTemplate(data.template);
         setTemplateTags(data.templateTags);
+        setEditableTags(data.templateTags);
 
         console.log(data.templateTags)
       } catch (error) {
@@ -135,8 +144,6 @@ const TemplatePage = () => {
       return null;
     }
   };
-
-
 
   const handleDelete = async () => {
     if (!id) return;
@@ -232,7 +239,17 @@ const TemplatePage = () => {
   const handleSave = async () => {
     if (!editableTemplate || !id) return;
 
-    console.log("sending" + JSON.stringify(editableTemplate))
+    // console.log("sending" + JSON.stringify(editableTemplate))
+
+    var request: any = {};
+    request.title = editableTemplate.title;
+    request.description = editableTemplate.description;
+    request.content = editableTemplate.content;
+    request.tags = editableTags.map((tag) => tag.tag.tagName);
+
+    let requestContent = JSON.stringify(request); 
+
+    console.log("Request params " + requestContent)
 
     try {
       let token = localStorage.getItem("token");
@@ -242,7 +259,7 @@ const TemplatePage = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(editableTemplate),
+        body: requestContent,
       });
       if (res.ok) {
         const updatedTemplate = await res.json();
@@ -264,7 +281,7 @@ const TemplatePage = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(editableTemplate),
+          body: requestContent,
         });
       }
 
@@ -368,6 +385,57 @@ const TemplatePage = () => {
               ></textarea>
             </div>
 
+            {/* Tags editing */}
+              <div className="mb-4">
+              <label className="block font-bold mb-2">Tags</label>
+              <div className="space-y-2">
+                {editableTags.map((tagVal, index) => (
+                  <div key={tagVal.tag.tagid} className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={tagVal.tag.tagName}
+                      onChange={(e) => {
+                        const updatedTags = [...editableTags];
+                        updatedTags[index] = {
+                          ...updatedTags[index],
+                          tag: { ...updatedTags[index].tag, tagName: e.target.value },
+                        };
+                        setEditableTags(updatedTags);
+                      }}
+                      className="w-full px-3 py-2 border rounded"
+                    />
+                    <button
+                      onClick={() => {
+                        setEditableTags((prevTags) =>
+                          prevTags.filter((_, idx) => idx !== index)
+                        );
+                      }}
+                      className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() =>
+                  setEditableTags((prevTags) => [
+                    ...prevTags,
+                    {
+                      templateTagId: 0,
+                      tagId: 0,
+                      templateId: template?.templateId || 0,
+                      tag: { tagName: "", tagid: 0 },
+                    },
+                  ])
+                }
+                className="mt-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Add Tag
+              </button>
+            </div>
+
+              {/* Handle saves */}
             <div className="flex justify-between">
 
               <div className="mt-8">
@@ -378,6 +446,7 @@ const TemplatePage = () => {
                 Save Changes
               </button>
               </div>
+              {/* Handle cancellations */}
               <div className="mt-8">
               <button
                 onClick={() => setIsEditMode(!isEditMode)}
