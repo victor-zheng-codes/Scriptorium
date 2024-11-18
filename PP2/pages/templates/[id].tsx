@@ -26,7 +26,12 @@ const TemplatePage = () => {
   const [templateTags, setTemplateTags] = useState<TemplateTag[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
-  const [success, setSuccess] = useState<string | null>(null); // Error state
+  const [success, setSuccess] = useState<string | null>(null); // Success state
+
+  // editable mode
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [editableTemplate, setEditableTemplate] = useState<Template | null>(null);
+
 
   // logged in user
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -74,16 +79,16 @@ const TemplatePage = () => {
         });
 
         if (!res.ok) {
-          setError("Error fetching template.");
+          setError("Error fetching template " +  + (await res.json())?.error || " Unknown error");
           return;
         }
 
         const data = await res.json();
         setTemplate(data.template);
+        setEditableTemplate(data.template);
         setTemplateTags(data.templateTags);
       } catch (error) {
-        console.error("Error fetching template:", error);
-        setError("An error occurred while fetching template.");
+        setError("An error occurred while fetching template: " + error);
       } finally {
         setLoading(false);
       }
@@ -113,10 +118,10 @@ const TemplatePage = () => {
         alert("Template deleted successfully.");
         router.push("/templates"); // Redirect to templates list page
       } else if (res.status === 401){
-        setError("Unauthorized");
+        setError("Unauthorized: " +  + (await res.json())?.error || " Unknown error");
       }
       else {
-        setError("Error deleting templates, please contact the system admin");
+        setError("Error deleting templates: " + (await res.json())?.error || " contact sysadmin");
       }
     } catch (error) {
       console.error("Error deleting template:", error);
@@ -147,11 +152,56 @@ const TemplatePage = () => {
           router.reload(); // Force a full page reload
         });
       } else {
-        setError("Error forking template.");
+        setError("Error forking template: " + (await res.json())?.error || " contact sysadmin");
       }
     } catch (error) {
       console.error("Error forking template:", error);
-      setError("An error occurred while forking the template.");
+      setError("An error occurred while forking the template: " + error);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!editableTemplate || !id) return;
+
+    console.log("sending" + JSON.stringify(editableTemplate))
+
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`/api/templates/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(editableTemplate),
+      });
+      if (res.ok) {
+        const updatedTemplate = await res.json();
+
+        setTemplate(updatedTemplate);
+        setIsEditMode(false);
+        setSuccess("Template updated successfully.");
+        router.reload()
+      }
+      else
+      {
+        setError("Error saving template: " + (await res.json())?.error || " contact sysadmin");
+      }
+
+    } catch (err) {
+      setError("An error occurred while updating the template: " + err);
+    }
+  };
+
+  const handleRun = async () => {
+    if (!id) return;
+    // let token = localStorage.getItem("token");
+
+    try {
+      router.push(`/code/${id}`)
+    } catch (error) {
+      console.error("Error forking template:", error);
+      setError("An error occurred while forking the template: " + error);
     }
   };
 
@@ -190,6 +240,70 @@ const TemplatePage = () => {
       </div>
       )}
 
+        {isEditMode ? (
+          <div className="container mx-auto px-8 py-16">
+            <div className="mb-4">
+              <label className="block font-bold mb-2">Title</label>
+              <input
+                type="text"
+                value={editableTemplate?.title || ""}
+                onChange={(e) =>
+                  setEditableTemplate((prev) =>
+                    prev ? { ...prev, title: e.target.value } : null
+                  )
+                }
+                className="w-full px-3 py-2 border rounded"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-bold mb-2">Description</label>
+              <textarea
+                value={editableTemplate?.description || ""}
+                onChange={(e) =>
+                  setEditableTemplate((prev) =>
+                    prev ? { ...prev, description: e.target.value } : null
+                  )
+                }
+                className="w-full px-3 py-2 border rounded"
+              ></textarea>
+            </div>
+            <div className="mb-4">
+              <label className="block font-bold mb-2">Content</label>
+              <textarea
+                value={editableTemplate?.content || ""}
+                onChange={(e) =>
+                  setEditableTemplate((prev) =>
+                    prev ? { ...prev, content: e.target.value } : null
+                  )
+                }
+                className="w-full px-3 py-2 border rounded font-mono"
+                rows={10}
+              ></textarea>
+            </div>
+
+            <div className="flex justify-between">
+
+              <div className="mt-8">
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Save Changes
+              </button>
+              </div>
+              <div className="mt-8">
+              <button
+                onClick={() => setIsEditMode(!isEditMode)}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Cancel Changes
+              </button>
+              </div>
+            </div>
+          </div>
+          
+        ) : 
+        (
       <div className="container mx-auto px-8 py-16">
         {/* Template Title and Metadata */}
         <div className="mb-8">
@@ -230,28 +344,50 @@ const TemplatePage = () => {
           </div>
         )}
 
-        {/* Delete Button */}
-        <div className="mt-8">
-          {isLoggedIn && (
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-            >
-              Delete Template
-            </button>
-          )}
-        </div>
+        <h2 className="text-2xl font-bold mt-5">Actions</h2>
 
-        {/* Fork Button */}
-        <div className="mt-8">
+        {/* Action Buttons */}
+        <div className="flex justify-between">
+            {isLoggedIn && (
+              <div className="mt-8">
+                  <button
+                    onClick={handleDelete}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  >
+                    Delete Template
+                  </button>
+              </div>
+            )}
+
+          <div className="mt-8">
+            <button
+              onClick={handleRun}
+              className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700">
+              Execute Code
+            </button>
+          </div>
+
+          {/* Fork Button */}
+          {isLoggedIn && (
+          <div className="mt-8">
+            <button
+              onClick={handleFork}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+              Fork Template
+            </button>
+          </div>)}
+
+          {/* Edit Mode Toggle */}
+          {isLoggedIn && (
+          <div className="mt-8">
           <button
-            onClick={handleFork}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-          >
-            Fork Template
+            onClick={() => setIsEditMode(!isEditMode)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+            {isEditMode ? "Cancel Edit" : "Edit Template"}
           </button>
+          </div>)}
         </div>
-      </div>
+      </div>)}
     </Layout>
   );
 };
