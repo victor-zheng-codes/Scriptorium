@@ -87,17 +87,17 @@ export default async function handler(req, res) {
             codeFilePath += javaFilePath;
 
             // compileCommand = `javac ${javaFilePath}`;
-            runCommand = `javac ${javaFilePath} && java -cp tmp Main`;
+            runCommand = `bash -c "javac Main.java && java Main"`
             break;
 
-        case "c":
+        case "c" || "C":
             const cFilePath = `main.c`;
             // const cExecutablePath = `tmp/ctemp`;
 
             codeFilePath += cFilePath;
 
-            // compileCommand = `printf "%s\n" "${code}" > ${cFilePath} && gcc -Wall ${cFilePath} -o ${cExecutablePath}`;
-            // runCommand = `${cExecutablePath}`;
+            // runCommand = `printf "%s\n" "${code}" > main.c && gcc -Wall main.c -o main.c`;
+            runCommand = `bash -c "gcc -Wall main.c -o main && ./main"`;
             break;
             
         case "cpp":
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
             codeFilePath += cppFilePath;
 
             // compileCommand = `printf "%s\n" "${code}" > ${cppFilePath} && g++ -Wall ${cppFilePath} -o ${cppExecutablePath}`;
-            // runCommand = `${cppExecutablePath}`;
+            runCommand = `bash -c "g++ -Wall main.cpp -o main && ./main"`;
             break;
 
         case "go":
@@ -140,7 +140,8 @@ export default async function handler(req, res) {
             const rustFilePath = `main.rb`;
 
             codeFilePath += rustFilePath;
-
+        default: 
+            console.log("ERROR, language not found")
     }
     const inputFilePath = "tmp/input.txt";
     const writeCodeCommand = `printf "%s\n" "${code}" > ${codeFilePath}`; // Write code to file
