@@ -87,7 +87,8 @@ export default async function handler(req, res) {
             codeFilePath += javaFilePath;
 
             // compileCommand = `javac ${javaFilePath}`;
-            runCommand = `javac ${javaFilePath} && java -cp tmp Main`;
+            // runCommand = `javac ${javaFilePath} && java -cp tmp Main`;
+            runCommand = `bash -c "javac Main.java && java Main"`
             break;
 
         case "c":
