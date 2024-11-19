@@ -31,10 +31,14 @@ export default async function handler(req, res) {
                             content: true, // Select the content from the Comment model
                             upvotes: true,  // Include upvotes from the Comment model
                             downvotes: true, // Include downvotes from the Comment model
+                            isAppropriate: true,
                             user: { // Access the user relation to get the username
                                 select: {
                                     username: true // Include username from the User model
                                 }
+                            },
+                            CommentReport: {
+                                select: { explanation: true }
                             }
                         },
                     }

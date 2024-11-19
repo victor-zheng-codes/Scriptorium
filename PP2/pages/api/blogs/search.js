@@ -54,6 +54,8 @@ export default async function handler(req, res) {
             // If templates exists and has elements, only include blogs with 
             // at least one associated template whose title is in the
             // templates array (case insensitive)
+
+            { isAppropriate: true } // Always include blogs with isAppropriate set to true
         ].filter(Boolean); // Remove undefined values (from non-existent parameters)
     };
     

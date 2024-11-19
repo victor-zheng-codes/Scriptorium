@@ -315,6 +315,7 @@ export default async function handler(req, res) {
                         content: true,
                         upvotes: true,
                         downvotes: true,
+                        isAppropriate: true,
                         user: { // Include the user relation to access the username
                             select: {
                                 username: true // Select the username field from the User model
@@ -328,6 +329,7 @@ export default async function handler(req, res) {
                                         content: true,
                                         upvotes: true,
                                         downvotes: true,
+                                        isAppropriate: true,
                                         user: {
                                             select: { username: true }
                                         }
@@ -343,6 +345,7 @@ export default async function handler(req, res) {
                                         content: true,
                                         upvotes: true,
                                         downvotes: true,
+                                        isAppropriate: true,
                                         user: {
                                             select: { username: true }
                                         }
@@ -355,6 +358,9 @@ export default async function handler(req, res) {
                                 userId: true,
                                 rating: true,
                             }
+                        },
+                        CommentReport: {
+                            select: { explanation: true }
                         }
                     },
                     orderBy: [ // Order by upvotes first and then downvotes
@@ -378,7 +384,10 @@ export default async function handler(req, res) {
                         userId: true,
                         rating: true,
                     }
-                }
+                },
+                BlogReport: {
+                    select: { explanation: true }
+                },
             }
         });
 
