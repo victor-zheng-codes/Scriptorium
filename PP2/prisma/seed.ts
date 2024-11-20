@@ -298,7 +298,34 @@ await prisma.tag.createMany({
           content: 'plot(1:10, main="Simple Plot")', 
           language: "r" 
         },
-
+        { 
+          userId: 3, 
+          title: 'C Hello World', 
+          description: "Hello World Example in C", 
+          content: '#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}', 
+          language: "c" 
+        },
+        { 
+          userId: 3, 
+          title: 'C Arithmetic', 
+          description: "Simple addition in C", 
+          content: '#include <stdio.h>\n\nint main() {\n    int a = 10;\n    int b = 20;\n    printf("Sum: %d\\n", a + b);\n    return 0;\n}', 
+          language: "c" 
+        },
+        { 
+          userId: 4, 
+          title: 'C Factorial', 
+          description: "Calculate the factorial of a number", 
+          content: '#include <stdio.h>\n\nint factorial(int n) {\n    if (n == 0) return 1;\n    return n * factorial(n - 1);\n}\n\nint main() {\n    int num = 5;\n    printf("Factorial of %d: %d\\n", num, factorial(num));\n    return 0;\n}', 
+          language: "c" 
+        },
+        { 
+          userId: 4, 
+          title: 'C String Length', 
+          description: "Calculate the length of a string", 
+          content: '#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char str[] = "Hello, World!";\n    printf("Length of string: %lu\\n", strlen(str));\n    return 0;\n}', 
+          language: "c" 
+        },        
         // More languages (adjust IDs and add two examples for each as needed)
       ],
     });
