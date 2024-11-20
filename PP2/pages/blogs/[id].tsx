@@ -220,7 +220,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
   const getButtonClass = (rating: number | null, action: number) => {
     if (rating === action) {
-      return action === 1 ? 'bg-blue-500 text-white' : 'bg-red-500 text-white';
+      return action === 1 ? 'bg-green-500 text-white' : 'bg-red-500 text-white';
     } else if (rating === 0) {
       return 'bg-gray-200 text-gray-800';
     } else {
