@@ -23,9 +23,15 @@ interface TemplatesTags {
   tag: { tagName: string, tagid: number }
 }
 
+interface LinkedBlogs {
+  blogId: number;
+  blog: {title: string, description: string, blogId: number};
+}
+
 const TemplatePage = () => {
   const [template, setTemplate] = useState<Template | null>(null); // State for template
   const [templateTags, setTemplateTags] = useState<TemplatesTags[]>([]); // State for template tags
+  const [linkedBlogs, setLinkedBlogs] = useState<LinkedBlogs[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
   const [success, setSuccess] = useState<string | null>(null); // Success state
@@ -77,6 +83,8 @@ const TemplatePage = () => {
 
         const data = await res.json();
         setTemplate(data.template);
+        setLinkedBlogs(data.templateBlogs);
+        console.log("linked blogs " + JSON.stringify(data.templateBlogs))
         setEditableTemplate(data.template);
         setTemplateTags(data.templateTags);
         setEditableTags(data.templateTags);
@@ -480,7 +488,7 @@ const TemplatePage = () => {
           </SyntaxHighlighter>
         </div>
 
-        {/* Tags Section */}
+        {/* Tags Section, non editable */}
         {templateTags.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-4">Tags</h2>
@@ -497,6 +505,23 @@ const TemplatePage = () => {
           </div>
         )}
 
+        {/* Blogs Section, non editable */}
+        {linkedBlogs.length > 0 && (
+          <div>
+            <h2 className="text-2xl font-bold mb-4 mt-4">Blogs</h2>
+            <div className="flex space-x-2">
+              {linkedBlogs.map((blogArray) => (
+                <button
+                  onClick={() => router.push(`/blogs/${blogArray.blog.blogId}`)}
+                  key={blogArray.blog.blogId}
+                  className="px-3 py-1 rounded bg-teal-500 text-white"
+                >
+                  {blogArray.blog.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         <h2 className="text-2xl font-bold mt-5">Actions</h2>
 

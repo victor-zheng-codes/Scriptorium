@@ -32,17 +32,20 @@ export default async function handler(req, res) {
         include: {
           tag: true
         },
-        // select: {
-        //   tag: {
-        //     select: {
-        //       tagName: true, // Select only the tagName field from the related Tag model
-        //       tagId: true,
-        //     },
-        //   },
-        // },
       });
 
-      res.status(200).json({template, templateTags}); // Returns template along with associated blogs
+
+      const templateBlogs = await prisma.BlogTemplate.findMany({
+        where: { 
+          templateId,
+        },
+        include: {
+          blog: true
+        }
+      });
+
+
+      res.status(200).json({template, templateTags, templateBlogs}); // Returns template along with associated blogs
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Internal server error' });
