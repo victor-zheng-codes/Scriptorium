@@ -233,7 +233,7 @@ const Templates = () => {
                     </Button> */}
                     <input
                       type="text"
-                      placeholder="Filter by tags"
+                      placeholder="Filter by language"
                       value={languageFilter}
                       className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
                     /> 
