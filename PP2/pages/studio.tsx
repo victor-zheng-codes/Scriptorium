@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
 import Layout from "@/components/ui/layout";
 import {
   DropdownMenu,
@@ -221,18 +227,22 @@ const Studio = () => {
                 You have not published any templates...
               </p>) }
               {templates.length > 0 && (
-                <div>
-                  <div className="flex space-x-2">
-                    {templates.map((templateArray) => (
-                      <button
-                        onClick={() => router.push(`/templates/${templateArray.templateId}`)}
-                        key={templateArray.templateId}
-                        className="px-3 py-1 rounded bg-teal-500 text-white"
-                      >
-                        {templateArray.title}
-                      </button>
-                    ))}
-                  </div>
+                 <div className="flex space-x-2">
+                  {templates.map((templateArray) => (
+                    <HoverCard>
+                      <HoverCardTrigger>
+                        <button
+                          onClick={() => router.push(`/templates/${templateArray.templateId}`)}
+                          key={templateArray.templateId}
+                          className="px-3 py-1 rounded bg-teal-500 text-white" >
+                          {templateArray.title}
+                        </button>
+                      </HoverCardTrigger>
+                      <HoverCardContent>
+                        {templateArray.description}
+                      </HoverCardContent>
+                    </HoverCard>
+                  ))}
                 </div>
               )}
             </div>
@@ -244,18 +254,22 @@ const Studio = () => {
                 You have not published any blogs...
               </p>) }
               {blogs.length > 0 && (
-                <div>
-                  <div className="flex space-x-2">
-                    {blogs.map((blogArray) => (
-                      <button
-                        onClick={() => router.push(`/blogs/${blogArray.blogId}`)}
-                        key={blogArray.blogId}
-                        className="px-3 py-1 rounded bg-teal-500 text-white"
-                      >
-                        {blogArray.title}
-                      </button>
-                    ))}
-                  </div>
+                 <div className="flex space-x-2">
+                  {blogs.map((templateArray) => (
+                    <HoverCard>
+                      <HoverCardTrigger>
+                        <button
+                          onClick={() => router.push(`/blogs/${templateArray.blogId}`)}
+                          key={templateArray.blogId}
+                          className="px-3 py-1 rounded bg-teal-500 text-white" >
+                          {templateArray.title}
+                        </button>
+                      </HoverCardTrigger>
+                      <HoverCardContent>
+                        {templateArray.description}
+                      </HoverCardContent>
+                    </HoverCard>
+                  ))}
                 </div>
               )}
             </div>
