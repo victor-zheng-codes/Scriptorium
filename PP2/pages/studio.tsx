@@ -204,7 +204,7 @@ const Studio = () => {
             } dark:text-white`}
             onClick={() => setActiveTab("templates")}
           >
-            Templates
+            Your Templates
           </button>
           <button
             className={`py-2 px-4 text-xl font-semibold ${
@@ -214,7 +214,7 @@ const Studio = () => {
             } dark:text-white`}
             onClick={() => setActiveTab("blogs")}
           >
-            Blogs
+            Your Blogs
           </button>
         </div>
 
@@ -234,12 +234,12 @@ const Studio = () => {
                         <button
                           onClick={() => router.push(`/templates/${templateArray.templateId}`)}
                           key={templateArray.templateId}
-                          className="px-3 py-1 rounded bg-teal-500 text-white" >
+                          className="p-5 py-1 rounded bg-sky-500 dark:text-white" >
                           {templateArray.title}
                         </button>
                       </HoverCardTrigger>
-                      <HoverCardContent>
-                        {templateArray.description}
+                      <HoverCardContent className="overflow-y-auto bg-gray-100 dark:bg-gray-925 p-4 dark:text-white rounded-md">
+                        Description: {templateArray.description}
                       </HoverCardContent>
                     </HoverCard>
                   ))}
@@ -255,18 +255,18 @@ const Studio = () => {
               </p>) }
               {blogs.length > 0 && (
                  <div className="flex space-x-2">
-                  {blogs.map((templateArray) => (
+                  {blogs.map((blogArray) => (
                     <HoverCard>
                       <HoverCardTrigger>
                         <button
-                          onClick={() => router.push(`/blogs/${templateArray.blogId}`)}
-                          key={templateArray.blogId}
-                          className="px-3 py-1 rounded bg-teal-500 text-white" >
-                          {templateArray.title}
+                          onClick={() => router.push(`/blogs/${blogArray.blogId}`)}
+                          key={blogArray.blogId}
+                          className="p-5 py-1 rounded bg-violet-400 dark:text-white" >
+                          {blogArray.title}
                         </button>
                       </HoverCardTrigger>
-                      <HoverCardContent>
-                        {templateArray.description}
+                      <HoverCardContent className="overflow-y-auto bg-gray-100 dark:bg-gray-925 p-4 dark:text-white rounded-md">
+                        Description: {blogArray.description}
                       </HoverCardContent>
                     </HoverCard>
                   ))}
