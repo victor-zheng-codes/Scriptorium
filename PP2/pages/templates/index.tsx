@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Define the Template interface
 interface Template {
@@ -181,13 +187,16 @@ const Templates = () => {
           {/* Filters */}
           <div className="container mx-auto px-16 mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <input
+              {/* <input
                 type="text"
                 placeholder="Filter by language"
                 value={languageFilter}
                 onChange={(e) => handleFilterChange("language", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              />
+              /> */}
+
+               {/* Create button with shadcn Dropdown */}
+            
               <input
                 type="text"
                 placeholder="Filter by title"
@@ -215,8 +224,92 @@ const Templates = () => {
                 value={tagFilter}
                 onChange={(e) => handleFilterChange("tags", e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              />            
+              />    
+              <div className="justify-center">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    {/* <Button className="px-4 py-2 rounded-md focus:outline-none">
+                      Filter by languages
+                    </Button> */}
+                    <input
+                      type="text"
+                      placeholder="Filter by tags"
+                      value={languageFilter}
+                      className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+                    /> 
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-48 dark:bg-gray-925 dark:text-gray-200">
+                  <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "")}
+                    >
+                      All
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "javascript")}
+                    >
+                      JavaScript
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "java")}
+                    >
+                      Java
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "python")}
+                    >
+                      Python
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "c")}
+                    >
+                      C
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "cpp")}
+                    >
+                      C++
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "golang")}
+                    >
+                      Go
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "r")}
+                    >
+                      R
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "ruby")}
+                    >
+                      Ruby
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "swift")}
+                    >
+                      Swift
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "csharp")}
+                    >
+                      C#
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                </div>    
             </div>
+            
           </div>
 
         {/* Templates List */}
