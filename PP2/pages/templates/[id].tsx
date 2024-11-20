@@ -491,17 +491,14 @@ const TemplatePage = () => {
         {/* Tags Section, non editable */}
         {templateTags.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Tags</h2>
-            <div className="flex space-x-2">
-              {templateTags.map((tagVal) => (
-                <span
-                  key={tagVal.tag.tagid}
-                  className="px-3 py-1 rounded bg-blue-500 text-white"
-                >
+            <h2 className="text-2xl font-bold mb-2">Tags</h2>
+             <ul className="flex gap-2 p-2">
+              {templateTags.map(( tagVal ) => (
+                <li key={tagVal.tag.tagid} className="bg-gray-200 px-3 py-1 rounded-full dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
                   {tagVal.tag.tagName}
-                </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         )}
 

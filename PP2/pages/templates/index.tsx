@@ -247,17 +247,14 @@ const Templates = () => {
               </p>
                 {template.templatesTags?.length > 0 && (
                   <div>
-                    <h2 className="text-2xl font-bold mb-4 pt-5">Tags</h2>
-                    <div className="flex space-x-2">
-                      {template.templatesTags.map((tag) => (
-                        <span
-                          className="px-3 py-1 rounded dark:bg-blue-900 bg-blue-500 text-white"
-                        >
-                          {tag.tag.tagName}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                   <ul className="flex gap-2 mt-4">
+                    {template.templatesTags.map(( tagVal ) => (
+                      <li key={tagVal.tag.tagId} className="bg-gray-200 px-3 py-1 rounded-full dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
+                        {tagVal.tag.tagName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 )}
 
               {/* buttons to edit or delete */}
