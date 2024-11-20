@@ -332,6 +332,49 @@ await prisma.tag.createMany({
           content: 'my $a = 10;\nmy $b = 20;\nprint "Sum: ", $a + $b, "\\n";', 
           language: "perl" 
         },
+        // additional examples of python, java, javascript
+        { 
+          userId: 1, 
+          title: 'Python3 String Reversal', 
+          description: "Reverse a string in Python", 
+          content: 's = "Hello, World!"\nprint(s[::-1])', 
+          language: "python" 
+        },
+        { 
+          userId: 1, 
+          title: 'Python3 List Comprehension', 
+          description: "Use a list comprehension to generate squares", 
+          content: 'squares = [x**2 for x in range(10)]\nprint(squares)', 
+          language: "python" 
+        },
+        { 
+          userId: 2, 
+          title: 'JavaScript String Length', 
+          description: "Find the length of a string in JavaScript", 
+          content: 'let str = "Hello, World!";\nconsole.log("Length:", str.length);', 
+          language: "javascript" 
+        },
+        { 
+          userId: 2, 
+          title: 'JavaScript Array Mapping', 
+          description: "Map an array to its square values", 
+          content: 'let numbers = [1, 2, 3, 4];\nlet squares = numbers.map(num => num ** 2);\nconsole.log(squares);', 
+          language: "javascript" 
+        },
+        { 
+          userId: 3, 
+          title: 'Java Array Printing', 
+          description: "Print an array of integers in Java", 
+          content: 'public class Main {\n  public static void main(String[] args) {\n    int[] nums = {1, 2, 3, 4};\n    for (int num : nums) {\n      System.out.println(num);\n    }\n  }\n}', 
+          language: "java" 
+        },
+        { 
+          userId: 3, 
+          title: 'Java Factorial Calculation', 
+          description: "Compute factorial using recursion in Java", 
+          content: 'public class Main {\n  public static int factorial(int n) {\n    if (n == 0) return 1;\n    return n * factorial(n - 1);\n  }\n\n  public static void main(String[] args) {\n    System.out.println("Factorial of 5: " + factorial(5));\n  }\n}', 
+          language: "java" 
+        },
         // More languages (adjust IDs and add two examples for each as needed)
       ],
     });
