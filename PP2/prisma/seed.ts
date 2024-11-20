@@ -376,149 +376,118 @@ await prisma.tag.createMany({
 
     await prisma.blog.createMany({
       data: [
-        { 
-          title: 'Understanding JavaScript', 
-          content: `
-            JavaScript is a versatile, high-level programming language primarily used for web development. 
-            Initially created to make static web pages interactive, JavaScript now powers complex web 
-            applications, backend servers, mobile apps, and even machine learning models. 
-            Key features include dynamic typing, event-driven programming, and a large ecosystem 
-            of libraries and frameworks such as React, Angular, and Vue.js. 
-            Mastering JavaScript opens doors to full-stack development, with opportunities 
-            to work on diverse projects across industries.
-          `,
-          description: 'An overview of JavaScript fundamentals and use cases.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 1 
-        },
-        { 
-          title: 'Getting Started with Python', 
-          content: `
-            Python is one of the most popular programming languages due to its simplicity and versatility. 
-            Known for its readable syntax, Python is used in fields ranging from web development to 
-            artificial intelligence and data science. Its extensive libraries, such as NumPy, pandas, 
-            and TensorFlow, make it a go-to choice for scientific computation and machine learning. 
-            Python’s motto, "There’s only one way to do it," encourages writing clear and efficient code. 
-            Beginners and experts alike value Python's ability to turn ideas into working solutions quickly.
-          `,
-          description: 'A beginner-friendly guide to Python programming.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 2 
-        },
-        { 
-          title: 'Mastering Java Basics', 
-          content: `
-            Java, a cornerstone of modern programming, is an object-oriented language widely used 
-            in enterprise applications, Android development, and backend systems. Its platform independence 
-            is achieved through the Java Virtual Machine (JVM), allowing developers to "write once, run anywhere." 
-            Essential concepts include classes, interfaces, and exception handling. The language's robustness 
-            and extensive ecosystem make it ideal for large-scale, high-performance applications in banking, 
-            retail, and beyond.
-          `,
-          description: 'Introduction to Java basics and its key features.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 3 
-        },
-        { 
-          title: 'Why Go is the Future of Development', 
-          content: `
-            Go, also known as Golang, is a statically typed, compiled language designed by Google engineers. 
-            It emphasizes simplicity and performance, making it a top choice for scalable backend systems, 
-            cloud infrastructure, and microservices. Features like built-in concurrency support through goroutines 
-            and a fast compilation process enable developers to build efficient, modern applications. 
-            Go’s straightforward syntax and minimal dependencies make it a language of choice 
-            for companies like Uber, Docker, and Kubernetes.
-          `,
-          description: 'Explore why developers are adopting Go for modern applications.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 4 
-        },
-        { 
-          title: 'C# for Beginners', 
-          content: `
-            C# is a powerful, object-oriented language developed by Microsoft as part of its .NET framework. 
-            It combines the flexibility of C++ with the simplicity of Visual Basic, making it ideal for 
-            desktop applications, web services, and game development using Unity. 
-            Key features include garbage collection, asynchronous programming, and LINQ for querying data. 
-            Its strong type system and comprehensive standard library enable developers to build robust, scalable solutions.
-          `,
-          description: 'A comprehensive guide to learning C# for beginners.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 5 
-        },
-        { 
-          title: 'Ruby on Rails: A Beginner’s Guide', 
-          content: `
-            Ruby is a dynamic, high-level programming language known for its focus on simplicity and productivity. 
-            When paired with Rails, a powerful web development framework, it enables developers to build 
-            web applications quickly and efficiently. Ruby on Rails popularized conventions like MVC architecture 
-            and the "Don't Repeat Yourself" principle. Its elegant syntax and extensive library of gems 
-            make it a favorite for startups and rapid prototyping.
-          `,
-          description: 'An introductory guide to Ruby and the Rails framework.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 6 
-        },
-        { 
-          title: 'Diving Into C++', 
-          content: `
-            C++ is a high-performance programming language that builds upon the foundations of C, adding 
-            object-oriented features and greater abstraction. Known for its speed and control over system resources, 
-            C++ is widely used in gaming, systems programming, and embedded systems. Its extensive standard library 
-            and support for templates allow developers to create efficient, reusable code. 
-            Despite its complexity, mastering C++ opens doors to highly technical fields.
-          `,
-          description: 'An overview of C++ programming for beginners.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 7 
-        },
-        { 
-          title: 'PHP and Modern Web Development', 
-          content: `
-            PHP, a server-side scripting language, has been a cornerstone of web development for decades. 
-            Known for its integration with HTML and databases like MySQL, PHP powers over 70% of websites, 
-            including WordPress and Facebook. Its modern features, such as improved performance in PHP 8 
-            and built-in error handling, keep it relevant in the ever-evolving web development landscape.
-          `,
-          description: 'Understand PHP basics and its role in web development.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 8 
-        },
-        { 
-          title: 'Learning Swift for iOS Development', 
-          content: `
-            Swift, a programming language developed by Apple, is used for building iOS, macOS, watchOS, 
-            and tvOS applications. With an emphasis on safety, performance, and expressiveness, 
-            Swift allows developers to write clean and powerful code. It’s designed to work with Objective-C 
-            but also simplifies many of the complexities of C-based languages. Swift’s powerful features, 
-            like optional types, closures, and generics, make it a modern choice for mobile development.
-          `,
-          description: 'Introduction to Swift and iOS development basics.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 9 
-        },
-        { 
-          title: 'Exploring Kotlin for Android', 
-          content: `
-            Kotlin is a statically typed programming language that runs on the Java Virtual Machine (JVM). 
-            Officially supported by Google for Android development, Kotlin simplifies many of Java’s verbose syntax 
-            and reduces boilerplate code. It includes modern features such as null safety, extension functions, 
-            and data classes, making it a great choice for Android developers who want to write cleaner and more efficient code.
-          `,
-          description: 'An introduction to Kotlin for Android application development.', 
-          isDeleted: false, 
-          isAppropriate: true, 
-          authorId: 10 
-        },
+          {
+            // "blogId": 1,
+            "title": "Understanding JavaScript",
+            "content": "JavaScript is a versatile, high-level programming language primarily used for web development. Initially created to make static web pages interactive, JavaScript now powers complex web applications, backend servers, mobile apps, and even machine learning models. Key features include dynamic typing, event-driven programming, and a large ecosystem of libraries and frameworks such as React, Angular, and Vue.js. Mastering JavaScript opens doors to full-stack development, with opportunities to work on diverse projects across industries.",
+            "description": "An overview of JavaScript fundamentals and use cases.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 1,
+            "upvotes": 2,
+            "downvotes": 0
+          },
+          {
+            // "blogId": 2,
+            "title": "Getting Started with Python",
+            "content": "Python is one of the most popular programming languages due to its simplicity and versatility. Known for its readable syntax, Python is used in fields ranging from web development to artificial intelligence and data science. Its extensive libraries, such as NumPy, pandas, and TensorFlow, make it a go-to choice for scientific computation and machine learning. Python’s motto, \"There’s only one way to do it,\" encourages writing clear and efficient code. Beginners and experts alike value Python's ability to turn ideas into working solutions quickly.",
+            "description": "A beginner-friendly guide to Python programming.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 2,
+            "upvotes": 0,
+            "downvotes": 1
+          },
+          {
+            // "blogId": 3,
+            "title": "Mastering Java Basics",
+            "content": "Java, a cornerstone of modern programming, is an object-oriented language widely used in enterprise applications, Android development, and backend systems. Its platform independence is achieved through the Java Virtual Machine (JVM), allowing developers to \"write once, run anywhere.\" Essential concepts include classes, interfaces, and exception handling. The language's robustness and extensive ecosystem make it ideal for large-scale, high-performance applications in banking, retail, and beyond.",
+            "description": "Introduction to Java basics and its key features.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 3,
+            "upvotes": 1,
+            "downvotes": 1
+          },
+          {
+            // "blogId": 4,
+            "title": "Why Go is the Future of Development",
+            "content": "Go, also known as Golang, is a statically typed, compiled language designed by Google engineers. It emphasizes simplicity and performance, making it a top choice for scalable backend systems, cloud infrastructure, and microservices. Features like built-in concurrency support through goroutines and a fast compilation process enable developers to build efficient, modern applications. Go’s straightforward syntax and minimal dependencies make it a language of choice for companies like Uber, Docker, and Kubernetes.",
+            "description": "Explore why developers are adopting Go for modern applications.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 4,
+            "upvotes": 1,
+            "downvotes": 0
+          },
+          {
+            // "blogId": 5,
+            "title": "C# for Beginners",
+            "content": "C# is a powerful, object-oriented language developed by Microsoft as part of its .NET framework. It combines the flexibility of C++ with the simplicity of Visual Basic, making it ideal for desktop applications, web services, and game development using Unity. Key features include garbage collection, asynchronous programming, and LINQ for querying data. Its strong type system and comprehensive standard library enable developers to build robust, scalable solutions.",
+            "description": "A comprehensive guide to learning C# for beginners.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 5,
+            "upvotes": 0,
+            "downvotes": 1
+          },
+          {
+            // "blogId": 6,
+            "title": "Ruby on Rails: A Beginner’s Guide",
+            "content": "Ruby is a dynamic, high-level programming language known for its focus on simplicity and productivity. When paired with Rails, a powerful web development framework, it enables developers to build web applications quickly and efficiently. Ruby on Rails popularized conventions like MVC architecture and the \"Don't Repeat Yourself\" principle. Its elegant syntax and extensive library of gems make it a favorite for startups and rapid prototyping.",
+            "description": "An introductory guide to Ruby and the Rails framework.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 6,
+            "upvotes": 1,
+            "downvotes": 0
+          },
+          {
+            // "blogId": 7,
+            "title": "Diving Into C++",
+            "content": "C++ is a high-performance programming language that builds upon the foundations of C, adding object-oriented features and greater abstraction. Known for its speed and control over system resources, C++ is widely used in gaming, systems programming, and embedded systems. Its extensive standard library and support for templates allow developers to create efficient, reusable code. Despite its complexity, mastering C++ opens doors to highly technical fields.",
+            "description": "An overview of C++ programming for beginners.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 7,
+            "upvotes": 0,
+            "downvotes": 1
+          },
+          {
+            // "blogId": 8,
+            "title": "PHP and Modern Web Development",
+            "content": "PHP, a server-side scripting language, has been a cornerstone of web development for decades. Known for its integration with HTML and databases like MySQL, PHP powers over 70% of websites, including WordPress and Facebook. Its modern features, such as improved performance in PHP 8 and built-in error handling, keep it relevant in the ever-evolving web development landscape.",
+            "description": "Understand PHP basics and its role in web development.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 8,
+            "upvotes": 1,
+            "downvotes": 0
+          },
+          {
+            // "blogId": 9,
+            "title": "Learning Swift for iOS Development",
+            "content": "Swift, a programming language developed by Apple, is used for building iOS, macOS, watchOS, and tvOS applications. With an emphasis on safety, performance, and expressiveness, Swift allows developers to write clean and powerful code. It’s designed to work with Objective-C but also simplifies many of the complexities of C-based languages. Swift’s powerful features, like optional types, closures, and generics, make it a modern choice for mobile development.",
+            "description": "Introduction to Swift and iOS development basics.",
+            "isDeleted": false,
+            "isAppropriate": true,
+            "authorId": 9,
+            "upvotes": 0,
+            "downvotes": 1
+          },    
+          { 
+            title: 'Exploring Kotlin for Android', 
+            content: `
+              Kotlin is a statically typed programming language that runs on the Java Virtual Machine (JVM). 
+              Officially supported by Google for Android development, Kotlin simplifies many of Java’s verbose syntax 
+              and reduces boilerplate code. It includes modern features such as null safety, extension functions, 
+              and data classes, making it a great choice for Android developers who want to write cleaner and more efficient code.`
+            ,
+            description: 'An introduction to Kotlin for Android application development.', 
+            isDeleted: false, 
+            isAppropriate: true, 
+            authorId: 10 
+          },    
         { 
           title: 'Understanding Machine Learning', 
           content: `
@@ -886,17 +855,6 @@ await prisma.tag.createMany({
       { userId: 4, blogId: 7, rating: -1 }, // User 4 downvotes Blog 7
       { userId: 5, blogId: 8, rating: 1 },  // User 5 upvotes Blog 8
       { userId: 5, blogId: 9, rating: -1 }, // User 5 downvotes Blog 9
-      { userId: 6, blogId: 10, rating: 1 }, // User 6 upvotes Blog 10
-      { userId: 6, blogId: 11, rating: -1 }, // User 6 downvotes Blog 11
-      { userId: 7, blogId: 12, rating: 1 },  // User 7 upvotes Blog 12
-      { userId: 7, blogId: 13, rating: -1 }, // User 7 downvotes Blog 13
-      { userId: 8, blogId: 14, rating: 1 },  // User 8 upvotes Blog 14
-      { userId: 8, blogId: 15, rating: -1 }, // User 8 downvotes Blog 15
-      { userId: 9, blogId: 16, rating: 1 },  // User 9 upvotes Blog 16
-      { userId: 9, blogId: 17, rating: -1 }, // User 9 downvotes Blog 17
-      { userId: 10, blogId: 18, rating: 1 }, // User 10 upvotes Blog 18
-      { userId: 10, blogId: 19, rating: -1 }, // User 10 downvotes Blog 19
-      { userId: 1, blogId: 20, rating: 1 },  // User 1 upvotes Blog 20
     ],
   });
 
