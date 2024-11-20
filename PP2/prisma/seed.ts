@@ -103,7 +103,6 @@ await prisma.tag.createMany({
       data: [
         // Python
         { 
-          templateId: 1, 
           userId: 1, 
           title: 'Python3 Hello World', 
           description: "Hello World Example", 
@@ -111,7 +110,6 @@ await prisma.tag.createMany({
           language: "python" 
         },
         { 
-          templateId: 2, 
           userId: 1, 
           title: 'Python3 Arithmetic', 
           description: "Simple addition in Python", 
@@ -121,7 +119,6 @@ await prisma.tag.createMany({
 
         // JavaScript
         { 
-          templateId: 3, 
           userId: 2, 
           title: 'JavaScript Hello World', 
           description: "Hello World in JavaScript", 
@@ -129,7 +126,6 @@ await prisma.tag.createMany({
           language: "javascript" 
         },
         { 
-          templateId: 4, 
           userId: 2, 
           title: 'JavaScript Sum Function', 
           description: "A simple sum function", 
@@ -139,7 +135,6 @@ await prisma.tag.createMany({
 
         // Java
         { 
-          templateId: 5, 
           userId: 3, 
           title: 'Java Hello World', 
           description: "Hello World in Java", 
@@ -147,7 +142,6 @@ await prisma.tag.createMany({
           language: "java" 
         },
         { 
-          templateId: 6, 
           userId: 3, 
           title: 'Java Loop Example', 
           description: "A simple for-loop in Java", 
@@ -157,7 +151,6 @@ await prisma.tag.createMany({
 
         // C#
         { 
-          templateId: 7, 
           userId: 4, 
           title: 'C# Hello World', 
           description: "Hello World in C#", 
@@ -165,7 +158,6 @@ await prisma.tag.createMany({
           language: "csharp" 
         },
         { 
-          templateId: 8, 
           userId: 4, 
           title: 'C# Array Example', 
           description: "Working with arrays in C#", 
@@ -175,7 +167,6 @@ await prisma.tag.createMany({
 
         // Ruby
         { 
-          templateId: 9, 
           userId: 5, 
           title: 'Ruby Hello World', 
           description: "Hello World in Ruby", 
@@ -183,7 +174,6 @@ await prisma.tag.createMany({
           language: "ruby" 
         },
         { 
-          templateId: 10, 
           userId: 5, 
           title: 'Ruby Block Example', 
           description: "A simple block in Ruby", 
@@ -193,25 +183,22 @@ await prisma.tag.createMany({
 
         // Go
         { 
-          templateId: 11, 
           userId: 6, 
           title: 'Go Hello World', 
           description: "Hello World in Go", 
           content: 'package main\n\nimport "fmt"\n\nfunc main() {\n    fmt.Println("Hello, World!")\n}', 
-          language: "go" 
+          language: "golang" 
         },
         { 
-          templateId: 12, 
           userId: 6, 
           title: 'Go Function Example', 
           description: "A function example in Go", 
           content: 'package main\n\nfunc add(a int, b int) int {\n    return a + b\n}\n\nfunc main() {\n    fmt.Println(add(2, 3))\n}', 
-          language: "go" 
+          language: "golang" 
         },
 
         // C++
         { 
-          templateId: 13, 
           userId: 7, 
           title: 'C++ Hello World', 
           description: "Hello World in C++", 
@@ -219,7 +206,6 @@ await prisma.tag.createMany({
           language: "cpp" 
         },
         { 
-          templateId: 14, 
           userId: 7, 
           title: 'C++ Conditional Example', 
           description: "An if-statement in C++", 
@@ -229,7 +215,6 @@ await prisma.tag.createMany({
 
         // PHP
         { 
-          templateId: 15, 
           userId: 8, 
           title: 'PHP Hello World', 
           description: "Hello World in PHP", 
@@ -237,7 +222,6 @@ await prisma.tag.createMany({
           language: "php" 
         },
         { 
-          templateId: 16, 
           userId: 8, 
           title: 'PHP Array Example', 
           description: "An array example in PHP", 
@@ -247,7 +231,6 @@ await prisma.tag.createMany({
 
         // Kotlin
         { 
-          templateId: 17, 
           userId: 9, 
           title: 'Kotlin Hello World', 
           description: "Hello World in Kotlin", 
@@ -255,7 +238,6 @@ await prisma.tag.createMany({
           language: "kotlin" 
         },
         { 
-          templateId: 18, 
           userId: 9, 
           title: 'Kotlin Class Example', 
           description: "A simple class in Kotlin", 
@@ -265,7 +247,6 @@ await prisma.tag.createMany({
 
         // Swift
         { 
-          templateId: 19, 
           userId: 10, 
           title: 'Swift Hello World', 
           description: "Hello World in Swift", 
@@ -273,7 +254,6 @@ await prisma.tag.createMany({
           language: "swift" 
         },
         { 
-          templateId: 20, 
           userId: 10, 
           title: 'Swift Array Example', 
           description: "Working with arrays in Swift", 
@@ -283,7 +263,6 @@ await prisma.tag.createMany({
 
         // R
         { 
-          templateId: 21, 
           userId: 11, 
           title: 'R Hello World', 
           description: "Hello World in R", 
@@ -291,7 +270,6 @@ await prisma.tag.createMany({
           language: "r" 
         },
         { 
-          templateId: 22, 
           userId: 11, 
           title: 'R Plot Example', 
           description: "A basic plot in R", 
@@ -325,7 +303,35 @@ await prisma.tag.createMany({
           description: "Calculate the length of a string", 
           content: '#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char str[] = "Hello, World!";\n    printf("Length of string: %lu\\n", strlen(str));\n    return 0;\n}', 
           language: "c" 
-        },        
+        },
+        { 
+          userId: 6, 
+          title: 'Rust Hello World', 
+          description: "Hello World Example in Rust", 
+          content: 'fn main() {\n    println!("Hello, World!");\n}', 
+          language: "rust" 
+        },
+        { 
+          userId: 6, 
+          title: 'Rust Factorial', 
+          description: "Calculate the factorial of a number in Rust", 
+          content: 'fn factorial(n: u32) -> u32 {\n    if n == 0 { return 1; }\n    n * factorial(n - 1)\n}\n\nfn main() {\n    let num = 5;\n    println!("Factorial of {}: {}", num, factorial(num));\n}', 
+          language: "rust" 
+        },
+        { 
+          userId: 7, 
+          title: 'Perl Hello World', 
+          description: "Hello World Example in Perl", 
+          content: 'print "Hello, World!\\n";', 
+          language: "perl" 
+        },
+        { 
+          userId: 7, 
+          title: 'Perl Sum of Two Numbers', 
+          description: "Add two numbers in Perl", 
+          content: 'my $a = 10;\nmy $b = 20;\nprint "Sum: ", $a + $b, "\\n";', 
+          language: "perl" 
+        },
         // More languages (adjust IDs and add two examples for each as needed)
       ],
     });
