@@ -11,7 +11,7 @@ export default function Custom404() {
         </h1>
 
         {/* ShadCN's Button with grey shades */}
-        <Link href="\">
+        <Link href="/">
         <Button>
           Return Home
         </Button>
