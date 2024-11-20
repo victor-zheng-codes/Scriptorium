@@ -517,11 +517,11 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
         {/* Display Tags */}
         <div className="mb-4">
-          <strong>Tags:</strong>
+          <h2><strong>Tags: </strong></h2>
           {currentBlog.BlogTags.length > 0 ? (
-            <ul className="flex gap-2">
+            <ul className="flex gap-2 p-2">
               {currentBlog.BlogTags.map(({ tag }) => (
-                <li key={tag.tagId} className="bg-gray-200 px-3 py-1 rounded-full">
+                <li key={tag.tagId} className="bg-gray-200 px-3 py-1 rounded-full dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
                   {tag.tagName}
                 </li>
               ))}
@@ -533,11 +533,11 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
         {/* Display Templates */}
         <div className="mb-4">
-          <strong>Templates:</strong>
-          {currentBlog.BlogTemplate.length > 0 ? (
-            <ul className="flex gap-2">
+        <h2><strong>Templates: </strong></h2>
+        {currentBlog.BlogTemplate.length > 0 ? (
+            <ul className="flex gap-2 p-3">
               {currentBlog.BlogTemplate.map(({ template }) => (
-                <li key={template.templateId} className="bg-gray-200 px-3 py-1 rounded-full">
+                <li key={template.templateId} className="bg-gray-200 px-3 py-1 rounded-full dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
                   <Link href={`/templates/${template.templateId}`} className="text-blue-500 hover:underline">
                     {template.title}
                   </Link>
