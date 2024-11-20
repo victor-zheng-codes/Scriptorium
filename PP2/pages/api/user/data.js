@@ -31,9 +31,22 @@ export default async function handler(req, res) {
 				}
 			});
 
+			const templates = await prisma.template.findMany({
+			  where: {
+				userId: userId, 
+			  },
+			}); 
+	  
+			const blogs = await prisma.blog.findMany({
+			  where: {
+				authorId: userId, 
+			  },
+			}); 
+			
+
 			const { password: _, refreshToken: _2, ...userResponse } = userDetails;
 
-			res.status(200).json({ message: 'Profile fetched', user: userResponse });
+			res.status(200).json({ message: 'Profile fetched', user: userResponse, blogs, templates });
 		} catch (error) {
 			console.log(error)
 			res.status(500).json({ error: 'Error fetching profile' });

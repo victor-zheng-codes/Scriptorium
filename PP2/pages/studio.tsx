@@ -12,12 +12,27 @@ import { Button } from "@/components/ui/button";
 interface User {
   username: string;
 }
-interface Data {
-  user: User;
+
+// interface Data {
+//   user: User;
+// }
+
+interface Blogs {
+  blogId: number;
+  title: string;
+  description: string;
+}
+
+interface Templates {
+  templateId: number;
+  title: string;
+  description: string;
 }
 
 const Studio = () => {
-  const [data, setData] = useState<Data | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [blogs, setBlogs] = useState<Blogs[]>([]);
+  const [templates, setTemplates] = useState<Templates[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"templates" | "blogs">(
@@ -75,7 +90,9 @@ const Studio = () => {
 
       if (res.ok) {
         const data = await res.json();
-        setData(data);
+        setUser(data.user);
+        setTemplates(data.templates);
+        setBlogs(data.blogs);
       } else if (res.status === 401) {
         const newToken = await refreshAccessToken();
         if (newToken) {
@@ -87,7 +104,9 @@ const Studio = () => {
           });
           if (res.ok) {
             const data = await res.json();
-            setData(data);
+            setUser(data.user);
+            setTemplates(data.templates);
+            setBlogs(data.blogs);
           } else {
             setError("An error occurred while fetching user data.");
             router.push("/");
@@ -142,7 +161,7 @@ const Studio = () => {
       <div className="container mx-auto px-16 py-8 relative dark:bg-gray-900">
         <div className="flex justify-between items-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200 mb-8 pt-2">
-            Welcome {data?.user.username} to your creator studio
+            Welcome {user?.username} to your creator studio
           </h1>
 
           {/* Create button with shadcn Dropdown */}
@@ -198,17 +217,47 @@ const Studio = () => {
           {activeTab === "templates" && (
             <div className="h-64 overflow-y-auto bg-gray-100 dark:bg-gray-925 p-4 rounded-md">
               {/* Add content related to templates here */}
-              <p className="dark:text-gray-400">
+              {templates.length == 0 && (<p className="dark:text-gray-400">
                 You have not published any templates...
-              </p>
+              </p>) }
+              {templates.length > 0 && (
+                <div>
+                  <div className="flex space-x-2">
+                    {templates.map((templateArray) => (
+                      <button
+                        onClick={() => router.push(`/templates/${templateArray.templateId}`)}
+                        key={templateArray.templateId}
+                        className="px-3 py-1 rounded bg-teal-500 text-white"
+                      >
+                        {templateArray.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {activeTab === "blogs" && (
             <div className="h-64 overflow-y-auto bg-gray-100 dark:bg-gray-925 p-4 rounded-md">
               {/* Add content related to blogs here */}
-              <p className="dark:text-gray-400">
+              {blogs.length == 0 && (<p className="dark:text-gray-400">
                 You have not published any blogs...
-              </p>
+              </p>) }
+              {blogs.length > 0 && (
+                <div>
+                  <div className="flex space-x-2">
+                    {blogs.map((blogArray) => (
+                      <button
+                        onClick={() => router.push(`/blogs/${blogArray.blogId}`)}
+                        key={blogArray.blogId}
+                        className="px-3 py-1 rounded bg-teal-500 text-white"
+                      >
+                        {blogArray.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
