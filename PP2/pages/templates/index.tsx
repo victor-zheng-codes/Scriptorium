@@ -295,6 +295,12 @@ const Templates = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "rust")}
+                    >
+                      Rust
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
                       onClick={(e) => handleFilterChange("language", "swift")}
                     >
                       Swift
@@ -304,6 +310,24 @@ const Templates = () => {
                       onClick={(e) => handleFilterChange("language", "csharp")}
                     >
                       C#
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "php")}
+                    >
+                      PHP
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "perl")}
+                    >
+                      Perl
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={(e) => handleFilterChange("language", "kotlin")}
+                    >
+                      Kotlin
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
