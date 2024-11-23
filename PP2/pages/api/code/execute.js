@@ -119,7 +119,7 @@ export default async function handler(req, res) {
 
         case "go":
             const goFilePath = "main.go";
-    
+
             codeFilePath = path.join(dirPath, goFilePath);
 
             runCommand = `go run ${goFilePath}`;
@@ -127,29 +127,28 @@ export default async function handler(req, res) {
 
         case "perl":
             const perlFilePath = `main.pl`;
+
             codeFilePath = path.join(dirPath, perlFilePath);
-
+            
             runCommand = `perl ${perlFilePath}`;
-
             break; 
+
         case "php":
             const phpFilePath = `main.php`;
+
             codeFilePath = path.join(dirPath, phpFilePath);
 
             runCommand = `php ${phpFilePath}`;
-
-            // TODO: add run command
-
             break;
+
         case "ruby":
             const rubyFilePath = `main.rb`;
+
             codeFilePath = path.join(dirPath, rubyFilePath);
 
             runCommand = `ruby ${rubyFilePath}`;
-
-            // TODO: add run command
-
             break;
+
         case "rust":
             const rustFilePath = `main.rs`;
             const rustExecutablePath = `main`;
@@ -157,10 +156,8 @@ export default async function handler(req, res) {
             codeFilePath = path.join(dirPath, rustFilePath);
 
             runCommand = `rustc ${rustFilePath} -o main && ./${rustExecutablePath}`;
-
-            // TODO: add run command
-
             break;
+
         default: 
             return res.status(400).json({
                 output: "",
