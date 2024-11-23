@@ -474,6 +474,33 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       [commentId]: value,
     }));
   };
+
+  const handleEditBlog = (blogId: number) => {
+    return
+  }
+
+  const handleDeleteBlog = async (blogId: number) => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      toast.error("You must be logged in to edit.");
+      return;
+    }
+
+    const response = await fetch(`/api/blogs/${currentBlog.blogId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      router.push("/create");
+    } else {
+      toast.error("Failed to delete blog");
+    }
+  }
     
 
   return (
@@ -484,6 +511,23 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
         <p className="text-lg mb-4">{currentBlog.description}</p>
         <div className="prose lg:prose-xl mb-12">{currentBlog.content}</div>
+
+        {/* Edit and Delete Buttons */}
+        <div className="flex justify-end gap-4 mt-8">
+          <Button
+            onClick={() => handleEditBlog(currentBlog.blogId)}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Edit Blog
+          </Button>
+          <Button
+            onClick={() => handleDeleteBlog(currentBlog.blogId)}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+          >
+            Delete Blog
+          </Button>
+        </div>
+
 
         {/* Report Information (if inappropriate) */}
         {!currentBlog.isAppropriate && (
