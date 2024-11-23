@@ -58,7 +58,7 @@ export default async function handler(req, res) {
         input = input + "\n"; // Add newline to the end of standard input if no newline present
     }
 
-    let runCommand = null, compileCommand = null;
+    let runCommand, compileCommand;
     code = code.replace(/"/g, '\\"'); // Escape double quotes to prevent syntax errors when running
     input = input.replace(/"/g, '\\"');
     code = code.replace(/`/g, '\\`').replace(/\$/g, '\\$');
@@ -87,18 +87,17 @@ export default async function handler(req, res) {
 
         case "javascript":
             const jsFilePath = "main.js";
-            codeFilePath += jsFilePath;
+            codeFilePath = path.join(dirPath, jsFilePath);
 
             runCommand = `node "${jsFilePath}"`;
             break;
 
         case "java":
             const classNameMatch = code.match(/public\s+class\s+(\w+)/); // Get first public class name
-            const javaFilePath = classNameMatch ? classNameMatch[1] : 'Main.java';
-            codeFilePath += javaFilePath;
+            const javaFilePath = classNameMatch ? classNameMatch[1] : 'Main';
+            codeFilePath = path.join(dirPath, javaFilePath);
 
-            // compileCommand = `javac ${javaFilePath}`;
-            runCommand = `bash -c "javac Main.java && java Main"`
+            runCommand = `javac ${javaFilePath}.java && java ${javaFilePath}`;
             break;
 
         case "c" || "C":
@@ -157,6 +156,9 @@ export default async function handler(req, res) {
     
     fs.writeFileSync(codeFilePath, code);
     fs.writeFileSync(inputFilePath, input);
+    
+    // Redirect stdin to file containing given user input, and stderr to stdout so both can be returned to user
+    runCommand += "< input.txt 2>&1"
 
     // current directory
     // const command = `docker run --rm -v ${process.cwd()}/tmp:/app -w /app ${imageLanguage} ${instructions}`;
