@@ -95,7 +95,7 @@ export default async function handler(req, res) {
         case "java":
             const classNameMatch = code.match(/public\s+class\s+(\w+)/); // Get first public class name
             const javaFilePath = classNameMatch ? classNameMatch[1] : 'Main';
-            codeFilePath = path.join(dirPath, javaFilePath);
+            codeFilePath = path.join(dirPath, `${javaFilePath}.java`);
 
             runCommand = `javac ${javaFilePath}.java && java ${javaFilePath}`;
             break;
@@ -163,7 +163,7 @@ export default async function handler(req, res) {
     const runCommandWithShell = `bash -c "timeout ${TIMEOUT}s ${runCommand}"`
 
     // current directory
-    const command = `docker run --rm -v ${dirPath}:/app:ro -w /app --memory="${MEMORY_LIMIT}m" ${image} ${runCommandWithShell}`;
+    const command = `docker run --rm -v ${dirPath}:/app -w /app --memory="${MEMORY_LIMIT}m" ${image} ${runCommandWithShell}`;
 
     console.log("running: " + command)
     
