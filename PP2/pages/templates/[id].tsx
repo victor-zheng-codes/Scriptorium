@@ -1,7 +1,13 @@
 import { useRouter } from "next/router";
 import Layout from "@/components/ui/layout";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
+import { highlight, languages } from 'prismjs';
+import Editor from 'react-simple-code-editor';
+
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css'; //Example style, you can use another
+
 import { useEffect, useState } from "react";
 
 interface Template {
@@ -30,6 +36,8 @@ interface LinkedBlogs {
 
 const TemplatePage = () => {
   const [template, setTemplate] = useState<Template | null>(null); // State for template
+  const [editableTemplate, setEditableTemplate] = useState<Template | null>(null);
+
   const [templateTags, setTemplateTags] = useState<TemplatesTags[]>([]); // State for template tags
   const [linkedBlogs, setLinkedBlogs] = useState<LinkedBlogs[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
@@ -38,7 +46,6 @@ const TemplatePage = () => {
 
   // editable mode
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [editableTemplate, setEditableTemplate] = useState<Template | null>(null);
   const [editableTags, setEditableTags] = useState<TemplatesTags[]>([]); // State for template tags
 
   // logged in user
@@ -83,9 +90,10 @@ const TemplatePage = () => {
 
         const data = await res.json();
         setTemplate(data.template);
+        setEditableTemplate(data.template);
+
         setLinkedBlogs(data.templateBlogs);
         console.log("linked blogs " + JSON.stringify(data.templateBlogs))
-        setEditableTemplate(data.template);
         setTemplateTags(data.templateTags);
         setEditableTags(data.templateTags);
 
@@ -206,6 +214,7 @@ const TemplatePage = () => {
         const data = await res.json();
 
         setTemplate(data.template);
+        setEditableTemplate(data.template)
         setSuccess("Successfully forked template with new template id " + data.templateId);
 
         router.push(`/templates/${data.templateId}`).then(() => {
@@ -237,8 +246,6 @@ const TemplatePage = () => {
 
   const handleSave = async () => {
     if (!editableTemplate || !id) return;
-
-    // console.log("sending" + JSON.stringify(editableTemplate))
 
     var request: any = {};
     request.title = editableTemplate.title;
@@ -327,6 +334,9 @@ const TemplatePage = () => {
     );
   }
 
+  // @ts-ignore
+  // @ts-ignore
+  // @ts-ignore
   return (
     <Layout>
       {/* Error Message at the Top */}
@@ -372,16 +382,20 @@ const TemplatePage = () => {
             </div>
             <div className="mb-4">
               <label className="block font-bold mb-2">Content</label>
-              <textarea
-                value={editableTemplate?.content || ""}
-                onChange={(e) =>
-                  setEditableTemplate((prev) =>
-                    prev ? { ...prev, content: e.target.value } : null
-                  )
-                }
-                className="w-full px-3 py-2 border rounded font-mono"
-                rows={10}
-              ></textarea>
+              <Editor
+                  className="p-4 font-mono text-lg leading-6 bg-gray-100 dark:bg-gray-925 border border-gray-500 rounded-md resize-none placeholder-gray-400"
+                  value={editableTemplate?.content || ''} // Bind code state to textarea value
+                  onValueChange={(code) =>
+                    setEditableTemplate((prev) =>
+                    prev ? { ...prev, content: code } : null
+                    )} // Update code state on change
+                  highlight={code => highlight(code, languages.js, editableTemplate?.language || 'python')}
+                  padding={10}
+                  style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 12,
+                  }}
+              />
             </div>
 
             {/* Tags editing */}
@@ -479,13 +493,17 @@ const TemplatePage = () => {
 
         {/* Template Code */}
         <div className="mb-8">
-          <SyntaxHighlighter
-            language={template.language}
-            style={materialDark}
-            showLineNumbers
-          >
-            {template.content}
-          </SyntaxHighlighter>
+          <Editor
+              className="p-4 font-mono text-lg leading-6 bg-gray-100 dark:bg-gray-925 border border-gray-500 rounded-md resize-none placeholder-gray-400"
+              value={template.content} // Bind code state to textarea value
+              onValueChange={(e) => (e)} // Update code state on change
+              highlight={code => highlight(code, languages.js, template.language)}
+              padding={10}
+              style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 12,
+              }}
+          />
         </div>
 
         {/* Tags Section, non editable */}

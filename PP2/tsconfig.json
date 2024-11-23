@@ -18,8 +18,9 @@
     "incremental": true,
     "paths": {
       "@/*": [
-        "./*"
-      ]
+        "./*",
+      ],
+      "@components/*": ["./components/*"],
     },
     "target": "ES2017"
   },

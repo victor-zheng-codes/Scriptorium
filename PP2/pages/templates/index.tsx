@@ -2,8 +2,17 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/ui/layout";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
+import { highlight, languages } from 'prismjs';
+import Editor from 'react-simple-code-editor';
+
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css'; //Example style, you can use another
+
+
+// import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+// import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -328,13 +337,17 @@ const Templates = () => {
               <p className="text-gray-600 dark:text-gray-300 mb-4">
                 {template.description}
               </p>
-              <SyntaxHighlighter
-                language={template.language}
-                style={materialDark}
-                showLineNumbers
-              >
-                {template.content}
-              </SyntaxHighlighter>
+              <Editor
+                  className="p-4 font-mono text-lg leading-6 bg-gray-100 dark:bg-gray-925 border border-gray-500 rounded-md resize-none placeholder-gray-400"
+                  value={template.content} // Bind code state to textarea value
+                  onValueChange={(e) => (e)} // Update code state on change
+                  highlight={code => highlight(code, languages.js, template.language)}
+                  padding={10}
+                  style={{
+                    fontFamily: '"Fira code", "Fira Mono", monospace',
+                    fontSize: 12,
+                  }}
+              />
               <p className="text-sm text-gray-500 mt-2">
                 Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | Author: {template.owner.username}
               </p>

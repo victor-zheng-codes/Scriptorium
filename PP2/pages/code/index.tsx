@@ -4,6 +4,13 @@ import { useState } from "react";
 import Layout from "@/components/ui/layout";
 import { useRouter } from "next/router"; // Import the router for redirection
 
+import { highlight, languages } from 'prismjs';
+import Editor from 'react-simple-code-editor';
+
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css'; //Example style, you can use another
+
 const Code = () => {
   const [code, setCode] = useState<string>(""); // State to hold code from the textarea
   const [selectedLanguage, setSelectedLanguage] = useState<string>("python"); // State to hold selected language
@@ -190,13 +197,16 @@ const Code = () => {
 
       <div className="flex gap-1 text-gray-600 dark:text-gray-300 pr-8 pl-8">
         {/* Code textarea */}
-        <textarea
-          id="code-editor"
+        <Editor
           className="w-1/2 h-[38rem] p-4 font-mono text-lg leading-6 bg-gray-100 dark:bg-gray-925 border border-gray-500 rounded-md resize-none placeholder-gray-400"
           value={code} // Bind code state to textarea value
-          onChange={(e) => setCode(e.target.value)} // Update code state on change
-          onKeyDown={handleKeyDown}
-          placeholder="Write your code here"
+          highlight={code => highlight(code, languages.js, selectedLanguage)}
+          onValueChange={code => setCode(code)}
+          padding={10}
+          style={{
+            fontFamily: '"Fira code", "Fira Mono", monospace',
+            fontSize: 12,
+          }}
         />
 
         <div className="flex flex-col w-1/2 gap-1">
