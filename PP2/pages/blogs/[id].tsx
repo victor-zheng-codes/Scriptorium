@@ -84,7 +84,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
             if (data.user.userId) {
               setUserId(data.user.userId);
             }
-            if (!blog.isAppropriate && data.user.userId !== blog.authorId) {
+            if (!currentBlog.isAppropriate && data.user.userId !== currentBlog.authorId) {
               router.replace('/404');
             }
           } 
@@ -474,6 +474,50 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       [commentId]: value,
     }));
   };
+
+  const handleEditBlog = () => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      toast.error("You must be logged in to edit.");
+      return;
+    }
+
+    if (userId !== currentBlog.authorId) {
+      toast.error("You are not the owner of this blog!")
+      return;
+    }
+
+    router.push(`/blogs/edit/${currentBlog.blogId}`)
+  }
+
+  const handleDeleteBlog = async () => {
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      toast.error("You must be logged in to delete.");
+      return;
+    }
+
+    if (userId !== currentBlog.authorId) {
+      toast.error("You are not the owner of this blog!")
+      return;
+    }
+
+    const response = await fetch(`/api/blogs/${currentBlog.blogId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      router.push("/studio");
+    } else {
+      toast.error("Failed to delete blog. Please try again.");
+    }
+  }
     
 
   return (
@@ -484,6 +528,23 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
         <p className="text-lg mb-4">{currentBlog.description}</p>
         <div className="prose lg:prose-xl mb-12">{currentBlog.content}</div>
+
+        {/* Edit and Delete Buttons */}
+        <div className="flex justify-end gap-4 mt-8">
+          <Button
+            onClick={() => handleEditBlog()}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Edit Blog
+          </Button>
+          <Button
+            onClick={() => handleDeleteBlog()}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+          >
+            Delete Blog
+          </Button>
+        </div>
+
 
         {/* Report Information (if inappropriate) */}
         {!currentBlog.isAppropriate && (
