@@ -119,35 +119,42 @@ export default async function handler(req, res) {
             break;
 
         case "go":
-            const goFilePath = `main.go`;
+            const goFilePath = "main.go";
+    
+            codeFilePath = path.join(dirPath, goFilePath);
 
-            // TODO: add run command
+            runCommand = `go run ${goFilePath}`;
+            break;
 
         case "csharp":
             const csharpFilePath = `main.cs`;
             // TODO: add run command
-
+            
+            break;
         case "perl":
             const perlFilePath = `main.pl`;
 
             // TODO: add run command
 
-
+            break; 
         case "php":
             const phpFilePath = `main.php`;
 
             // TODO: add run command
 
-
+            break;
         case "ruby":
             const rubyFilePath = `main.rb`;
 
             // TODO: add run command
 
+            break;
         case "rust":
             const rustFilePath = `main.rb`;
 
             // TODO: add run command
+
+            break;
         default: 
             return res.status(400).json({
                 output: "",
