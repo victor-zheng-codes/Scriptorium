@@ -102,20 +102,20 @@ export default async function handler(req, res) {
             
         case "c":
             const cFilePath = `main.c`;
-            // const cExecutablePath = `tmp/ctemp`;
+            const cExecutablePath = `main`;
 
-            codeFilePath += cFilePath;
+            codeFilePath = path.join(dirPath, `${cFilePath}`);
 
-            runCommand = `gcc -Wall main.c -o main && ./main`;
+            runCommand = `gcc -Wall main.c -o main && ./${cExecutablePath}`;
             break;
             
         case "cpp":
             const cppFilePath = `main.cpp`;
-            //const cppExecutablePath = `tmp/cpptemp`;
+            const cppExecutablePath = `main`;
 
-            codeFilePath += cppFilePath;
+            codeFilePath = path.join(dirPath, `${cppFilePath}`);
 
-            runCommand = `g++ -Wall main.cpp -o main && ./main`;
+            runCommand = `g++ -Wall main.cpp -o main && ./${cppExecutablePath}`;
             break;
 
         case "go":
