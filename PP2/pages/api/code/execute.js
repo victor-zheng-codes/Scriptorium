@@ -1,5 +1,8 @@
 import { exec as execCallback } from "child_process";
 import util from "util";
+import { v4 as uuidv4 } from "uuid";
+import fs from "fs";
+import path from 'path';
 
 // const allowedLanguages = ["python", "javascript", "java", "c", "cpp"];
 const TIMEOUT = 10000; // 10 seconds
@@ -60,8 +63,16 @@ export default async function handler(req, res) {
     input = input.replace(/"/g, '\\"');
     code = code.replace(/`/g, '\\`').replace(/\$/g, '\\$');
 
-    let codeFilePath = `tmp/`;
     
+    // Create directory with unique ID
+    const uniqueId = uuidv4();
+    const dirPath = path.join(process.cwd(), 'tmp', uniqueId);
+    fs.mkdirSync(dirPath, { recursive: true });
+
+    let codeFilePath;
+    const inputFilePath = path.join(dirPath, 'input.txt');
+    
+
     // instructions for running
     // let instructions = '';
 
@@ -69,9 +80,9 @@ export default async function handler(req, res) {
     switch (language.toLowerCase()) {
         case "python":
             const pythonFilePath = "main.py";
-            codeFilePath += pythonFilePath;
+            codeFilePath = path.join(dirPath, pythonFilePath);
 
-            runCommand = `python ${pythonFilePath}`;
+            runCommand = `python3 ${pythonFilePath}`;
             break;
 
         case "javascript":
@@ -82,8 +93,8 @@ export default async function handler(req, res) {
             break;
 
         case "java":
-            const javaFilePath = "Main.java";
-            //const className = "Main"
+            const classNameMatch = code.match(/public\s+class\s+(\w+)/); // Get first public class name
+            const javaFilePath = classNameMatch ? classNameMatch[1] : 'Main.java';
             codeFilePath += javaFilePath;
 
             // compileCommand = `javac ${javaFilePath}`;
@@ -143,29 +154,13 @@ export default async function handler(req, res) {
         default: 
             console.log("ERROR, language not found")
     }
-    const inputFilePath = "tmp/input.txt";
-    const writeCodeCommand = `printf "%s\n" "${code}" > ${codeFilePath}`; // Write code to file
-    const writeInputCommand = `printf "%s\n" "${input}" > ${inputFilePath}`; // Write standard input to file for redirection
-
-    try {
-        // Write code and standard input to corresponding files
-        const { stdout, stderr} = await exec(`${writeCodeCommand} && ${writeInputCommand}`, { timeout: TIMEOUT });
-    } catch (error) {
-        const isTimeout = error.signal === "SIGTERM";
-
-        return res.status(400).json({
-            success: false,
-            error: isTimeout ? "Execution timed out (10 second limit)" : error.stderr || "Compilation or runtime error occurred.",
-            output: error.stdout || "",
-            // warnings
-        });
-    }
-
-    // codeFilePath = codeFilePath.replace(/^tmp\//, "");
+    
+    fs.writeFileSync(codeFilePath, code);
+    fs.writeFileSync(inputFilePath, input);
 
     // current directory
     // const command = `docker run --rm -v ${process.cwd()}/tmp:/app -w /app ${imageLanguage} ${instructions}`;
-    const command = `docker run --rm -v ${process.cwd()}/tmp:/app -w /app ${image} ${runCommand}`;
+    const command = `docker run --rm -v ${dirPath}:/app -w /app ${image} ${runCommand}`;
 
     console.log("running: " + command)
     
