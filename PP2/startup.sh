@@ -29,3 +29,10 @@ docker pull perl:5.36
 # docker save -o $IMAGE_DIR/perl_5.36.tar perl:5.36
 
 echo "Docker images pulled and saved successfully"
+
+echo "Installing npm packages..."
+npm install
+
+# Reset the database and run migrations, also creating admin user
+echo "Resetting database and running migrations..."
+npx prisma migrate reset --force
