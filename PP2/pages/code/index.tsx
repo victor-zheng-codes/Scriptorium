@@ -158,7 +158,7 @@ const Code = () => {
           <option value="java">Java</option>
           <option value="cpp">C++</option>
           <option value="c">C</option>
-          <option value="go">Golang</option>
+          <option value="go">Go</option>
           <option value="ruby">Ruby</option>
           <option value="perl">Perl</option>
           <option value="php">PHP</option>
