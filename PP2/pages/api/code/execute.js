@@ -42,7 +42,6 @@ export default async function handler(req, res) {
         ruby: "ruby:3.3",
         php: "php:8.2-cli",
         perl: "perl:5.36",
-        csharp: "mcr.microsoft.com/dotnet/sdk:8.0",
         go: "golang:1.21",
         rust:"rust:1.73",
     };
@@ -126,31 +125,38 @@ export default async function handler(req, res) {
             runCommand = `go run ${goFilePath}`;
             break;
 
-        case "csharp":
-            const csharpFilePath = `main.cs`;
-            // TODO: add run command
-            
-            break;
         case "perl":
             const perlFilePath = `main.pl`;
+            codeFilePath = path.join(dirPath, perlFilePath);
 
-            // TODO: add run command
+            runCommand = `perl ${perlFilePath}`;
 
             break; 
         case "php":
             const phpFilePath = `main.php`;
+            codeFilePath = path.join(dirPath, phpFilePath);
+
+            runCommand = `php ${phpFilePath}`;
 
             // TODO: add run command
 
             break;
         case "ruby":
             const rubyFilePath = `main.rb`;
+            codeFilePath = path.join(dirPath, rubyFilePath);
+
+            runCommand = `ruby ${rubyFilePath}`;
 
             // TODO: add run command
 
             break;
         case "rust":
-            const rustFilePath = `main.rb`;
+            const rustFilePath = `main.rs`;
+            const rustExecutablePath = `main`;
+
+            codeFilePath = path.join(dirPath, rustFilePath);
+
+            runCommand = `rustc ${rustFilePath} -o main && ./${rustExecutablePath}`;
 
             // TODO: add run command
 
