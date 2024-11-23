@@ -307,7 +307,7 @@ export default async function handler(req, res) {
         // This query was generated largely by ChatGPT
         // Fetch the blog details along with comments to the blog
         const blogDetails = await prisma.blog.findUnique({
-            where: { blogId },
+            where: { blogId, isDeleted: false },
             include: {
                 Comment: {
                     select: {
