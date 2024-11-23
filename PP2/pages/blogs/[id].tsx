@@ -84,7 +84,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
             if (data.user.userId) {
               setUserId(data.user.userId);
             }
-            if (!blog.isAppropriate && data.user.userId !== blog.authorId) {
+            if (!currentBlog.isAppropriate && data.user.userId !== currentBlog.authorId) {
               router.replace('/404');
             }
           } 
@@ -475,7 +475,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     }));
   };
 
-  const handleEditBlog = (blogId: number) => {
+  const handleEditBlog = () => {
     const token = localStorage.getItem("token");
   
     if (!token) {
@@ -483,14 +483,24 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       return;
     }
 
-    router.push(`/blogs/edit/${blogId}`)
+    if (userId !== currentBlog.authorId) {
+      toast.error("You are not the owner of this blog!")
+      return;
+    }
+
+    router.push(`/blogs/edit/${currentBlog.blogId}`)
   }
 
-  const handleDeleteBlog = async (blogId: number) => {
+  const handleDeleteBlog = async () => {
     const token = localStorage.getItem("token");
   
     if (!token) {
       toast.error("You must be logged in to delete.");
+      return;
+    }
+
+    if (userId !== currentBlog.authorId) {
+      toast.error("You are not the owner of this blog!")
       return;
     }
 
@@ -522,13 +532,13 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         {/* Edit and Delete Buttons */}
         <div className="flex justify-end gap-4 mt-8">
           <Button
-            onClick={() => handleEditBlog(currentBlog.blogId)}
+            onClick={() => handleEditBlog()}
             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
           >
             Edit Blog
           </Button>
           <Button
-            onClick={() => handleDeleteBlog(currentBlog.blogId)}
+            onClick={() => handleDeleteBlog()}
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
           >
             Delete Blog
