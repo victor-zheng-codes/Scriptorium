@@ -476,14 +476,21 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   };
 
   const handleEditBlog = (blogId: number) => {
-    return
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      toast.error("You must be logged in to edit.");
+      return;
+    }
+
+    router.push(`/blogs/edit/${blogId}`)
   }
 
   const handleDeleteBlog = async (blogId: number) => {
     const token = localStorage.getItem("token");
   
     if (!token) {
-      toast.error("You must be logged in to edit.");
+      toast.error("You must be logged in to delete.");
       return;
     }
 
@@ -496,9 +503,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     });
 
     if (response.ok) {
-      router.push("/create");
+      router.push("/studio");
     } else {
-      toast.error("Failed to delete blog");
+      toast.error("Failed to delete blog. Please try again.");
     }
   }
     

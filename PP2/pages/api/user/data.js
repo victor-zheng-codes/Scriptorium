@@ -39,7 +39,8 @@ export default async function handler(req, res) {
 	  
 			const blogs = await prisma.blog.findMany({
 			  where: {
-				authorId: userId, 
+				authorId: userId,
+				isDeleted: false,
 			  },
 			}); 
 			
