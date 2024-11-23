@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # Create a directory to store Docker image tar files
-IMAGE_DIR="docker_images"
-mkdir -p $IMAGE_DIR
+# IMAGE_DIR="docker_images"
+# mkdir -p $IMAGE_DIR
 
 # Pull Docker images
 docker pull python:3.10
 docker pull node:20
 docker pull openjdk:20
 docker pull gcc:12
-# docker pull mcr.microsoft.com/dotnet/sdk:8.0
 docker pull golang:1.21
 docker pull ruby:3.3
 docker pull php:8.2-cli
 docker pull rust:1.73
 docker pull perl:5.36
+# docker pull mcr.microsoft.com/dotnet/sdk:8.0
 
 # Save Docker images to the specified directory
 # docker save -o $IMAGE_DIR/python_3.10.tar python:3.10
@@ -28,4 +28,4 @@ docker pull perl:5.36
 # docker save -o $IMAGE_DIR/rust_1.73.tar rust:1.73
 # docker save -o $IMAGE_DIR/perl_5.36.tar perl:5.36
 
-echo "Docker images pulled and saved successfully in $IMAGE_DIR."
+echo "Docker images pulled and saved successfully"
