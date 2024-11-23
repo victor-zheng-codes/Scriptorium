@@ -149,22 +149,6 @@ await prisma.tag.createMany({
           language: "java" 
         },
 
-        // C#
-        { 
-          userId: 4, 
-          title: 'C# Hello World', 
-          description: "Hello World in C#", 
-          content: 'using System;\n\nclass Program {\n  static void Main() {\n    Console.WriteLine("Hello, World!");\n  }\n}', 
-          language: "csharp" 
-        },
-        { 
-          userId: 4, 
-          title: 'C# Array Example', 
-          description: "Working with arrays in C#", 
-          content: 'int[] numbers = {1, 2, 3, 4};\nforeach (int number in numbers) {\n  Console.WriteLine(number);\n}', 
-          language: "csharp" 
-        },
-
         // Ruby
         { 
           userId: 5, 
@@ -187,14 +171,14 @@ await prisma.tag.createMany({
           title: 'Go Hello World', 
           description: "Hello World in Go", 
           content: 'package main\n\nimport "fmt"\n\nfunc main() {\n    fmt.Println("Hello, World!")\n}', 
-          language: "golang" 
+          language: "go" 
         },
         { 
           userId: 6, 
           title: 'Go Function Example', 
           description: "A function example in Go", 
           content: 'package main\n\nfunc add(a int, b int) int {\n    return a + b\n}\n\nfunc main() {\n    fmt.Println(add(2, 3))\n}', 
-          language: "golang" 
+          language: "go" 
         },
 
         // C++
@@ -227,54 +211,6 @@ await prisma.tag.createMany({
           description: "An array example in PHP", 
           content: '<?php\n  $arr = [1, 2, 3];\n  foreach ($arr as $value) {\n    echo $value . "\\n";\n  }\n?>', 
           language: "php" 
-        },
-
-        // Kotlin
-        { 
-          userId: 9, 
-          title: 'Kotlin Hello World', 
-          description: "Hello World in Kotlin", 
-          content: 'fun main() {\n    println("Hello, World!")\n}', 
-          language: "kotlin" 
-        },
-        { 
-          userId: 9, 
-          title: 'Kotlin Class Example', 
-          description: "A simple class in Kotlin", 
-          content: 'class Person(val name: String) {\n    fun greet() {\n        println("Hello, $name")\n    }\n}\n\nfun main() {\n    val p = Person("Alice")\n    p.greet()\n}', 
-          language: "kotlin" 
-        },
-
-        // Swift
-        { 
-          userId: 10, 
-          title: 'Swift Hello World', 
-          description: "Hello World in Swift", 
-          content: 'import Foundation\n\nprint("Hello, World!")', 
-          language: "swift" 
-        },
-        { 
-          userId: 10, 
-          title: 'Swift Array Example', 
-          description: "Working with arrays in Swift", 
-          content: 'let numbers = [1, 2, 3]\nfor number in numbers {\n    print(number)\n}', 
-          language: "swift" 
-        },
-
-        // R
-        { 
-          userId: 11, 
-          title: 'R Hello World', 
-          description: "Hello World in R", 
-          content: 'cat("Hello, World!")', 
-          language: "r" 
-        },
-        { 
-          userId: 11, 
-          title: 'R Plot Example', 
-          description: "A basic plot in R", 
-          content: 'plot(1:10, main="Simple Plot")', 
-          language: "r" 
         },
         { 
           userId: 3, 
@@ -400,12 +336,6 @@ await prisma.tag.createMany({
         { tagId: 16, templateId: 6 }, // Loops
         { tagId: 17, templateId: 6 }, // Console Output
 
-        // C# Templates
-        { tagId: 6, templateId: 7 }, // C#
-        { tagId: 18, templateId: 7 }, // Hello World
-        { tagId: 14, templateId: 8 }, // Arrays
-        { tagId: 16, templateId: 8 }, // Loops
-
         // Ruby Templates
         { tagId: 7, templateId: 9 }, // Ruby
         { tagId: 18, templateId: 9 }, // Hello World
@@ -429,18 +359,6 @@ await prisma.tag.createMany({
         { tagId: 18, templateId: 15 }, // Hello World
         { tagId: 14, templateId: 16 }, // Arrays
         { tagId: 16, templateId: 16 }, // Loops
-
-        // Kotlin Templates
-        { tagId: 11, templateId: 17 }, // Kotlin
-        { tagId: 18, templateId: 17 }, // Hello World
-        { tagId: 20, templateId: 18 }, // Classes and Objects
-        { tagId: 15, templateId: 18 }, // Functions
-
-        // Swift Templates
-        { tagId: 12, templateId: 19 }, // Swift
-        { tagId: 18, templateId: 19 }, // Hello World
-        { tagId: 14, templateId: 20 }, // Arrays
-        { tagId: 17, templateId: 20 }, // Console Output
 
         // R Templates
         { tagId: 13, templateId: 21 }, // R
