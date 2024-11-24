@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Layout from "@/components/ui/layout";
+import ErrorPage from "next/error";
 
 interface ReportedContent {
     id: number;
@@ -27,8 +28,7 @@ const ReportedBlogsAndComments = () => {
         const token = localStorage.getItem("token");
 
         if (!token) {
-            router.push("/login");
-            return;
+            router.push("/404");
         }
 
         const fetchReports = async () => {
@@ -40,14 +40,8 @@ const ReportedBlogsAndComments = () => {
                     },
                 });
 
-                if (response.status === 401) {
-                    router.push("/login");
-                    return;
-                }
-
-                if (response.status === 403) {
-                    setError("Access denied: Admin privileges required.");
-                    return;
+                if (response.status === 401 || response.status === 403) {
+                    router.push("/404");
                 }
 
                 if (!response.ok) {
@@ -134,6 +128,7 @@ const ReportedBlogsAndComments = () => {
     if (loading) return <p>Loading...</p>;
 
     if (error) return <p className="text-red-500">{error}</p>;
+
 
     return (
         <Layout>
