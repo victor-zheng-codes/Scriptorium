@@ -109,3 +109,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.dark .Toastify__close-button {
+  color: #F3F4F6; /* Dark mode color for the close button */
+}
+
+.dark .Toastify__close-button:hover {
+  color: #FFFFFF; /* Dark mode hover color */
+}
