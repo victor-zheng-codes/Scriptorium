@@ -220,11 +220,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
   const getButtonClass = (rating: number | null, action: number) => {
     if (rating === action) {
-      return action === 1 ? 'bg-green-500 text-white' : 'bg-red-500 text-white';
-    } else if (rating === 0) {
-      return 'bg-gray-200 text-gray-800';
+      return action === 1 ? 'bg-green-600 hover:bg-green-800 text-white dark:bg-green-600 dark:hover:bg-green-700' : 'bg-red-600 hover:bg-red-800 text-white dark:bg-red-600 dark:hover:bg-red-700';
     } else {
-      return 'bg-gray-200 text-gray-600';
+      return 'bg-gray-200 hover:bg-gray-400 text-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700';
     }
   };
 
@@ -326,7 +324,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         {thisReplies.map((reply) => (
           // If the reply is appropriate, show it normally for everyone
           reply.isAppropriate ? (
-            <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-950">
               <p className="mb-2">{reply.content}</p>
               <div className="flex justify-between items-center text-sm">
                 <p>
@@ -492,6 +490,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   }
 
   const handleDeleteBlog = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this blog?");
+    if (!confirmDelete) return;
+
     const token = localStorage.getItem("token");
   
     if (!token) {
@@ -530,21 +531,22 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         <div className="prose lg:prose-xl mb-12">{currentBlog.content}</div>
 
         {/* Edit and Delete Buttons */}
-        <div className="flex justify-end gap-4 mt-8">
-          <Button
-            onClick={() => handleEditBlog()}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-          >
-            Edit Blog
-          </Button>
-          <Button
-            onClick={() => handleDeleteBlog()}
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-          >
-            Delete Blog
-          </Button>
-        </div>
-
+        {userId === currentBlog.authorId && ( // Only show if current user is author
+          <div className="flex justify-end gap-4 mt-8">
+            <Button
+              onClick={() => handleEditBlog()}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+            >
+              Edit Blog
+            </Button>
+            <Button
+              onClick={() => handleDeleteBlog()}
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
+            >
+              Delete Blog
+            </Button>
+          </div>
+        )}
 
         {/* Report Information (if inappropriate) */}
         {!currentBlog.isAppropriate && (
@@ -640,7 +642,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                 (comment.isAppropriate || username === comment.user.username) ? (
                 <li
                   key={comment.commentId}
-                  className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                  className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-950"
                 >
                   {/* Check if the comment is inappropriate */}
                   {comment.isAppropriate ? (

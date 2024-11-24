@@ -261,7 +261,7 @@ const EditBlog: React.FC<BlogPageProps> = ({ blog }) => {
             <div className="mt-6 flex justify-end space-x-4 pb-8">
               <Button
                 className="text-sm py-1 px-4"
-                onClick={() => router.push("/studio")}
+                onClick={() => router.push(`/blogs/${blog.blogId}`)}
               >
                 Cancel
               </Button>
