@@ -138,16 +138,16 @@ const ReportedBlogsAndComments = () => {
     return (
         <Layout>
             <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4">Reported Content</h1>
+                <h1 className="text-2xl font-bold mb-4 dark:text-white">Reported Content</h1>
 
                 <div>
-                    <h2 className="text-xl font-semibold mb-2">Reported Blogs</h2>
+                    <h2 className="text-xl font-semibold mb-2 dark:text-white">Reported Blogs</h2>
                     {reportedBlogs.length === 0 ? (
                         <p>No reported blogs.</p>
                     ) : (
                         <ul className="list-disc pl-5">
                             {reportedBlogs.map((blog) => (
-                                <li key={blog.id} className="mb-4">
+                                <li key={blog.id} className="mb-4 dark:text-white">
                                     <div>
                                         <p>
                                             <strong>Title:</strong>{" "}
@@ -161,14 +161,14 @@ const ReportedBlogsAndComments = () => {
                                         <div className="mt-2">
                                             {blog.isAppropriate ? (
                                                 <Button
-                                                    className="px-2 py-1 bg-red-500 text-white rounded"
+                                                    className="px-2 py-1 bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded"
                                                     onClick={() => handleFlagContent(blog.id, "blog", false)}
                                                 >
                                                     Mark as Inappropriate
                                                 </Button>
                                             ) : (
                                                 <Button
-                                                    className="px-2 py-1 bg-green-500 text-white rounded"
+                                                    className="px-2 py-1 bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded"
                                                     onClick={() => handleFlagContent(blog.id, "blog", true)}
                                                 >
                                                     Mark as Appropriate
@@ -196,7 +196,7 @@ const ReportedBlogsAndComments = () => {
 
                                         {/* Show the reports if showReports is true */}
                                         {blog.showReports && (
-                                            <div className="mt-2 p-4 bg-gray-100 rounded">
+                                            <div className="mt-2 p-4 bg-gray-100 rounded dark:bg-gray-800">
                                                 {blog.reports.map((report: any) => (
                                                     <div key={report.user.userId} className="border-t border-gray-200 pt-2 mt-2">
                                                         <p><strong>Reporter Username:</strong> {report.user.username}</p>
@@ -214,13 +214,13 @@ const ReportedBlogsAndComments = () => {
                 </div>
 
                 <div className="mt-6">
-                    <h2 className="text-xl font-semibold mb-2">Reported Comments</h2>
+                    <h2 className="text-xl dark:text-white font-semibold mb-2">Reported Comments</h2>
                     {reportedComments.length === 0 ? (
                         <p>No reported comments.</p>
                     ) : (
                         <ul className="list-disc pl-5">
                             {reportedComments.map((comment) => (
-                                <li key={comment.id} className="mb-4">
+                                <li key={comment.id} className="mb-4 dark:text-white">
                                     <div>
                                         <p>
                                             <strong>Comment Content:</strong> {comment.content}
@@ -238,14 +238,14 @@ const ReportedBlogsAndComments = () => {
                                         <div className="mt-2">
                                             {comment.isAppropriate ? (
                                                 <Button
-                                                    className="px-2 py-1 bg-red-500 text-white rounded"
+                                                    className="px-2 py-1 bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded"
                                                     onClick={() => handleFlagContent(comment.id, "comment", false)}
                                                 >
                                                     Mark as Inappropriate
                                                 </Button>
                                             ) : (
                                                 <Button
-                                                    className="px-2 py-1 bg-green-500 text-white rounded"
+                                                   className="px-2 py-1 bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded"
                                                     onClick={() => handleFlagContent(comment.id, "comment", true)}
                                                 >
                                                     Mark as Appropriate
@@ -273,7 +273,7 @@ const ReportedBlogsAndComments = () => {
 
                                         {/* Show the reports if showReports is true */}
                                         {comment.showReports && (
-                                            <div className="mt-2 p-4 bg-gray-100 rounded">
+                                            <div className="mt-2 p-4 bg-gray-100 rounded dark:bg-gray-800">
                                                 {comment.reports.map((report: any) => (
                                                     <div key={report.user.userId} className="border-t border-gray-200 pt-2 mt-2">
                                                         <p><strong>Reporter Username:</strong> {report.user.username}</p>

@@ -386,14 +386,14 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
             </li>
           ) : username === reply.user?.username ? (
             // If the reply is inappropriate and the user is the creator, show it with a message indicating it's inappropriate and show the reports
-            <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-950">
               <p className="mb-2">{reply.content}</p>
               <div className="flex justify-between items-center text-sm">
                 <p>
                   By: <span className="font-medium">{reply.user.username}</span>
                 </p>
               </div>
-              <div className="bg-red-100 text-red-600 p-4 rounded-md mt-4">
+              <div className="mt-6 bg-red-100 dark:bg-red-700 text-red-600 dark:text-red-200 p-4 rounded-md mb-6">
                 <p className="mb-2">This reply has been marked as inappropriate.</p>
                 {reply.CommentReport && reply.CommentReport.length > 0 ? (
                   <div className="mt-4">
@@ -402,7 +402,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                       {reply.CommentReport.map((report, index) => (
                         <li
                           key={index}
-                          className="bg-gray-50 border border-gray-200 p-3 rounded-md"
+                          className="bg-gray-50 border border-gray-200 p-3 rounded-md dark:bg-gray-800"
                         >
                           <p className="text-sm">
                             <span className="font-semibold">Reason:</span> {report.explanation}
@@ -412,7 +412,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                     </ul>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-200 mt-2">
                     No reports available for this reply.
                   </p>
                 )} 
@@ -533,12 +533,13 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         {/* Edit and Delete Buttons */}
         {userId === currentBlog.authorId && ( // Only show if current user is author
           <div className="flex justify-end gap-4 mt-8">
+            {currentBlog.isAppropriate && (
             <Button
               onClick={() => handleEditBlog()}
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
             >
               Edit Blog
-            </Button>
+            </Button>)}
             <Button
               onClick={() => handleDeleteBlog()}
               className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
@@ -550,7 +551,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
         {/* Report Information (if inappropriate) */}
         {!currentBlog.isAppropriate && (
-        <div className="bg-red-100 text-red-600 p-4 rounded-md mb-6">
+        <div className="mt-6 bg-red-100 dark:bg-red-700 text-red-600 dark:text-red-200 p-4 rounded-md mb-6">
           <p className="font-semibold">
             This blog has been marked as inappropriate.
           </p>
@@ -561,7 +562,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                 {currentBlog.BlogReport.map((report, index) => (
                   <li
                     key={index}
-                    className="bg-gray-50 border border-gray-200 p-3 rounded-md"
+                    className="bg-gray-50 border border-gray-200 p-3 rounded-md dark:bg-gray-800"
                   >
                     <p className="text-sm">
                       <span className="font-semibold">Reason:</span> {report.explanation}
@@ -571,7 +572,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
               </ul>
             </div>
           ) : (
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 dark:text-gray-200 mt-2">
               No reports available for this blog.
             </p>
           )}
@@ -642,7 +643,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                 (comment.isAppropriate || username === comment.user.username) ? (
                 <li
                   key={comment.commentId}
-                  className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-950"
+                  className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-900"
                 >
                   {/* Check if the comment is inappropriate */}
                   {comment.isAppropriate ? (
@@ -749,7 +750,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                           By: <span className="font-medium">{comment.user.username}</span>
                         </p>
                       </div>
-                      <div className="bg-red-100 text-red-600 p-4 rounded-md mt-4">
+                      <div className="mt-6 bg-red-100 dark:bg-red-700 text-red-600 dark:text-red-200 p-4 rounded-md mb-2">
                         <p className="font-semibold">
                           This comment has been marked as inappropriate.
                         </p>
@@ -760,7 +761,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                               {comment.CommentReport.map((report, index) => (
                                 <li
                                   key={index}
-                                  className="bg-gray-50 border border-gray-200 p-3 rounded-md"
+                                  className="bg-gray-50 border border-gray-200 p-3 rounded-md dark:bg-gray-800"
                                 >
                                   <p className="text-sm">
                                     <span className="font-semibold">Reason:</span> {report.explanation}
@@ -770,7 +771,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                             </ul>
                           </div>
                         ) : (
-                          <p className="text-sm text-gray-500 mt-2">
+                          <p className="text-sm text-gray-500 dark:text-gray-200 mt-2">
                             No reports available for this comment.
                           </p>
                         )}
