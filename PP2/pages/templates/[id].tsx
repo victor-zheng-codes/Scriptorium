@@ -392,8 +392,8 @@ const TemplatePage = () => {
                   highlight={code => highlight(code, languages.js, editableTemplate?.language || 'python')}
                   padding={10}
                   style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 12,
+                    fontFamily: '"Cascadia code", "Fira Mono", monospace',
+                    fontSize: "1em",
                   }}
               />
             </div>
@@ -501,7 +501,7 @@ const TemplatePage = () => {
               padding={10}
               style={{
                 fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: 12,
+                fontSize: "1em",
               }}
           />
         </div>

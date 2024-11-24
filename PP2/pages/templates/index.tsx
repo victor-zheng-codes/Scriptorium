@@ -345,7 +345,7 @@ const Templates = () => {
                   padding={10}
                   style={{
                     fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: 12,
+                    fontSize: "1em",
                   }}
               />
               <p className="text-sm text-gray-500 mt-2">
