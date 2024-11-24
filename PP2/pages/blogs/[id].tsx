@@ -119,7 +119,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   ) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("You must be logged in to rate.");
+      router.push("/login");
       return;
     }
   
@@ -177,7 +177,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      toast.error("You must be logged in to comment.");
+      router.push("/login");
       return;
     }
     if (!commentContents[0] || !commentContents[0].trim()) {
@@ -265,7 +265,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
   const handleReplySubmit = async (e: React.FormEvent, parentId: number) => {
     e.preventDefault();
     if (!isLoggedIn) {
-      toast.error("You must be logged in to reply.");
+      router.push("/login");
       return;
     }
     if (!commentContents[parentId] || !commentContents[parentId].trim()) {
@@ -326,7 +326,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
           reply.isAppropriate ? (
             <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-950">
               <p className="mb-2">{reply.content}</p>
-              <div className="flex justify-between items-center text-sm">
+              <div className="flex justify-between items-center text-sm mb-2">
                 <p>
                   By: <span className="font-medium">{reply.user?.username || "Unknown"}</span>
                 </p>
@@ -336,7 +336,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
               </div>
 
               {/* Upvote/downvote reply */}
-              <div className="flex gap-2 mb-8">
+              <div className="flex gap-2 mb-2">
                 <Button
                   onClick={() => handleVote(1, reply.commentId, true, reply.parentId)}
                   className={getButtonClass(getCurrentCommentRating(userId, reply.commentId), 1)}
@@ -353,11 +353,17 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
               <div className="mt-2">
                 <Button
-                  onClick={() => handleReportChange(reply.commentId, "")}
+                  onClick={() => {
+                    if (reportReasons[reply.commentId] !== undefined) {
+                      handleReportChange(reply.commentId, undefined);
+                    } else {
+                      handleReportChange(reply.commentId, "");
+                    }
+                  }}
                   size="sm"
                   variant="link"
                 >
-                  Report
+                  Report Reply
                 </Button>
                 {reportReasons[reply.commentId] !== undefined && (
                   <form
@@ -429,7 +435,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     const token = localStorage.getItem("token");
   
     if (!token) {
-      toast.error("You must be logged in to report.");
+      router.push("/login");
       return;
     }
   
@@ -477,7 +483,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     const token = localStorage.getItem("token");
   
     if (!token) {
-      toast.error("You must be logged in to edit.");
+      router.push("/login");
       return;
     }
 
@@ -496,7 +502,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
     const token = localStorage.getItem("token");
   
     if (!token) {
-      toast.error("You must be logged in to delete.");
+      router.push("/login");
       return;
     }
 
@@ -631,7 +637,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         </div>
 
         {/* Comments Section */}
-        <section className="mb-12">
+        <section>
           <h2 className="text-2xl font-semibold mb-4">Comments</h2>
           {!currentBlog.Comment || currentBlog.Comment.length === 0 ? (
             <p>No comments yet.</p>
@@ -714,7 +720,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                           size="sm"
                           variant="link"
                         >
-                          Report
+                          Report Comment
                         </Button>
                         {reportReasons[comment.commentId] !== undefined && (
                           <form
