@@ -130,34 +130,34 @@ const Blogs = () => {
     <Layout>
       <div className="p-4 space-y-4">
         <form onSubmit={handleSearch} className="space-y-4">
-          <div className="flex space-x-4 text-gray-600 dark:text-gray-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-gray-600 dark:text-gray-300">
             <input
               type="text"
               placeholder="Search by content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="p-2 border border-gray-500 rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md"
             />
             <input
               type="text"
               placeholder="Search by title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="p-2 border border-gray-500 rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md"
             />
             <input
               type="text"
               placeholder="Tags (comma-separated)"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              className="p-2 border border-gray-500 rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md"
             />
             <input
               type="text"
               placeholder="Templates (comma-separated)"
               value={templates}
               onChange={(e) => setTemplates(e.target.value)}
-              className="p-2 border border-gray-500 rounded-md w-1/4"
+              className="p-2 border border-gray-500 rounded-md"
             />
           </div>
           <div className="flex items-center space-x-4 text-gray-600 dark:text-gray-300">
