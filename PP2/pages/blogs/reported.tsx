@@ -21,8 +21,17 @@ const ReportedBlogsAndComments = () => {
     const [reportedComments, setReportedComments] = useState<ReportedContent[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1); // Track the current page
+    const [limit, setLimit] = useState(10); // Number of items per page
+    const [totalBlogPages, setTotalBlogPages] = useState(1); // Total number of blog pages
+    const [totalCommentPages, setTotalCommentPages] = useState(1);
+    const [selectedType, setSelectedType] = useState<"blog" | "comment">("blog"); 
 
     const router = useRouter();
+
+    const handleTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedType(event.target.value as "blog" | "comment");
+    };
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -33,7 +42,7 @@ const ReportedBlogsAndComments = () => {
 
         const fetchReports = async () => {
             try {
-                const response = await fetch("/api/blogs/reports", {
+                const response = await fetch(`/api/blogs/reports?page=${page}&limit=${limit}`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -50,7 +59,8 @@ const ReportedBlogsAndComments = () => {
 
                 const data = await response.json();
 
-                console.log(data);
+                setTotalBlogPages(data.totalBlogPages); // Set the total number of pages from the response
+                setTotalCommentPages(data.totalCommentPages);
 
                 const formattedBlogs = data.sortedBlogs.map((blog: any) => ({
                     id: blog.blogId,
@@ -84,7 +94,8 @@ const ReportedBlogsAndComments = () => {
         };
 
         fetchReports();
-    }, [router]);
+    }, [page, limit, router]);
+    
 
     const handleFlagContent = async (id: number, type: "blog" | "comment", isAppropriate: boolean) => {
         const token = localStorage.getItem("token");
@@ -133,16 +144,34 @@ const ReportedBlogsAndComments = () => {
     return (
         <Layout>
             <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4 dark:text-white">Reported Content</h1>
+                <h1 className="text-2xl font-bold mb-4 dark:text-gray-300">Reported Content</h1>
+
+                {/* Dropdown for selecting type */}
+                <div className="mb-4">
+                    <label htmlFor="content-type" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Select Content Type:
+                    </label>
+                    <select
+                        id="content-type"
+                        value={selectedType}
+                        onChange={handleTypeChange}
+                        className="p-2 border rounded dark:bg-gray-800 dark:text-gray-300"
+                    >
+                        <option value="blog">Blogs</option>
+                        <option value="comment">Comments</option>
+                    </select>
+                </div>
+
+                {selectedType === "blog" ? (
 
                 <div>
-                    <h2 className="text-xl font-semibold mb-2 dark:text-white">Reported Blogs</h2>
+                    <h2 className="text-xl font-semibold mb-2 dark:text-gray-300">Reported Blogs</h2>
                     {reportedBlogs.length === 0 ? (
                         <p>No reported blogs.</p>
                     ) : (
                         <ul className="list-disc pl-5">
                             {reportedBlogs.map((blog) => (
-                                <div className="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-900 mb-4 dark:text-white">
+                                <div className="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-900 mb-4 dark:text-gray-300">
                                     <div>
                                         <p>
                                             <strong>Title:</strong>{" "}
@@ -206,16 +235,31 @@ const ReportedBlogsAndComments = () => {
                             ))}
                         </ul>
                     )}
+                    <div className="flex justify-between mt-6 dark:text-gray-300">
+                        <Button
+                            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={page === 1}
+                        >
+                            Previous
+                        </Button>
+                        <span>Page {page} of {totalBlogPages}</span>
+                        <Button
+                            onClick={() => setPage((prev) => Math.min(prev + 1, totalBlogPages))}
+                            disabled={page === totalBlogPages}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
-
+                ) : (
                 <div className="mt-6">
-                    <h2 className="text-xl dark:text-white font-semibold mb-2">Reported Comments</h2>
+                    <h2 className="text-xl dark:text-gray-300 font-semibold mb-2">Reported Comments</h2>
                     {reportedComments.length === 0 ? (
                         <p>No reported comments.</p>
                     ) : (
                         <ul className="list-disc pl-5">
                             {reportedComments.map((comment) => (
-                                <div className="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-900 mb-4 dark:text-white">
+                                <div className="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-900 mb-4 dark:text-gray-300">
                                     <div>
                                         <p>
                                             <strong>Comment Content:</strong> {comment.content}
@@ -283,7 +327,23 @@ const ReportedBlogsAndComments = () => {
                             ))}
                         </ul>
                     )}
+                    <div className="flex justify-between mt-6 mt-6 dark:text-gray-300">
+                        <Button
+                            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={page === 1}
+                        >
+                            Previous
+                        </Button>
+                        <span>Page {page} of {totalCommentPages}</span>
+                        <Button
+                            onClick={() => setPage((prev) => Math.min(prev + 1, totalCommentPages))}
+                            disabled={page === totalCommentPages}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
+            )}
             </div>
         </Layout>
     );
