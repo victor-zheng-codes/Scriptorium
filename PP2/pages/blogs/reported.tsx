@@ -142,7 +142,7 @@ const ReportedBlogsAndComments = () => {
                     ) : (
                         <ul className="list-disc pl-5">
                             {reportedBlogs.map((blog) => (
-                                <li key={blog.id} className="mb-4 dark:text-white">
+                                <div className="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-900 mb-4 dark:text-white">
                                     <div>
                                         <p>
                                             <strong>Title:</strong>{" "}
@@ -202,7 +202,7 @@ const ReportedBlogsAndComments = () => {
                                             </div>
                                         )}
                                     </div>
-                                </li>
+                                </div>
                             ))}
                         </ul>
                     )}
@@ -215,7 +215,7 @@ const ReportedBlogsAndComments = () => {
                     ) : (
                         <ul className="list-disc pl-5">
                             {reportedComments.map((comment) => (
-                                <li key={comment.id} className="mb-4 dark:text-white">
+                                <div className="p-4 border rounded-lg shadow-md bg-white dark:bg-gray-900 mb-4 dark:text-white">
                                     <div>
                                         <p>
                                             <strong>Comment Content:</strong> {comment.content}
@@ -279,7 +279,7 @@ const ReportedBlogsAndComments = () => {
                                             </div>
                                         )}
                                     </div>
-                                </li>
+                                </div>
                             ))}
                         </ul>
                     )}
