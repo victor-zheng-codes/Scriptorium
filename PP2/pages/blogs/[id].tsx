@@ -537,11 +537,11 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         {/* Blog Content */}
         <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
         <p className="text-lg mb-4">{currentBlog.description}</p>
-        <div className="prose lg:prose-xl mb-12">{currentBlog.content}</div>
+        <div className="prose lg:prose-xl mb-6">{currentBlog.content}</div>
 
         {/* Edit and Delete Buttons */}
         {userId === currentBlog.authorId && ( // Only show if current user is author
-          <div className="flex justify-end gap-4 mt-8">
+          <div className="flex justify-end gap-4 mt-6">
             {currentBlog.isAppropriate && (
             <Button
               onClick={() => handleEditBlog()}
