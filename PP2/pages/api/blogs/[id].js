@@ -22,8 +22,8 @@ function isValidBlogContent(content) {
 }
 
 function isValidTag(tag) {
-    // Tags should be alphanumeric, no spaces, and between 1 and 20 characters
-    const tagRegex = /^[a-zA-Z0-9]{1,20}$/;
+    // // Tags should only contain alphanumeric characters and spaces, and be between 1 and 20 characters
+    const tagRegex = /^[a-zA-Z0-9\s]{1,20}$/;
     return tagRegex.test(tag);
 }
 
@@ -182,7 +182,7 @@ export default async function handler(req, res) {
         }
         
         if (tags !== null && !areValidTags(tags)) {
-            return res.status(400).json({ error: 'Tags should be alphanumeric, no spaces, and between 1 and 20 characters' });
+            return res.status(400).json({ error: '// Tags should only contain alphanumeric characters and spaces, and be between 1 and 20 characters' });
         }
         
         if (templateIds !== null && !areValidIntegers(templateIds)) {
