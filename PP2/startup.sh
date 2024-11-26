@@ -9,7 +9,7 @@ docker pull python:3.10
 docker pull node:20
 docker pull openjdk:20
 docker pull gcc:12
-docker pull golang:1.21
+docker pull openresty/openresty
 docker pull ruby:3.3
 docker pull php:8.2-cli
 docker pull rust:1.73
