@@ -91,6 +91,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         })
         .catch((error) => console.error("Error fetching user data:", error));
     } else {
+      if (!currentBlog.isAppropriate) {
+        router.replace('/404');
+      }
       setIsLoggedIn(false);
     }
   }, []);
