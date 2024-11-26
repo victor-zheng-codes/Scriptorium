@@ -140,10 +140,11 @@ const EditBlog: React.FC<BlogPageProps> = ({ blog }) => {
       } else if (res.status === 401) {
         const newToken = await refreshAccessToken();
         if (newToken) {
-          const res = await fetch("/api/blogs/create", {
-            method: "POST",
+          const res = await fetch(`/api/blogs/${blog.blogId}`, {
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Assuming token exists
             },
             body: JSON.stringify({
               title,
@@ -153,13 +154,8 @@ const EditBlog: React.FC<BlogPageProps> = ({ blog }) => {
               templateIds: templateIdArray,
             }),
           });
-          if (res.ok) {
-            const result = await res.json();
-            setBlogId(result.blogId); // Save the blog ID in the state
-            router.push(`/blogs/${result.blogId}`); // Redirect to the created blog page
-          }
         } else {
-            setError("An error occurred while saving the blog.");
+            setError("An error occurred while editing the blog.");
         }
       } else {
         const result = await res.json();
