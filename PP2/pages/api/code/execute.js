@@ -42,7 +42,7 @@ export default async function handler(req, res) {
         ruby: "ruby:3.3",
         php: "php:8.2-cli",
         perl: "perl:5.36",
-        go: "golang:1.21",
+        lua: "openresty/openresty",
         rust:"rust:1.73",
     };
 
@@ -117,12 +117,12 @@ export default async function handler(req, res) {
             runCommand = `g++ -Wall main.cpp -o main && ./${cppExecutablePath}`;
             break;
 
-        case "go":
-            const goFilePath = "main.go";
+        case "lua":
+            const luaFilePath = "main.lua";
 
-            codeFilePath = path.join(dirPath, goFilePath);
+            codeFilePath = path.join(dirPath, luaFilePath);
 
-            runCommand = `go run ${goFilePath}`;
+            runCommand = `lua ${luaFilePath}`;
             break;
 
         case "perl":
