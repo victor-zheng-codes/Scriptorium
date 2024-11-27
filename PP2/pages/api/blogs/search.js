@@ -6,8 +6,8 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: `Method ${req.method} not allowed` });
     }
 
-    const { content, title, templates } = req.query;
-    let { tags } = req.query;
+    const { content, title } = req.query;
+    let { tags, templates } = req.query;
     // content and title are strings
     // tags is a list of comma-separated template names (strings)
     // templates is a list of comma-separated template names (strings)
@@ -27,6 +27,13 @@ export default async function handler(req, res) {
     const buildWhereConditions = () => {
         if (tags){
             tags = tags.split(",").map(function(item) {
+              return item.trim();
+            }).filter(function(item) {
+              return item !== ''; // Remove empty strings
+            });
+        }
+        if (templates){
+            templates = templates.split(",").map(function(item) {
               return item.trim();
             }).filter(function(item) {
               return item !== ''; // Remove empty strings
@@ -56,7 +63,7 @@ export default async function handler(req, res) {
             // If tags exists and has elements, only include blogs with at least
             // one associated tag whose name is in the tags array (case insensitive)
             templates && templates.length > 0 ? {
-                AND: templates.split(',').map((template) => ({
+                AND: templates.map((template) => ({
                     BlogTemplate: {
                         some: {
                             template: {
