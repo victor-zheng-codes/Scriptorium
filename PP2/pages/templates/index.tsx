@@ -279,9 +279,9 @@ const Templates = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("go")}
+                      onClick={(e) => setLocalLanguageFilter("lua")}
                     >
-                      Go
+                      Lua
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
