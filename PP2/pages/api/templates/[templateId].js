@@ -71,6 +71,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing at least one of title, content, tags, language, or description.' });
     }
 
+    // check if tags are empty
+    const isTagsEmpty = !tags || tags.some(tag => tag.trim() === "");
+
+    if (isTagsEmpty){
+      return res.status(400).json({ error: 'Format of tags provided either empty or not valid.' });
+    }
+
     const existingTemplate = await prisma.template.findUnique({
       where: {
         templateId, 
