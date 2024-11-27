@@ -17,6 +17,10 @@ type BlogTemplate = {
   };
 };
 
+type User = {
+  username: string;
+}
+
 type Blog = {
   blogId: number;
   title: string;
@@ -26,6 +30,7 @@ type Blog = {
   BlogTemplate: BlogTemplate[];
   upvotes: number;
   downvotes: number;
+  author: User
 };
 
 type ApiResponse = {
@@ -39,10 +44,12 @@ const Blogs = () => {
   const [title, setTitle] = useState<string>("");
   const [tags, setTags] = useState<string>("");
   const [templates, setTemplates] = useState<string>("");
+  const [author, setAuthor] = useState<string>("");
   const [activeTitle, setActiveTitle] = useState<string>("");
   const [activeTags, setActiveTags] = useState<string>("");
   const [activeTemplates, setActiveTemplates] = useState<string>("");
   const [activeContent, setActiveContent] = useState<string>("");
+  const [activeAuthor, setActiveAuthor] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -78,12 +85,13 @@ const Blogs = () => {
   };
 
   useEffect(() => {
-    const { content, title, tags, templates, page, limit } = router.query;
+    const { content, title, tags, templates, page, author, limit } = router.query;
 
     if (content) setContent(content as string);
     if (title) setTitle(title as string);
     if (tags) setTags(tags as string);
     if (templates) setTemplates(templates as string);
+    if (author) setAuthor(author as string);
     if (page) {
       if (Number(page) > totalPages) setPage(1);
       else setPage(Number(page));
@@ -118,6 +126,7 @@ const Blogs = () => {
         ...(activeTitle && { title: activeTitle }),
         ...(activeTags && { tags: activeTags }),
         ...(activeTemplates && { templates: activeTemplates }),
+        ...(activeAuthor && { author: activeAuthor }),
         page: page.toString(),
         limit: limit.toString(),
       });
@@ -144,11 +153,12 @@ const Blogs = () => {
     setActiveTitle(title);
     setActiveTags(tags);
     setActiveTemplates(templates);
+    setActiveAuthor(author);
     setPage(1); // Reset to page 1 when new search criteria are entered
     router.push(
       {
         pathname: "/blogs",
-        query: { content, title, tags, templates, page, limit },
+        query: { content, title, tags, templates, author, page, limit },
       },
       undefined,
       { shallow: true } // Avoid full page reload
@@ -157,35 +167,43 @@ const Blogs = () => {
 
   return (
     <Layout>
+      <h1 className="text-4xl text-center font-bold py-4 dark:text-gray-200">Blogs</h1>
       <div className="p-4 space-y-4">
         <form onSubmit={handleSearch} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-gray-600 dark:text-gray-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-gray-600 dark:text-gray-300">
             <input
               type="text"
-              placeholder="Search by title"
+              placeholder="Filter by title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="p-2 border border-gray-500 rounded-md"
             />
             <input
               type="text"
-              placeholder="Search by content"
+              placeholder="Filter by content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="p-2 border border-gray-500 rounded-md"
             />
             <input
               type="text"
-              placeholder="Tags (comma-separated)"
+              placeholder="Filter by tags"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
               className="p-2 border border-gray-500 rounded-md"
             />
             <input
               type="text"
-              placeholder="Templates (comma-separated)"
+              placeholder="Filter by templates"
               value={templates}
               onChange={(e) => setTemplates(e.target.value)}
+              className="p-2 border border-gray-500 rounded-md"
+            />
+            <input
+              type="text"
+              placeholder="Filter by author"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
               className="p-2 border border-gray-500 rounded-md"
             />
           </div>
@@ -237,6 +255,9 @@ const Blogs = () => {
               </h2>
               <p>{blog.description}</p>
               <div>
+                <strong>By:</strong> {blog.author.username}
+              </div>
+              <div>
                 <strong>Tags:</strong> {blog.BlogTags.map((tag) => tag.tag.tagName).join(", ")}
               </div>
               <div>
@@ -262,7 +283,7 @@ const Blogs = () => {
               router.push(
                 {
                   pathname: "/blogs",
-                  query: { content, title, tags, templates, page: newPage, limit },
+                  query: { content, title, tags, templates, author, page: newPage, limit },
                 },
                 undefined,
                 { shallow: true } // Avoid full page reload
@@ -282,7 +303,7 @@ const Blogs = () => {
               router.push(
                 {
                   pathname: "/blogs",
-                  query: { content, title, tags, templates, page: newPage, limit },
+                  query: { content, title, tags, templates, author, page: newPage, limit },
                 },
                 undefined,
                 { shallow: true } // Avoid full page reload

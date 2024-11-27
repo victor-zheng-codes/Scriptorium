@@ -6,7 +6,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: `Method ${req.method} not allowed` });
     }
 
-    const { content, title } = req.query;
+    const { content, title, author } = req.query;
     let { tags, templates } = req.query;
     // content and title are strings
     // tags is a list of comma-separated template names (strings)
@@ -73,6 +73,7 @@ export default async function handler(req, res) {
                     },
                 }))
             } : undefined,
+            author ? { author: { username: { contains: author } } } : undefined,
             // If templates exists and has elements, only include blogs with 
             // at least one associated template whose title is in the
             // templates array (case insensitive)
@@ -105,6 +106,11 @@ export default async function handler(req, res) {
                         template: true, // Include template info
                     },
                 },
+                author: {
+                    select: {
+                        username: true,
+                    }
+                }
             },
             skip: skip,
             take: take,

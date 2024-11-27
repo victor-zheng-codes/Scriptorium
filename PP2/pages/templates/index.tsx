@@ -245,7 +245,7 @@ const Templates = () => {
               {/* Filter by username */}
               <input
                 type="text"
-                placeholder="Filter by username"
+                placeholder="Filter by author"
                 value={localAuthorFilter}
                 onChange={(e) => setLocalAuthorFilter(e.target.value)}
                 onKeyDown={(e) => {
