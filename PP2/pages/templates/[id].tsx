@@ -51,6 +51,8 @@ const TemplatePage = () => {
   // logged in user
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
+  const [isAuthor, setIsAuthor] = useState<boolean>(false);
+
   const router = useRouter();
   const { id } = router.query; // Get the template ID from the URL
 
