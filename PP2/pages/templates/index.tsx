@@ -187,7 +187,7 @@ const Templates = () => {
         {/* Main Content Area */}
         <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
           {/* Header */}
-          <div className="flex justify-between px-8 py-8">
+          <div className="flex justify-between py-8">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200 pl-24">
               Code Templates
             </h1>
