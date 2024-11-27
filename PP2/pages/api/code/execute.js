@@ -42,7 +42,7 @@ export default async function handler(req, res) {
         ruby: "ruby:3.3",
         php: "php:8.2-cli",
         perl: "perl:5.36",
-        lua: "lua:5.3",
+        lua: "nickblah/lua",
         rust:"rust:1.73",
     };
 
