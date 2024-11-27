@@ -33,7 +33,7 @@ export default async function handler(req, res) {
           content ? { content: { contains: content } } : undefined,
           title ? { title: { contains: title } } : undefined,
           description ? {description: {contains: description} }: undefined,
-          language ? {language: {contains: language} }: undefined,
+          language ? {language: language }: undefined,
           author ?  { owner: { username: {contains: author }}} : undefined,
           tags && tags.length > 0 ? {
             AND: tags.map((tag) => ({
