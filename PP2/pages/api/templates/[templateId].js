@@ -140,10 +140,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Title requested already exists' });
       }
 
-      const date = new Date()
-      const estOffset = -5 * 60;
-      const utcOffset = date.getTimezoneOffset(); 
-      const estDate = new Date(date.getTime() + (estOffset + utcOffset) * 60 * 1000); 
+      // const date = new Date()
+      // const estOffset = -5 * 60;
+      // const utcOffset = date.getTimezoneOffset(); 
+      // const estDate = new Date(date.getTime() + (estOffset + utcOffset) * 60 * 1000); 
 
       try {
         const updatedTemplate = await prisma.template.update({
@@ -153,7 +153,7 @@ export default async function handler(req, res) {
             content,
             language,
             description,
-            updatedAt: estDate.toISOString()
+            // updatedAt: estDate.toISOString()
           },
         });
 
