@@ -167,7 +167,7 @@ const Blogs = () => {
 
   return (
     <Layout>
-      <h1 className="text-4xl text-center font-bold py-4 dark:text-gray-200">Blogs</h1>
+      <h1 className="text-4xl text-center font-bold pt-4 dark:text-gray-200">Blogs</h1>
       <div className="p-4 space-y-4">
         <form onSubmit={handleSearch} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 text-gray-600 dark:text-gray-300">
