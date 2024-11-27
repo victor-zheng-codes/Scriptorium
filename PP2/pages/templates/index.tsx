@@ -142,7 +142,7 @@ const Templates = () => {
   useEffect(() => {
     // set the filter limit
     if (limitFilter) {
-      if (Number(limitFilter) < 1) setLimitFilter(1);
+      if (Number(limitFilter) < 10) setLimitFilter(10);
       else setLimitFilter(Number(limitFilter));
     }
 
