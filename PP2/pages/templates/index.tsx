@@ -183,16 +183,9 @@ const Templates = () => {
 
   return (
     <Layout>
-      <div className="flex flex-grow m-5">
-        {/* Main Content Area */}
-        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
-          {/* Header */}
-          <div className="flex justify-between py-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200 pl-24">
-              Code Templates
-            </h1>
-          </div>
-
+      <div className="container mx-auto px-4 py-8 px-6">
+        <h1 className="text-4xl font-bold mb-8">Code Templates</h1>
+           <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4"> 
           {/* Filters */}
           <div className="container mx-auto px-16 mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
