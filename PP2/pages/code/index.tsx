@@ -9,7 +9,7 @@ import Editor from 'react-simple-code-editor';
 
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
+import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
 
 const Code = () => {
   const [code, setCode] = useState<string>(""); // State to hold code from the textarea

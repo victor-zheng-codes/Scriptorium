@@ -6,7 +6,9 @@ import Editor from 'react-simple-code-editor';
 
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
+import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
+
+import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import { useEffect, useState } from "react";
 
@@ -51,7 +53,8 @@ const TemplatePage = () => {
   // logged in user
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const [isAuthor, setIsAuthor] = useState<boolean>(false);
+  // const [authorId, setAuthorId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const router = useRouter();
   const { id } = router.query; // Get the template ID from the URL
@@ -95,7 +98,7 @@ const TemplatePage = () => {
         setEditableTemplate(data.template);
 
         setLinkedBlogs(data.templateBlogs);
-        console.log("linked blogs " + JSON.stringify(data.templateBlogs))
+        // console.log("linked tags " + JSON.stringify(data.templateTags))
         setTemplateTags(data.templateTags);
         setEditableTags(data.templateTags);
 
@@ -112,8 +115,25 @@ const TemplatePage = () => {
     // only get the local storage status after fetching templates
     let token = localStorage.getItem("token");
 
+    // if (token) {
+    //   setIsLoggedIn(true); // User is logged in, token exists
+
     if (token) {
-      setIsLoggedIn(true); // User is logged in, token exists
+      setIsLoggedIn(true);
+      fetch("/api/user/data", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.user) {
+            if (data.user.userId) {
+              setUserId(data.user.userId);
+            }
+          } 
+        })
+        .catch((error) => console.error("Error fetching user data:", error));
     } else {
       setIsLoggedIn(false); // User is not logged in
     }
@@ -393,10 +413,11 @@ const TemplatePage = () => {
                     )} // Update code state on change
                   highlight={code => highlight(code, languages.js, editableTemplate?.language || 'python')}
                   padding={10}
-                  style={{
-                    fontFamily: '"Cascadia code", "Fira Mono", monospace',
-                    fontSize: "1em",
-                  }}
+                  style={materialDark}
+                  // style={{
+                  //   fontFamily: 'monospace',
+                  //   fontSize: "1em",
+                  // }}
               />
             </div>
 
@@ -501,10 +522,11 @@ const TemplatePage = () => {
               onValueChange={(e) => (e)} // Update code state on change
               highlight={code => highlight(code, languages.js, template.language)}
               padding={10}
-              style={{
-                fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: "1em",
-              }}
+              style={materialDark}
+              // style={{
+              //   fontFamily: 'monospace',
+              //   fontSize: "1em",
+              // }}
           />
         </div>
 
@@ -541,48 +563,47 @@ const TemplatePage = () => {
         )}
 
         <h2 className="text-2xl font-bold mt-5">Actions</h2>
-
-        {/* Action Buttons */}
-        <div className="flex justify-between">
-            {isLoggedIn && (
-              <div className="mt-8">
-                  <button
-                    onClick={handleDelete}
-                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                  >
-                    Delete Template
-                  </button>
-              </div>
-            )}
-
-          <div className="mt-8">
-            <button
-              onClick={handleRun}
-              className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700">
-              Execute Code
-            </button>
-          </div>
-
-          {/* Fork Button */}
-          {isLoggedIn && (
-          <div className="mt-8">
-            <button
-              onClick={handleFork}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-              Fork Template
-            </button>
-          </div>)}
-
-          {/* Edit Mode Toggle */}
-          {isLoggedIn && (
-          <div className="mt-8">
+        {/* Action Buttons */}  
+        <div className="flex flex-wrap gap-4 justify-center md:justify-start mt-4">
+        {/* Delete Button */}
+        {isLoggedIn && template.userId === userId && (
           <button
-            onClick={() => setIsEditMode(!isEditMode)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-            {isEditMode ? "Cancel Edit" : "Edit Template"}
+            onClick={handleDelete}
+            className="px-4 py-2 w-full md:w-auto bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Delete Template
           </button>
-          </div>)}
-        </div>
+        )}
+
+        {/* Execute Code Button */}
+        <button
+          onClick={handleRun}
+          className="px-4 py-2 w-full md:w-auto bg-amber-600 text-white rounded-md hover:bg-amber-700"
+        >
+          Execute Code
+        </button>
+
+      {/* Fork Button */}
+      {isLoggedIn && (
+        <button
+          onClick={handleFork}
+          className="px-4 py-2 w-full md:w-auto bg-green-600 text-white rounded-md hover:bg-green-700"
+        >
+          Fork Template
+        </button>
+      )}
+
+      {/* Edit Toggle Button */}
+      {isLoggedIn && template.userId === userId && (
+        <button
+          onClick={() => setIsEditMode(!isEditMode)}
+          className="px-4 py-2 w-full md:w-auto bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          {isEditMode ? "Cancel Edit" : "Edit Template"}
+        </button>
+      )}
+    </div>
+
       </div>)}
       </div>
     </Layout>

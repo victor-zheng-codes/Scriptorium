@@ -3,13 +3,15 @@ import Layout from "@/components/ui/layout";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
 import { highlight, languages } from 'prismjs';
 import Editor from 'react-simple-code-editor';
 
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
-
+import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
 
 // import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
@@ -48,14 +50,33 @@ const Templates = () => {
   const [contentFilter, setContentFilter] = useState<string>("");
   const [tagFilter, setTagFilter] = useState<string>("");
   const [limitFilter, setLimitFilter] = useState<number>(10);
+  const [authorFilter, setAuthorFilter] = useState<string>("");
+
+  // Local states for filters
+  const [localTitleFilter, setLocalTitleFilter] = useState<string>(titleFilter);
+  const [localDescriptionFilter, setLocalDescriptionFilter] = useState<string>(descriptionFilter);
+  const [localContentFilter, setLocalContentFilter] = useState<string>(contentFilter);
+  const [localTagFilter, setLocalTagFilter] = useState<string>(tagFilter);
+  const [localLanguageFilter, setLocalLanguageFilter] = useState<string>(languageFilter);
+  const [localAuthorFilter, setLocalAuthorFilter] = useState<string>("");
 
   const router = useRouter();
+
+  const applyFilters = () => {
+    setTitleFilter(localTitleFilter);
+    setDescriptionFilter(localDescriptionFilter);
+    setContentFilter(localContentFilter);
+    setTagFilter(localTagFilter);
+    setLanguageFilter(localLanguageFilter);
+    setAuthorFilter(localAuthorFilter);
+    setCurrentPage(0); // Reset to the first page on filter change
+  };
 
   const fetchTemplates = async (page: number) => {
     setLoading(true);
     setError(null);
 
-    console.log("tags " + tagFilter)
+    // console.log("tags " + tagFilter)
 
     const params = new URLSearchParams({
       page: page.toString(),
@@ -64,6 +85,7 @@ const Templates = () => {
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
       ...(contentFilter && { content: contentFilter }),
+      ...(authorFilter && { author: authorFilter }),
     });
 
     // this can be combined with above 
@@ -71,7 +93,7 @@ const Templates = () => {
         params.append("tags", tagFilter.toString())
     }
 
-    console.log("params " + params)
+    // console.log("params " + params)
 
     try {
       const res = await fetch(`/api/templates?${params.toString()}`, {
@@ -115,23 +137,18 @@ const Templates = () => {
     return debouncedValue;
   };
 
-  const debouncedLanguageFilter = useDebounce(languageFilter, 500);
-  const debouncedTitleFilter = useDebounce(titleFilter, 500);
-  const debouncedDescriptionFilter = useDebounce(descriptionFilter, 500);
-  const debouncedContentFilter = useDebounce(contentFilter, 500);
-  const debouncedTagFilter = useDebounce(tagFilter, 500);
   const debouncedLimitFilter = useDebounce(limitFilter, 1000);
 
   useEffect(() => {
     // set the filter limit
     if (limitFilter) {
-      if (Number(limitFilter) < 1) setLimitFilter(1);
+      if (Number(limitFilter) < 10) setLimitFilter(10);
       else setLimitFilter(Number(limitFilter));
     }
 
     // Fetch templates whenever the filters or page change
     fetchTemplates(currentPage);
-  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter, debouncedTagFilter, debouncedLimitFilter]);
+  }, [currentPage, languageFilter, titleFilter, descriptionFilter, contentFilter, tagFilter, debouncedLimitFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -139,27 +156,6 @@ const Templates = () => {
     }
   };
 
-  const handleFilterChange = (filterType: string, value: string) => {
-    switch (filterType) {
-      case "language":
-        setLanguageFilter(value);
-        break;
-      case "title":
-        setTitleFilter(value);
-        break;
-      case "description":
-        setDescriptionFilter(value);
-        break;
-      case "content":
-          setContentFilter(value);
-          break;
-      case "tags":
-          setTagFilter(value);
-          break;
-      default:
-        break;
-    }
-  };
 
   if (loading) {
     return (
@@ -183,146 +179,122 @@ const Templates = () => {
 
   return (
     <Layout>
-      <div className="flex flex-grow m-5">
-        {/* Main Content Area */}
-        <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4">
-          {/* Header */}
-          <div className="flex justify-between px-8 py-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-200 pl-24">
-              Code Templates
-            </h1>
-          </div>
-
+      <div className="container mx-auto px-4 py-8 px-6">
+        <h1 className="text-4xl font-bold mb-8 dark:text-gray-200">Code Templates</h1>
+           <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4"> 
+          {/* Filters */}
           {/* Filters */}
           <div className="container mx-auto px-16 mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* <input
-                type="text"
-                placeholder="Filter by language"
-                value={languageFilter}
-                onChange={(e) => handleFilterChange("language", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              /> */}
-
-               {/* Create button with shadcn Dropdown */}
-            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {/* Filter by title */}
               <input
                 type="text"
                 placeholder="Filter by title"
-                value={titleFilter}
-                onChange={(e) => handleFilterChange("title", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+                value={localTitleFilter}
+                onChange={(e) => setLocalTitleFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
               />
+              
+              {/* Filter by description */}
               <input
                 type="text"
                 placeholder="Filter by description"
-                value={descriptionFilter}
-                onChange={(e) => handleFilterChange("description", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+                value={localDescriptionFilter}
+                onChange={(e) => setLocalDescriptionFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
               />
+
+              {/* Filter by code content */}
               <input
                 type="text"
                 placeholder="Filter by code content"
-                value={contentFilter}
-                onChange={(e) => handleFilterChange("content", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+                value={localContentFilter}
+                onChange={(e) => setLocalContentFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
               />
+
+              {/* Filter by tags */}
               <input
                 type="text"
                 placeholder="Filter by tags"
-                value={tagFilter}
-                onChange={(e) => handleFilterChange("tags", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              />    
-              <div className="justify-center">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    {/* <Button className="px-4 py-2 rounded-md focus:outline-none">
-                      Filter by languages
-                    </Button> */}
-                    <input
-                      type="text"
-                      placeholder="Filter by language"
-                      value={languageFilter}
-                      className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-                    /> 
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-48 dark:bg-gray-925 dark:text-gray-200">
-                  <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "")}
-                    >
-                      All
-                    </DropdownMenuItem>
+                value={localTagFilter}
+                onChange={(e) => setLocalTagFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
+              />
+
+              {/* Filter by username */}
+              <input
+                type="text"
+                placeholder="Filter by username"
+                value={localAuthorFilter}
+                onChange={(e) => setLocalAuthorFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
+              />
+
+              {/* Dropdown menu for languages */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <input
+                    type="text"
+                    placeholder="Filter by language"
+                    value={localLanguageFilter}
+                    className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
+                  />
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-48 dark:bg-gray-925 dark:text-gray-200">
+                  {['All', 'javascript', 'java', 'python', 'c', 'cpp', 'lua', 'ruby', 'rust', 'php', 'perl'].map((language) => (
                     <DropdownMenuItem
+                      key={language}
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "javascript")}
+                      onClick={() => setLocalLanguageFilter(language === 'All' ? '' : language)}
                     >
-                      JavaScript
+                      {language === 'All' ? 'All' : language.charAt(0).toUpperCase() + language.slice(1)}
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "java")}
-                    >
-                      Java
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "python")}
-                    >
-                      Python
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "c")}
-                    >
-                      C
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "cpp")}
-                    >
-                      C++
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "go")}
-                    >
-                      Go
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "ruby")}
-                    >
-                      Ruby
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "rust")}
-                    >
-                      Rust
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "php")}
-                    >
-                      PHP
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "perl")}
-                    >
-                      Perl
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                </div>    
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Search button */}
+              <div className="flex justify-center mt-4 sm:col-span-2 xl:col-span-1">
+                <Button
+                  onClick={applyFilters}
+                  className="px-6 py-3 text-white rounded-lg hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                >
+                  Search
+                </Button>
+              </div>
             </div>
-            
           </div>
 
+
         {/* Templates List */}
-        <div className="container mx-auto px-16">
+        <div className="container mx-auto sm:px-8 md:px-12 lg:px-16">
         {templates.length === 0 ? (
           <div className="text-center text-xl text-gray-600 dark:text-gray-300 mt-8">
             No results match the applied filter.
@@ -343,11 +315,14 @@ const Templates = () => {
                   onValueChange={(e) => (e)} // Update code state on change
                   highlight={code => highlight(code, languages.js, template.language)}
                   padding={10}
-                  style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: "1em",
-                  }}
+                  // style={{
+                  //   fontFamily: '"Fira code", "Fira Mono", monospace',
+                  //   fontSize: "1em",
+                  // }}
               />
+              {/* <SyntaxHighlighter language={template.language} style={materialDark}>
+                {template.content}
+              </SyntaxHighlighter> */}
               <p className="text-sm text-gray-500 mt-2">
                 Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | Author: {template.owner.username}
               </p>
@@ -393,7 +368,7 @@ const Templates = () => {
             />
           </div>
 
-          <div className="flex justify-between items-center mt-10 m-20">
+          <div className="flex justify-between items-center mt-10 sm:m-8 md:m-12 lg:m-16">
             <Button
               disabled={currentPage === 1}
               onClick={() => handlePageChange(currentPage - 1)}

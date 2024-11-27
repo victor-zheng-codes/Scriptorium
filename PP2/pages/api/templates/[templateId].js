@@ -38,9 +38,13 @@ export default async function handler(req, res) {
       const templateBlogs = await prisma.BlogTemplate.findMany({
         where: { 
           templateId,
+          blog: {
+            isAppropriate: true,
+            isDeleted: false
+          }
         },
         include: {
-          blog: true
+          blog: true,  // Fetch the associated blog
         }
       });
 
@@ -69,6 +73,13 @@ export default async function handler(req, res) {
 
     if (!title && !content && !tags && !language && !description){
       return res.status(400).json({ error: 'Missing at least one of title, content, tags, language, or description.' });
+    }
+
+    // check if tags are empty
+    const isTagsEmpty = !tags || tags.some(tag => tag.trim() === "");
+
+    if (isTagsEmpty){
+      return res.status(400).json({ error: 'Format of tags provided either empty or not valid.' });
     }
 
     const existingTemplate = await prisma.template.findUnique({
@@ -129,10 +140,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Title requested already exists' });
       }
 
-      const date = new Date()
-      const estOffset = -5 * 60;
-      const utcOffset = date.getTimezoneOffset(); 
-      const estDate = new Date(date.getTime() + (estOffset + utcOffset) * 60 * 1000); 
+      // const date = new Date()
+      // const estOffset = -5 * 60;
+      // const utcOffset = date.getTimezoneOffset(); 
+      // const estDate = new Date(date.getTime() + (estOffset + utcOffset) * 60 * 1000); 
 
       try {
         const updatedTemplate = await prisma.template.update({
@@ -142,7 +153,7 @@ export default async function handler(req, res) {
             content,
             language,
             description,
-            updatedAt: estDate.toISOString()
+            // updatedAt: estDate.toISOString()
           },
         });
 

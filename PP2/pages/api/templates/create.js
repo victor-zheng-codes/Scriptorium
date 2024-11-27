@@ -16,11 +16,20 @@ export default async function handler(req, res) {
     if (!userId) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    
+    console.log("request body: " + JSON.stringify(req.body))
 
     const { title, content, tags, language, description} = req.body;
 
-    if (!title || !content || !tags || !language || !description) {
-      return res.status(400).json({ message: 'Missing title, code content, tags, language, or description' });
+    if (!title || !content || !language || !description) {
+      return res.status(400).json({ message: 'Missing title, code content, language, or description' });
+    }
+
+    // check if tags are empty
+    const isTagsEmpty = !tags || tags.some(tag => tag.trim() === "");
+
+    if (isTagsEmpty){
+      return res.status(400).json({ message: 'Format of tags provided either empty or not valid.' });
     }
 
     const existingTemplate = await prisma.template.findUnique({

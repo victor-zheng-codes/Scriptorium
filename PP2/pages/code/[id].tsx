@@ -9,7 +9,7 @@ import Editor from 'react-simple-code-editor';
 
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
+import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
 
 interface Template {
     templateId: number;
@@ -253,10 +253,6 @@ const Code = () => {
           highlight={code => highlight(code, languages.js, selectedLanguage)}
           onValueChange={code => setCode(code)}
           padding={10}
-          style={{
-            fontFamily: '"Fira code", "Fira Mono", monospace',
-            fontSize: "1em",
-          }}
         />
 
         <div className="flex flex-col w-1/2 gap-1">
