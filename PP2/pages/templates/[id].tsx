@@ -51,7 +51,8 @@ const TemplatePage = () => {
   // logged in user
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const [isAuthor, setIsAuthor] = useState<boolean>(false);
+  // const [authorId, setAuthorId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const router = useRouter();
   const { id } = router.query; // Get the template ID from the URL
@@ -112,8 +113,25 @@ const TemplatePage = () => {
     // only get the local storage status after fetching templates
     let token = localStorage.getItem("token");
 
+    // if (token) {
+    //   setIsLoggedIn(true); // User is logged in, token exists
+
     if (token) {
-      setIsLoggedIn(true); // User is logged in, token exists
+      setIsLoggedIn(true);
+      fetch("/api/user/data", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.user) {
+            if (data.user.userId) {
+              setUserId(data.user.userId);
+            }
+          } 
+        })
+        .catch((error) => console.error("Error fetching user data:", error));
     } else {
       setIsLoggedIn(false); // User is not logged in
     }
@@ -544,7 +562,7 @@ const TemplatePage = () => {
 
         {/* Action Buttons */}
         <div className="flex justify-between">
-            {isLoggedIn && (
+            {isLoggedIn && (template.userId == userId) && (
               <div className="mt-8">
                   <button
                     onClick={handleDelete}
@@ -574,7 +592,7 @@ const TemplatePage = () => {
           </div>)}
 
           {/* Edit Mode Toggle */}
-          {isLoggedIn && (
+          {isLoggedIn && (template.userId == userId) && (
           <div className="mt-8">
           <button
             onClick={() => setIsEditMode(!isEditMode)}
