@@ -49,13 +49,29 @@ const Templates = () => {
   const [tagFilter, setTagFilter] = useState<string>("");
   const [limitFilter, setLimitFilter] = useState<number>(10);
 
+  // Local states for filters
+  const [localTitleFilter, setLocalTitleFilter] = useState<string>(titleFilter);
+  const [localDescriptionFilter, setLocalDescriptionFilter] = useState<string>(descriptionFilter);
+  const [localContentFilter, setLocalContentFilter] = useState<string>(contentFilter);
+  const [localTagFilter, setLocalTagFilter] = useState<string>(tagFilter);
+  const [localLanguageFilter, setLocalLanguageFilter] = useState<string>(languageFilter);
+
   const router = useRouter();
+
+  const applyFilters = () => {
+    setTitleFilter(localTitleFilter);
+    setDescriptionFilter(localDescriptionFilter);
+    setContentFilter(localContentFilter);
+    setTagFilter(localTagFilter);
+    setLanguageFilter(localLanguageFilter);
+    setCurrentPage(0); // Reset to the first page on filter change
+  };
 
   const fetchTemplates = async (page: number) => {
     setLoading(true);
     setError(null);
 
-    console.log("tags " + tagFilter)
+    // console.log("tags " + tagFilter)
 
     const params = new URLSearchParams({
       page: page.toString(),
@@ -71,7 +87,7 @@ const Templates = () => {
         params.append("tags", tagFilter.toString())
     }
 
-    console.log("params " + params)
+    // console.log("params " + params)
 
     try {
       const res = await fetch(`/api/templates?${params.toString()}`, {
@@ -115,11 +131,6 @@ const Templates = () => {
     return debouncedValue;
   };
 
-  const debouncedLanguageFilter = useDebounce(languageFilter, 500);
-  const debouncedTitleFilter = useDebounce(titleFilter, 500);
-  const debouncedDescriptionFilter = useDebounce(descriptionFilter, 500);
-  const debouncedContentFilter = useDebounce(contentFilter, 500);
-  const debouncedTagFilter = useDebounce(tagFilter, 500);
   const debouncedLimitFilter = useDebounce(limitFilter, 1000);
 
   useEffect(() => {
@@ -131,7 +142,7 @@ const Templates = () => {
 
     // Fetch templates whenever the filters or page change
     fetchTemplates(currentPage);
-  }, [currentPage, debouncedLanguageFilter, debouncedTitleFilter, debouncedDescriptionFilter, debouncedContentFilter, debouncedTagFilter, debouncedLimitFilter]);
+  }, [currentPage, languageFilter, titleFilter, descriptionFilter, contentFilter, tagFilter, debouncedLimitFilter]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -139,27 +150,6 @@ const Templates = () => {
     }
   };
 
-  const handleFilterChange = (filterType: string, value: string) => {
-    switch (filterType) {
-      case "language":
-        setLanguageFilter(value);
-        break;
-      case "title":
-        setTitleFilter(value);
-        break;
-      case "description":
-        setDescriptionFilter(value);
-        break;
-      case "content":
-          setContentFilter(value);
-          break;
-      case "tags":
-          setTagFilter(value);
-          break;
-      default:
-        break;
-    }
-  };
 
   if (loading) {
     return (
@@ -189,42 +179,32 @@ const Templates = () => {
           {/* Filters */}
           <div className="container mx-auto px-16 mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* <input
-                type="text"
-                placeholder="Filter by language"
-                value={languageFilter}
-                onChange={(e) => handleFilterChange("language", e.target.value)}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              /> */}
-
-               {/* Create button with shadcn Dropdown */}
-            
               <input
                 type="text"
                 placeholder="Filter by title"
-                value={titleFilter}
-                onChange={(e) => handleFilterChange("title", e.target.value)}
+                value={localTitleFilter}
+                onChange={(e) => setLocalTitleFilter(e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />
               <input
                 type="text"
                 placeholder="Filter by description"
-                value={descriptionFilter}
-                onChange={(e) => handleFilterChange("description", e.target.value)}
+                value={localDescriptionFilter}
+                onChange={(e) => setLocalDescriptionFilter(e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />
               <input
                 type="text"
                 placeholder="Filter by code content"
-                value={contentFilter}
-                onChange={(e) => handleFilterChange("content", e.target.value)}
+                value={localContentFilter}
+                onChange={(e) => setLocalContentFilter(e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />
               <input
                 type="text"
                 placeholder="Filter by tags"
-                value={tagFilter}
-                onChange={(e) => handleFilterChange("tags", e.target.value)}
+                value={localTagFilter}
+                onChange={(e) => setLocalTagFilter(e.target.value)}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />    
               <div className="justify-center">
@@ -236,86 +216,93 @@ const Templates = () => {
                     <input
                       type="text"
                       placeholder="Filter by language"
-                      value={languageFilter}
+                      value={localLanguageFilter}
                       className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
                     /> 
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-48 dark:bg-gray-925 dark:text-gray-200">
                   <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "")}
+                      onClick={(e) => setLocalLanguageFilter("")}
                     >
                       All
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "javascript")}
+                      onClick={(e) => setLocalLanguageFilter("javascript")}
                     >
                       JavaScript
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "java")}
+                      onClick={(e) => setLocalLanguageFilter("java")}
                     >
                       Java
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "python")}
+                      onClick={(e) => setLocalLanguageFilter("python")}
                     >
                       Python
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "c")}
+                      onClick={(e) => setLocalLanguageFilter("c")}
                     >
                       C
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "cpp")}
+                      onClick={(e) => setLocalLanguageFilter("cpp")}
                     >
                       C++
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "go")}
+                      onClick={(e) => setLocalLanguageFilter("go")}
                     >
                       Go
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "ruby")}
+                      onClick={(e) => setLocalLanguageFilter("ruby")}
                     >
                       Ruby
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "rust")}
+                      onClick={(e) => setLocalLanguageFilter("rust")}
                     >
                       Rust
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "php")}
+                      onClick={(e) => setLocalLanguageFilter("php")}
                     >
                       PHP
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => handleFilterChange("language", "perl")}
+                      onClick={(e) => setLocalLanguageFilter("perl")}
                     >
                       Perl
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                </div>    
+
+                {/* <div className="py-4"> */}
+                  <Button onClick={applyFilters} className="m-3 rounded">
+                    Search
+                  </Button>
+                {/* </div> */}
+
+                </div>
             </div>
             
           </div>
 
         {/* Templates List */}
-        <div className="container mx-auto px-16">
+        <div className="container mx-auto sm:px-8 md:px-12 lg:px-16">
         {templates.length === 0 ? (
           <div className="text-center text-xl text-gray-600 dark:text-gray-300 mt-8">
             No results match the applied filter.
@@ -386,7 +373,7 @@ const Templates = () => {
             />
           </div>
 
-          <div className="flex justify-between items-center mt-10 m-20">
+          <div className="flex justify-between items-center mt-10 sm:m-8 md:m-12 lg:m-16">
             <Button
               disabled={currentPage === 1}
               onClick={() => handlePageChange(currentPage - 1)}
