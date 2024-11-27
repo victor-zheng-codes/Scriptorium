@@ -11,3 +11,6 @@ User level users can save templates, create, delete, and edit blog posts, and pr
 Admin level permissions allow users to sort by reports and review reported inappropriate content.
 
 
+The application is deployed to a Digital Ocean droplet. It utilizes Docker to conduct virtualization and isolation. On the server, NGINX is used as a server manager. We use PM2 for process management. The site is deployed on the server to localhost:3000 and is NGINX redirects output.
+
+The site has a Let's Encrypt SSL which automatically updates so that SSL is maintained. The site is deployed to https://codeshare.ca/. 
