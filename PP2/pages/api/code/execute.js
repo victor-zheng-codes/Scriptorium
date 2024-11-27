@@ -185,21 +185,32 @@ export default async function handler(req, res) {
             output: stdout,
         });
     } catch (error) {
+        console.log("Error message " + error)
+
         if (error.code === 124) { // Timed out
-            return res.status(400).json({
+            return res.status(200).json({
                 error: 'Execution timed out (limit exceeded)',
                 output: error.stdout || '',
             });
         }
 
+
+        if (error.code === 'ERR_CHILD_PROCESS_STDIO_MAXBUFFER') { // Memory limit exceeded
+            return res.status(200).json({
+                error: "Output buffer length exceeded",
+                output: "",
+            });
+        }
+
         if (error.code === 137) { // Memory limit exceeded
-            return res.status(400).json({
+            return res.status(200).json({
                 error: "Memory limit exceeded",
                 output: "",
             });
         }
+
         
-        return res.status(400).json({
+        return res.status(200).json({
             error: error.stderr,
             output: error.stdout || "",
         });

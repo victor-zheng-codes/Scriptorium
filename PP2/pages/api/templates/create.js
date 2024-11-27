@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const { title, content, tags, language, description} = req.body;
 
     if (!title || !content || !tags || !language || !description) {
-      return res.status(400).json({ message: 'Missing title, explanation, tags, language, or description' });
+      return res.status(400).json({ message: 'Missing title, code content, tags, language, or description' });
     }
 
     const existingTemplate = await prisma.template.findUnique({

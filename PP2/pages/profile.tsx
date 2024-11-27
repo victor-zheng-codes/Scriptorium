@@ -260,15 +260,16 @@ const Profile = () => {
             </div>
 
             {/* Buttons (Right Aligned) */}
+            {/* <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 ml-auto"> */}
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 ml-auto">
-              {user.isAdmin && (
+              {/* {user.isAdmin && (
                 <Button className="text-sm py-1 px-4" onClick={() => router.push("blogs/reported")}>
-                  Manage Inappropriate Content
+                  Manage Content
                 </Button>
-              )}
+              )} */}
               <Button className="text-sm py-1 px-4" onClick={handleLogout}>
                 Logout
-              </Button>
+              </Button> 
               <Button
                 className="text-sm py-1 px-4"
                 onClick={() => router.push("/profile/edit")}
@@ -389,6 +390,7 @@ const Profile = () => {
           </div>
         </div>
       )}
+      
     </Layout>
   );
 };
