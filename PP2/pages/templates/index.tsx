@@ -48,6 +48,7 @@ const Templates = () => {
   const [contentFilter, setContentFilter] = useState<string>("");
   const [tagFilter, setTagFilter] = useState<string>("");
   const [limitFilter, setLimitFilter] = useState<number>(10);
+  const [authorFilter, setAuthorFilter] = useState<string>("");
 
   // Local states for filters
   const [localTitleFilter, setLocalTitleFilter] = useState<string>(titleFilter);
@@ -55,6 +56,7 @@ const Templates = () => {
   const [localContentFilter, setLocalContentFilter] = useState<string>(contentFilter);
   const [localTagFilter, setLocalTagFilter] = useState<string>(tagFilter);
   const [localLanguageFilter, setLocalLanguageFilter] = useState<string>(languageFilter);
+  const [localAuthorFilter, setLocalAuthorFilter] = useState<string>("");
 
   const router = useRouter();
 
@@ -64,6 +66,7 @@ const Templates = () => {
     setContentFilter(localContentFilter);
     setTagFilter(localTagFilter);
     setLanguageFilter(localLanguageFilter);
+    setAuthorFilter(localAuthorFilter);
     setCurrentPage(0); // Reset to the first page on filter change
   };
 
@@ -80,6 +83,7 @@ const Templates = () => {
       ...(titleFilter && { title: titleFilter }),
       ...(descriptionFilter && { description: descriptionFilter }),
       ...(contentFilter && { content: contentFilter }),
+      ...(authorFilter && { author: authorFilter }),
     });
 
     // this can be combined with above 
@@ -220,6 +224,18 @@ const Templates = () => {
                 placeholder="Filter by tags"
                 value={localTagFilter}
                 onChange={(e) => setLocalTagFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
+                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+              />    
+              <input
+                type="text"
+                placeholder="Filter by username"
+                value={localAuthorFilter}
+                onChange={(e) => setLocalAuthorFilter(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     applyFilters();

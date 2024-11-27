@@ -1,7 +1,7 @@
 import prisma from '../../../utils/prisma-client';
 
 export default async function handler(req, res) {
-  let { title, content, language, description, tags, page = 1, limit = 10  } = req.query;
+  let { title, content, language, description, tags, author, page = 1, limit = 10  } = req.query;
 
   page = Number(page)
   limit = Number(limit)
@@ -23,8 +23,8 @@ export default async function handler(req, res) {
             return item !== ''; // Remove empty strings
           });
           console.log("after tags: " + tags)
-
       }
+
       // tagString = tags ? tags.split(",").map((tag) => tag.trim()).join(",") : "";
 
       // console.log("stringified tags: " + tagString)
@@ -34,6 +34,7 @@ export default async function handler(req, res) {
           title ? { title: { contains: title } } : undefined,
           description ? {description: {contains: description} }: undefined,
           language ? {language: {contains: language} }: undefined,
+          author ?  { owner: { username: {contains: author }}} : undefined,
           tags && tags.length > 0 ? {
             AND: tags.map((tag) => ({
               templatesTags: {
@@ -50,6 +51,8 @@ export default async function handler(req, res) {
   
   try {
       const whereConditions = buildWhereConditions();
+
+      console.log("where conditions "+ whereConditions)
 
       const templates = await prisma.template.findMany({
         where: {
