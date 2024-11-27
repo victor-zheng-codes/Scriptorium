@@ -8,8 +8,6 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
 
-import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-
 import { useEffect, useState } from "react";
 
 interface Template {
@@ -413,7 +411,7 @@ const TemplatePage = () => {
                     )} // Update code state on change
                   highlight={code => highlight(code, languages.js, editableTemplate?.language || 'python')}
                   padding={10}
-                  style={materialDark}
+                  // style={materialDark}
                   // style={{
                   //   fontFamily: 'monospace',
                   //   fontSize: "1em",
@@ -522,7 +520,7 @@ const TemplatePage = () => {
               onValueChange={(e) => (e)} // Update code state on change
               highlight={code => highlight(code, languages.js, template.language)}
               padding={10}
-              style={materialDark}
+              // style={materialDark}
               // style={{
               //   fontFamily: 'monospace',
               //   fontSize: "1em",
