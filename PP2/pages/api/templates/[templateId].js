@@ -38,9 +38,13 @@ export default async function handler(req, res) {
       const templateBlogs = await prisma.BlogTemplate.findMany({
         where: { 
           templateId,
+          blog: {
+            isAppropriate: true,
+            isDeleted: false
+          }
         },
         include: {
-          blog: true
+          blog: true,  // Fetch the associated blog
         }
       });
 
