@@ -180,7 +180,7 @@ const Templates = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8 px-6">
-        <h1 className="text-4xl font-bold mb-8">Code Templates</h1>
+        <h1 className="text-4xl font-bold mb-8 dark:text-gray-200">Code Templates</h1>
            <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4"> 
           {/* Filters */}
           {/* Filters */}
