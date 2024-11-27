@@ -190,10 +190,10 @@ await prisma.tag.createMany({
           language: "cpp" 
         },
         { 
-          userId: 7, 
+          userId: 8, 
           title: 'C++ Conditional Example', 
           description: "An if-statement in C++", 
-          content: 'int a = 10;\nif (a > 5) {\n    std::cout << "a is greater than 5";\n}', 
+          content: '#include <iostream>\n\nint main() {\n    int a = 10;\n    if (a > 5) {\n        std::cout << "a is greater than 5" << std::endl;\n    }\n    return 0;\n}', 
           language: "cpp" 
         },
 
@@ -311,6 +311,37 @@ await prisma.tag.createMany({
           content: 'public class Main {\n  public static int factorial(int n) {\n    if (n == 0) return 1;\n    return n * factorial(n - 1);\n  }\n\n  public static void main(String[] args) {\n    System.out.println("Factorial of 5: " + factorial(5));\n  }\n}', 
           language: "java" 
         },
+
+        // C++
+        { 
+          userId: 1, 
+          title: 'C++ Hello CSC309', 
+          description: "Hello World in C++", 
+          content: '#include <iostream>\n\nint main() {\n    std::cout << "Hello, CSC309!" << std::endl;\n    return 0;\n}', 
+          language: "cpp" 
+        },
+        { 
+          userId: 2, 
+          title: 'C++ Addition Function', 
+          description: "A function example to add two numbers in C++", 
+          content: '#include <iostream>\n\nint add(int a, int b) {\n    return a + b;\n}\n\nint main() {\n    std::cout << add(2, 3) << std::endl;\n    return 0;\n}', 
+          language: "cpp" 
+        },
+        { 
+          userId: 3, 
+          title: 'C++ Array Example', 
+          description: "A simple array example in C++", 
+          content: '#include <iostream>\n\nint main() {\n    int arr[3] = {1, 2, 3};\n    for (int i = 0; i < 3; i++) {\n        std::cout << arr[i] << " ";\n    }\n    std::cout << std::endl;\n    return 0;\n}', 
+          language: "cpp" 
+        },
+        { 
+          userId: 4, 
+          title: 'C++ Factorial Example', 
+          description: "Calculate the factorial of a number in C++", 
+          content: '#include <iostream>\n\nint factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}\n\nint main() {\n    int num = 5;\n    std::cout << "Factorial of " << num << " is " << factorial(num) << std::endl;\n    return 0;\n}', 
+          language: "cpp" 
+        },
+
         // More languages (adjust IDs and add two examples for each as needed)
       ],
     });
