@@ -181,8 +181,10 @@ const Templates = () => {
         <h1 className="text-4xl font-bold mb-8">Code Templates</h1>
            <div className="flex-grow bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200 py-4"> 
           {/* Filters */}
+          {/* Filters */}
           <div className="container mx-auto px-16 mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {/* Filter by title */}
               <input
                 type="text"
                 placeholder="Filter by title"
@@ -193,8 +195,10 @@ const Templates = () => {
                     applyFilters();
                   }
                 }}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
               />
+              
+              {/* Filter by description */}
               <input
                 type="text"
                 placeholder="Filter by description"
@@ -205,8 +209,10 @@ const Templates = () => {
                     applyFilters();
                   }
                 }}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
               />
+
+              {/* Filter by code content */}
               <input
                 type="text"
                 placeholder="Filter by code content"
@@ -217,8 +223,10 @@ const Templates = () => {
                     applyFilters();
                   }
                 }}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
               />
+
+              {/* Filter by tags */}
               <input
                 type="text"
                 placeholder="Filter by tags"
@@ -229,8 +237,10 @@ const Templates = () => {
                     applyFilters();
                   }
                 }}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              />    
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
+              />
+
+              {/* Filter by username */}
               <input
                 type="text"
                 placeholder="Filter by username"
@@ -241,101 +251,45 @@ const Templates = () => {
                     applyFilters();
                   }
                 }}
-                className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-              />    
-              <div className="justify-center">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    {/* <Button className="px-4 py-2 rounded-md focus:outline-none">
-                      Filter by languages
-                    </Button> */}
-                    <input
-                      type="text"
-                      placeholder="Filter by language"
-                      value={localLanguageFilter}
-                      className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
-                    /> 
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-48 dark:bg-gray-925 dark:text-gray-200">
-                  <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("")}
-                    >
-                      All
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("javascript")}
-                    >
-                      JavaScript
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("java")}
-                    >
-                      Java
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("python")}
-                    >
-                      Python
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("c")}
-                    >
-                      C
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("cpp")}
-                    >
-                      C++
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("lua")}
-                    >
-                      Lua
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("ruby")}
-                    >
-                      Ruby
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("rust")}
-                    >
-                      Rust
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("php")}
-                    >
-                      PHP
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-                      onClick={(e) => setLocalLanguageFilter("perl")}
-                    >
-                      Perl
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
+              />
 
-                {/* <div className="py-4"> */}
-                  <Button onClick={applyFilters} className="m-3 rounded">
-                    Search
-                  </Button>
-                {/* </div> */}
+              {/* Dropdown menu for languages */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <input
+                    type="text"
+                    placeholder="Filter by language"
+                    value={localLanguageFilter}
+                    className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-925 dark:text-gray-200 border-gray-500 transition duration-200"
+                  />
+                </DropdownMenuTrigger>
 
-                </div>
+                <DropdownMenuContent className="w-48 dark:bg-gray-925 dark:text-gray-200">
+                  {['All', 'javascript', 'java', 'python', 'c', 'cpp', 'lua', 'ruby', 'rust', 'php', 'perl'].map((language) => (
+                    <DropdownMenuItem
+                      key={language}
+                      className="hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                      onClick={() => setLocalLanguageFilter(language === 'All' ? '' : language)}
+                    >
+                      {language === 'All' ? 'All' : language.charAt(0).toUpperCase() + language.slice(1)}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Search button */}
+              <div className="flex justify-center mt-4 sm:col-span-2 xl:col-span-1">
+                <Button
+                  onClick={applyFilters}
+                  className="px-6 py-3 text-white rounded-lg hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                >
+                  Search
+                </Button>
+              </div>
             </div>
-            
           </div>
+
 
         {/* Templates List */}
         <div className="container mx-auto sm:px-8 md:px-12 lg:px-16">
