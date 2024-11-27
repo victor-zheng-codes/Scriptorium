@@ -44,8 +44,6 @@ const TemplatePage = () => {
   const [templateTags, setTemplateTags] = useState<TemplatesTags[]>([]); // State for template tags
   const [linkedBlogs, setLinkedBlogs] = useState<LinkedBlogs[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
-  // const [error, setError] = useState<string | null>(null); // Error state
-  // const [success, setSuccess] = useState<string | null>(null); // Success state
 
   // editable mode
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -91,26 +89,7 @@ const TemplatePage = () => {
   useEffect(() => {
     if (!id) return; // If the ID is not available, exit
 
-    // only show erorr messages for a few seconds if they do exist
-    // if (error) {
-    //   const timer = setTimeout(() => {
-    //     setError(null); // Hide the error message after 3 seconds
-    //   }, 3000); // 3 seconds delay
-
-    //   // Cleanup timeout on component unmount or when error changes
-    //   return () => clearTimeout(timer);
-    // }
-
-    // only show success messages for a few seconds if they do exist
-    // if (success) {
-    //   const timer = setTimeout(() => {
-    //     setSuccess(null); // Hide the error message after 3 seconds
-    //   }, 3000); // 3 seconds delay
-
-    //   // Cleanup timeout on component unmount or when error changes
-    //   return () => clearTimeout(timer);
-    // }
-
+    // fetch templates
     fetchTemplate();
 
     // only get the local storage status after fetching templates
@@ -290,20 +269,11 @@ const TemplatePage = () => {
       });
 
       if (res.ok) {
-        // const updatedTemplate = await res.json();
         setLoading(true)
-        // setTemplate(updatedTemplate);
-        // setEditableTemplate(updatedTemplate);
-        // setTemplateTags(updatedTemplate.templateTags);
-        // setEditableTags(updatedTemplate.templateTags);
-        // setLinkedBlogs(updatedTemplate.templateBlogs);
         fetchTemplate();
         setIsEditMode(false);     
         setLoading(false);
-
         toast.success("Template updated successfully.");
-        // router.reload()
-        // router.push(`/templates/`, undefined, { shallow: true })
       }
 
       // handle refresh token failure
