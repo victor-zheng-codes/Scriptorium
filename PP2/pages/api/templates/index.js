@@ -52,8 +52,6 @@ export default async function handler(req, res) {
   try {
       const whereConditions = buildWhereConditions();
 
-      console.log("where conditions "+ whereConditions)
-
       const templates = await prisma.template.findMany({
         where: {
           AND: whereConditions,
