@@ -45,7 +45,7 @@ await prisma.tag.createMany({
     { tagName: 'Java' }, // 5
     { tagName: 'C#' }, // 6
     { tagName: 'Ruby' }, // 7
-    { tagName: 'Go' }, // 8
+    { tagName: 'Lua' }, // 8
     { tagName: 'C++' }, // 9
     { tagName: 'PHP' }, // 10
     { tagName: 'Kotlin' }, // 11
@@ -165,20 +165,20 @@ await prisma.tag.createMany({
           language: "ruby" 
         },
 
-        // Go
+        // Lua
         { 
           userId: 6, 
-          title: 'Go Hello World', 
-          description: "Hello World in Go", 
-          content: 'package main\n\nimport "fmt"\n\nfunc main() {\n    fmt.Println("Hello, World!")\n}', 
-          language: "go" 
+          title: 'Lua Hello World', 
+          description: "Hello World in Lua", 
+          content: 'print("Hello, World!")', 
+          language: "lua" 
         },
         { 
           userId: 6, 
-          title: 'Go Function Example', 
-          description: "A function example in Go", 
-          content: 'package main\n\nfunc add(a int, b int) int {\n    return a + b\n}\n\nfunc main() {\n    fmt.Println(add(2, 3))\n}', 
-          language: "go" 
+          title: 'Lua Function Example', 
+          description: "A function example in Lua", 
+          content: 'function add(a, b)\n    return a + b\nend\n\nprint(add(2, 3))', 
+          language: "lua" 
         },
 
         // C++
@@ -342,8 +342,8 @@ await prisma.tag.createMany({
         { tagId: 16, templateId: 10 }, // Loops
         { tagId: 17, templateId: 10 }, // Console Output
 
-        // Go Templates
-        { tagId: 8, templateId: 11 }, // Go
+        // Lua Templates
+        { tagId: 8, templateId: 11 }, // Lua
         { tagId: 18, templateId: 11 }, // Hello World
         { tagId: 15, templateId: 12 }, // Functions
         { tagId: 17, templateId: 12 }, // Console Output
@@ -405,9 +405,9 @@ await prisma.tag.createMany({
           },
           {
             // "blogId": 4,
-            "title": "Why Go is the Future of Development",
-            "content": "Go, also known as Golang, is a statically typed, compiled language designed by Google engineers. It emphasizes simplicity and performance, making it a top choice for scalable backend systems, cloud infrastructure, and microservices. Features like built-in concurrency support through goroutines and a fast compilation process enable developers to build efficient, modern applications. Go’s straightforward syntax and minimal dependencies make it a language of choice for companies like Uber, Docker, and Kubernetes.",
-            "description": "Explore why developers are adopting Go for modern applications.",
+            "title": "Why Lua is the Future of Development",
+            "content": "Lua, is a statically typed, compiled language designed by Google engineers. It emphasizes simplicity and performance, making it a top choice for scalable backend systems, cloud infrastructure, and microservices. Features like built-in concurrency support through goroutines and a fast compilation process enable developers to build efficient, modern applications. Go’s straightforward syntax and minimal dependencies make it a language of choice for companies like Uber, Docker, and Kubernetes.",
+            "description": "Explore why developers are adopting Lua for modern applications.",
             "isDeleted": false,
             "isAppropriate": true,
             "authorId": 4,
