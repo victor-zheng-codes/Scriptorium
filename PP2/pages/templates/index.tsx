@@ -184,6 +184,11 @@ const Templates = () => {
                 placeholder="Filter by title"
                 value={localTitleFilter}
                 onChange={(e) => setLocalTitleFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />
               <input
@@ -191,6 +196,11 @@ const Templates = () => {
                 placeholder="Filter by description"
                 value={localDescriptionFilter}
                 onChange={(e) => setLocalDescriptionFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />
               <input
@@ -198,6 +208,11 @@ const Templates = () => {
                 placeholder="Filter by code content"
                 value={localContentFilter}
                 onChange={(e) => setLocalContentFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />
               <input
@@ -205,6 +220,11 @@ const Templates = () => {
                 placeholder="Filter by tags"
                 value={localTagFilter}
                 onChange={(e) => setLocalTagFilter(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    applyFilters();
+                  }
+                }}
                 className="p-2 border rounded dark:bg-gray-925 dark:text-gray-200 border-gray-500"
               />    
               <div className="justify-center">
