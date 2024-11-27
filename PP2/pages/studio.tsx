@@ -27,12 +27,20 @@ interface Blogs {
   blogId: number;
   title: string;
   description: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Templates {
   templateId: number;
   title: string;
   description: string;
+  content: string;
+  language: string;
+  createdAt: string;
+  updatedAt: string;
+  owner: {firstName: string, lastName: string, username: string}
+  templatesTags: {tag: {tagName: string, tagId: number}, tagId: number, templateId: number, templateTagId: number}[]
 }
 
 const Studio = () => {
@@ -220,40 +228,65 @@ const Studio = () => {
 
         {/* Tab Content */}
         <div className="mt-4">
-          {activeTab === "templates" && (
-            <div className="h-64 overflow-y-auto bg-gray-100 dark:bg-gray-925 p-4 rounded-md">
-              {/* Add content related to templates here */}
-              {templates.length == 0 && (<p className="dark:text-gray-400">
-                You have not published any templates...
-              </p>) }
-              {templates.length > 0 && (
-                 <div className="flex space-x-2">
-                  {templates.map((templateArray) => (
-                    <HoverCard>
-                      <HoverCardTrigger>
-                        <button
-                          onClick={() => router.push(`/templates/${templateArray.templateId}`)}
-                          key={templateArray.templateId}
-                          className="p-5 py-1 rounded bg-sky-500 dark:text-white" >
-                          {templateArray.title}
-                        </button>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="overflow-y-auto bg-gray-100 dark:bg-gray-925 p-4 dark:text-white rounded-md">
-                        Description: {templateArray.description}
-                      </HoverCardContent>
-                    </HoverCard>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          {activeTab === "blogs" && (
+        {activeTab === "templates" && (
+          <div className="overflow-y-auto bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
+            {templates.length === 0 ? (
+              <p className="dark:text-gray-400">You have not published any templates...</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {templates.map((templateArray) => (
+                  <div key={templateArray.templateId} className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                    <button
+                      onClick={() => router.push(`/templates/${templateArray.templateId}`)}
+                      className="p-4 bg-sky-400 text-white rounded-t-lg hover:bg-sky-500 transition-colors">
+                      <h3 className="text-xl font-semibold">{templateArray.title}</h3>
+                    </button>
+                    <div className="p-4 bg-gray-100 dark:bg-gray-925 rounded-b-lg dark:text-white">
+                      <p className="text-sm mb-2"><strong>Description:</strong> {templateArray.description}</p>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        <p><strong>Language:</strong> {templateArray?.language}</p>
+                        <p><strong>Created:</strong> {new Date(templateArray.createdAt).toLocaleDateString()}</p>
+                        <p><strong>Updated:</strong> {new Date(templateArray.updatedAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {activeTab === "blogs" && (
+          <div className="overflow-y-auto bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
+            {blogs.length === 0 ? (
+              <p className="dark:text-gray-400">You have not published any blogs...</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {blogs.map((blogArray) => (
+                  <div key={blogArray.blogId} className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                    <button
+                      onClick={() => router.push(`/blogs/${blogArray.blogId}`)}
+                      className="p-4 bg-purple-400 text-white rounded-t-lg hover:bg-purple-500 transition-colors">
+                      <h3 className="text-xl font-semibold">{blogArray.title}</h3>
+                    </button>
+                    <div className="p-4 bg-gray-100 dark:bg-gray-925 rounded-b-lg dark:text-white">
+                      <p className="text-sm mb-2"><strong>Description:</strong> {blogArray.description}</p>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        {/* <p><strong>Language:</strong> {blogArray?.language}</p> */}
+                        <p><strong>Created:</strong> {new Date(blogArray.createdAt).toLocaleDateString()}</p>
+                        <p><strong>Updated:</strong> {new Date(blogArray.updatedAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          {/* {activeTab === "blogs" && (
             <div className="h-64 overflow-y-auto bg-gray-100 dark:bg-gray-925 p-4 rounded-md">
               {/* Add content related to blogs here */}
-              {blogs.length == 0 && (<p className="dark:text-gray-400">
+              {/* {blogs.length == 0 && (<p className="dark:text-gray-400">
                 You have not published any blogs...
-              </p>) }
-              {blogs.length > 0 && (
+              </p>) } */} 
+              {/* {blogs.length > 0 && (
                  <div className="flex space-x-2">
                   {blogs.map((blogArray) => (
                     <HoverCard>
@@ -271,7 +304,7 @@ const Studio = () => {
                     </HoverCard>
                   ))}
                 </div>
-              )}
+              )} */}
             </div>
           )}
         </div>
