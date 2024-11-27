@@ -8,6 +8,9 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
 
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useEffect, useState } from "react";
 
 interface Template {
@@ -41,8 +44,8 @@ const TemplatePage = () => {
   const [templateTags, setTemplateTags] = useState<TemplatesTags[]>([]); // State for template tags
   const [linkedBlogs, setLinkedBlogs] = useState<LinkedBlogs[]>([]); // State for template tags
   const [loading, setLoading] = useState<boolean>(true); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
-  const [success, setSuccess] = useState<string | null>(null); // Success state
+  // const [error, setError] = useState<string | null>(null); // Error state
+  // const [success, setSuccess] = useState<string | null>(null); // Success state
 
   // editable mode
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -57,56 +60,56 @@ const TemplatePage = () => {
   const router = useRouter();
   const { id } = router.query; // Get the template ID from the URL
 
+  const fetchTemplate = async () => {
+    try {
+      const res = await fetch(`/api/templates/${id}`, {
+        method: "GET",
+      });
+
+      if (!res.ok) {
+        toast.error("Error fetching template " +  + (await res.json())?.error || " Unknown error");
+        return;
+      }
+
+      const data = await res.json();
+      setTemplate(data.template);
+      setEditableTemplate(data.template);
+
+      setLinkedBlogs(data.templateBlogs);
+      // console.log("linked tags " + JSON.stringify(data.templateTags))
+      setTemplateTags(data.templateTags);
+      setEditableTags(data.templateTags);
+
+      console.log(data.templateTags)
+    } catch (error) {
+      toast.error("An error occurred while fetching template: " + error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!id) return; // If the ID is not available, exit
 
     // only show erorr messages for a few seconds if they do exist
-    if (error) {
-      const timer = setTimeout(() => {
-        setError(null); // Hide the error message after 3 seconds
-      }, 3000); // 3 seconds delay
+    // if (error) {
+    //   const timer = setTimeout(() => {
+    //     setError(null); // Hide the error message after 3 seconds
+    //   }, 3000); // 3 seconds delay
 
-      // Cleanup timeout on component unmount or when error changes
-      return () => clearTimeout(timer);
-    }
+    //   // Cleanup timeout on component unmount or when error changes
+    //   return () => clearTimeout(timer);
+    // }
 
     // only show success messages for a few seconds if they do exist
-    if (success) {
-      const timer = setTimeout(() => {
-        setSuccess(null); // Hide the error message after 3 seconds
-      }, 3000); // 3 seconds delay
+    // if (success) {
+    //   const timer = setTimeout(() => {
+    //     setSuccess(null); // Hide the error message after 3 seconds
+    //   }, 3000); // 3 seconds delay
 
-      // Cleanup timeout on component unmount or when error changes
-      return () => clearTimeout(timer);
-    }
-
-    const fetchTemplate = async () => {
-      try {
-        const res = await fetch(`/api/templates/${id}`, {
-          method: "GET",
-        });
-
-        if (!res.ok) {
-          setError("Error fetching template " +  + (await res.json())?.error || " Unknown error");
-          return;
-        }
-
-        const data = await res.json();
-        setTemplate(data.template);
-        setEditableTemplate(data.template);
-
-        setLinkedBlogs(data.templateBlogs);
-        // console.log("linked tags " + JSON.stringify(data.templateTags))
-        setTemplateTags(data.templateTags);
-        setEditableTags(data.templateTags);
-
-        console.log(data.templateTags)
-      } catch (error) {
-        setError("An error occurred while fetching template: " + error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    //   // Cleanup timeout on component unmount or when error changes
+    //   return () => clearTimeout(timer);
+    // }
 
     fetchTemplate();
 
@@ -136,7 +139,7 @@ const TemplatePage = () => {
       setIsLoggedIn(false); // User is not logged in
     }
 
-  }, [id, error]);
+  }, [id]);
 
 
   // helper function for refreshing tokens
@@ -189,8 +192,8 @@ const TemplatePage = () => {
       });
 
       if (res.ok) {
-        // setSuccess("Template deleted successfully.");
-        alert("Template deleted successfully.");
+        toast.success("Template deleted successfully.");
+        // alert("Template deleted successfully.");
         router.push("/templates"); // Redirect to templates list page
       }
       
@@ -209,11 +212,11 @@ const TemplatePage = () => {
       }
 
       if (!res.ok) {
-        setError("Error deleting templates: " + (await res.json())?.error || " contact sysadmin");
+        toast.error("Error deleting templates: " + (await res.json())?.error || " contact sysadmin");
       }
     } catch (error) {
       console.error("Error deleting template:", error);
-      setError("An error occurred while deleting the template.");
+      toast.error("An error occurred while deleting the template.");
     }
   };
 
@@ -235,11 +238,9 @@ const TemplatePage = () => {
 
         setTemplate(data.template);
         setEditableTemplate(data.template)
-        setSuccess("Successfully forked template with new template id " + data.templateId);
+        toast.success("Successfully forked template with new template id " + data.templateId);
 
-        router.push(`/templates/${data.templateId}`).then(() => {
-          router.reload(); // Force a full page reload
-        });
+        router.push(`/templates/${data.templateId}`); // Force a full page reload
       }
 
       // handle refresh token failure
@@ -255,12 +256,12 @@ const TemplatePage = () => {
       }
       
       if (!res.ok) {
-        setError("Error forking template: " + (await res.json())?.error || " contact sysadmin");
+        toast.error("Error forking template: " + (await res.json())?.error || " contact sysadmin");
       }
 
     } catch (error) {
       console.error("Error forking template:", error);
-      setError("An error occurred while forking the template: " + error);
+      toast.error("An error occurred while forking the template: " + error);
     }
   };
 
@@ -287,13 +288,22 @@ const TemplatePage = () => {
         },
         body: requestContent,
       });
-      if (res.ok) {
-        const updatedTemplate = await res.json();
 
-        setTemplate(updatedTemplate);
-        setIsEditMode(false);
-        setSuccess("Template updated successfully.");
-        router.reload()
+      if (res.ok) {
+        // const updatedTemplate = await res.json();
+        setLoading(true)
+        // setTemplate(updatedTemplate);
+        // setEditableTemplate(updatedTemplate);
+        // setTemplateTags(updatedTemplate.templateTags);
+        // setEditableTags(updatedTemplate.templateTags);
+        // setLinkedBlogs(updatedTemplate.templateBlogs);
+        fetchTemplate();
+        setIsEditMode(false);     
+        setLoading(false);
+
+        toast.success("Template updated successfully.");
+        // router.reload()
+        // router.push(`/templates/`, undefined, { shallow: true })
       }
 
       // handle refresh token failure
@@ -314,11 +324,11 @@ const TemplatePage = () => {
       // check if result is OK
       if (!res.ok)
       {
-        setError("Error saving template: " + (await res.json())?.error || " contact sysadmin");
+        toast.error("Error saving template: " + (await res.json())?.error || " contact sysadmin");
       }
 
     } catch (err) {
-      setError("An error occurred while updating the template: " + err);
+      toast.error("An error occurred while updating the template: " + err);
     }
   };
 
@@ -330,7 +340,7 @@ const TemplatePage = () => {
       router.push(`/code/${id}`)
     } catch (error) {
       console.error("Error forking template:", error);
-      setError("An error occurred while forking the template: " + error);
+      toast.error("An error occurred while forking the template: " + error);
     }
   };
 
@@ -360,17 +370,17 @@ const TemplatePage = () => {
   return (
     <Layout>
       {/* Error Message at the Top */}
-      {error && (<div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+      {/* {error && (<div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
         <p className="font-bold">Error</p>
         <p>{error}</p>
       </div>
-      )}
+      )} */}
 
-      {success && (<div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+      {/* {success && (<div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
         <p className="font-bold">Success</p>
         <p>{success}</p>
       </div>
-      )}
+      )} */}
 
       <div className="bg-gray-50 dark:bg-gray-900 text-black dark:text-gray-200">
         {isEditMode ? (
@@ -412,10 +422,10 @@ const TemplatePage = () => {
                   highlight={code => highlight(code, languages.js, editableTemplate?.language || 'python')}
                   padding={10}
                   // style={materialDark}
-                  // style={{
-                  //   fontFamily: 'monospace',
-                  //   fontSize: "1em",
-                  // }}
+                  style={{
+                    fontFamily: 'monospace',
+                    // fontSize: "1em",
+                  }}
               />
             </div>
 
@@ -517,19 +527,19 @@ const TemplatePage = () => {
           <Editor
               className="p-4 font-mono text-lg leading-6 bg-gray-100 dark:bg-gray-925 border border-gray-500 rounded-md resize-none placeholder-gray-400"
               value={template.content} // Bind code state to textarea value
-              onValueChange={(e) => (e)} // Update code state on change
-              highlight={code => highlight(code, languages.js, template.language)}
+              onValueChange={() => {}} // Prevent updates by setting no-op function
+              highlight={(code) => highlight(code, languages.js, template.language)}
               padding={10}
               // style={materialDark}
-              // style={{
-              //   fontFamily: 'monospace',
-              //   fontSize: "1em",
-              // }}
+              style={{
+                fontFamily: 'monospace',
+                pointerEvents: 'none', // Disable user interactions
+              }}
           />
         </div>
 
         {/* Tags Section, non editable */}
-        {templateTags.length > 0 && (
+        {templateTags && templateTags?.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-2">Tags</h2>
              <ul className="flex gap-2 p-2">
@@ -543,7 +553,7 @@ const TemplatePage = () => {
         )}
 
         {/* Blogs Section, non editable */}
-        {linkedBlogs.length > 0 && (
+        {linkedBlogs && linkedBlogs.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-4 mt-4">Blogs</h2>
             <div className="flex space-x-2">

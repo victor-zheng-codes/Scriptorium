@@ -315,10 +315,11 @@ const Templates = () => {
                   onValueChange={(e) => (e)} // Update code state on change
                   highlight={code => highlight(code, languages.js, template.language)}
                   padding={10}
-                  // style={{
-                  //   fontFamily: '"Fira code", "Fira Mono", monospace',
-                  //   fontSize: "1em",
-                  // }}
+                  style={{
+                    fontFamily: 'monospace',
+                    // fontSize: "1em",
+                    pointerEvents: 'none', // Disable user interactions
+                  }}
               />
               {/* <SyntaxHighlighter language={template.language} style={materialDark}>
                 {template.content}

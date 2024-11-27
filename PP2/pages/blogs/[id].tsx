@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from "next/link";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 type Comment = {
@@ -561,7 +561,6 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
 
   return (
     <Layout>
-      <ToastContainer position="bottom-right" autoClose={3000} toastClassName="dark:bg-gray-800 dark:text-gray-100"/>
       <div className="container mx-auto px-4 py-8 text-gray-600 dark:text-gray-300">
         {/* Blog Content */}
         <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
