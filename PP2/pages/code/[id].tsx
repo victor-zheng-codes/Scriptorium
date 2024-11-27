@@ -195,9 +195,11 @@ const Code = () => {
 
   return (
     <Layout>
-      <div className="m-4 flex items-center space-x-2 text-gray-900 dark:text-gray-300 pl-8 pt-4 font-bold text-lg my-0">
+      {/* <div className="m-4 flex items-center space-x-2 text-gray-900 dark:text-gray-300 pl-8 pt-4 font-bold text-lg my-0">
         Code Execution
-      </div>
+      </div> */}
+      <h1 className="text-4xl text-center pt-8 font-bold mb-8 dark:text-gray-200">Code Execution</h1>
+
 
       <div className="m-4 flex flex-col md:flex-row items-center space-x-2 text-gray-800 dark:text-gray-300 md:pl-8 pt-2 my-0 pb-2">
         <Label htmlFor="language-select" className="block text-md font-medium">
