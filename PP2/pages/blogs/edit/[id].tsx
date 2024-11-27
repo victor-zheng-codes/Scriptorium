@@ -38,9 +38,9 @@ const EditBlog: React.FC<BlogPageProps> = ({ blog }) => {
 
   useEffect(() => {
     // Extract tag names from BlogTags and update the state
-    const tagNames = blog.BlogTags.map(tag => tag.tag.tagName).join(",");
+    const tagNames = blog.BlogTags.map(tag => tag.tag.tagName).join(", ");
     setTags(tagNames);
-    const initTemplateIds = blog.BlogTemplate.map(template => template.template.templateId).join(",");
+    const initTemplateIds = blog.BlogTemplate.map(template => template.template.templateId).join(", ");
     setTemplateIds(initTemplateIds);
   }, []); // Run on page init
 
