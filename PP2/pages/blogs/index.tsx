@@ -133,16 +133,16 @@ const Blogs = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-gray-600 dark:text-gray-300">
             <input
               type="text"
-              placeholder="Search by content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              placeholder="Search by title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               className="p-2 border border-gray-500 rounded-md"
             />
             <input
               type="text"
-              placeholder="Search by title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Search by content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
               className="p-2 border border-gray-500 rounded-md"
             />
             <input

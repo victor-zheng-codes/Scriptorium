@@ -39,7 +39,7 @@ export default async function handler(req, res) {
               templatesTags: {
                 some: {
                   tag: {
-                    tagName: { equals: tag }, // Case-insensitive match
+                    tagName: { contains: tag }, // Case-insensitive match
                   },
                 },
               },
