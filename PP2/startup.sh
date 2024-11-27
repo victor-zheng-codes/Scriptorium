@@ -9,7 +9,7 @@ docker pull python:3.10
 docker pull node:20
 docker pull openjdk:20
 docker pull gcc:12
-docker pull lua
+docker pull lua:5.3
 docker pull ruby:3.3
 docker pull php:8.2-cli
 docker pull rust:1.73
