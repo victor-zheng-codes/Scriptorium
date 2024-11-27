@@ -62,8 +62,8 @@ export async function refreshAccessToken(refreshToken) {
     }
 
     // Generate a new refresh token
-    const newRefreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
-    const newAccessToken = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '15m' });
+    const newRefreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+    const newAccessToken = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '1h' });
 
     return { "refreshToken": newRefreshToken, "accessToken": newAccessToken,  "userId": user.userId }; // Return the new access token
 

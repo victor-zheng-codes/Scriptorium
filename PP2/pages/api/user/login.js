@@ -42,10 +42,10 @@ export default async function handler(req, res) {
       }
 
       // Generate access token
-      const accessToken = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '15m' });
+      const accessToken = jwt.sign({ userId: user.userId }, JWT_SECRET, { expiresIn: '1h' });
       
       // Generate refresh token
-      const refreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '1h' });
+      const refreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
       // Store refresh token in the database
       await prisma.user.update({
