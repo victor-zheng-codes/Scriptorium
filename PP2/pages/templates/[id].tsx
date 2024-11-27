@@ -6,7 +6,9 @@ import Editor from 'react-simple-code-editor';
 
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
+import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
+
+import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import { useEffect, useState } from "react";
 
@@ -96,7 +98,7 @@ const TemplatePage = () => {
         setEditableTemplate(data.template);
 
         setLinkedBlogs(data.templateBlogs);
-        console.log("linked blogs " + JSON.stringify(data.templateBlogs))
+        // console.log("linked tags " + JSON.stringify(data.templateTags))
         setTemplateTags(data.templateTags);
         setEditableTags(data.templateTags);
 
@@ -411,10 +413,11 @@ const TemplatePage = () => {
                     )} // Update code state on change
                   highlight={code => highlight(code, languages.js, editableTemplate?.language || 'python')}
                   padding={10}
-                  style={{
-                    fontFamily: '"Cascadia code", "Fira Mono", monospace',
-                    fontSize: "1em",
-                  }}
+                  style={materialDark}
+                  // style={{
+                  //   fontFamily: 'monospace',
+                  //   fontSize: "1em",
+                  // }}
               />
             </div>
 
@@ -519,10 +522,11 @@ const TemplatePage = () => {
               onValueChange={(e) => (e)} // Update code state on change
               highlight={code => highlight(code, languages.js, template.language)}
               padding={10}
-              style={{
-                fontFamily: '"Fira code", "Fira Mono", monospace',
-                fontSize: "1em",
-              }}
+              style={materialDark}
+              // style={{
+              //   fontFamily: 'monospace',
+              //   fontSize: "1em",
+              // }}
           />
         </div>
 

@@ -3,13 +3,15 @@ import Layout from "@/components/ui/layout";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
+// import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
 import { highlight, languages } from 'prismjs';
 import Editor from 'react-simple-code-editor';
 
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css'; //Example style, you can use another
-
+import 'prismjs/themes/prism-solarizedlight.css'; //Example style, you can use another
 
 // import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 // import { materialDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
@@ -313,11 +315,14 @@ const Templates = () => {
                   onValueChange={(e) => (e)} // Update code state on change
                   highlight={code => highlight(code, languages.js, template.language)}
                   padding={10}
-                  style={{
-                    fontFamily: '"Fira code", "Fira Mono", monospace',
-                    fontSize: "1em",
-                  }}
+                  // style={{
+                  //   fontFamily: '"Fira code", "Fira Mono", monospace',
+                  //   fontSize: "1em",
+                  // }}
               />
+              {/* <SyntaxHighlighter language={template.language} style={materialDark}>
+                {template.content}
+              </SyntaxHighlighter> */}
               <p className="text-sm text-gray-500 mt-2">
                 Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | Author: {template.owner.username}
               </p>
