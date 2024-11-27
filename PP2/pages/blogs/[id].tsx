@@ -316,12 +316,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
       [commentId]: value,
     }));
   };
+  
 
-  const maxDepth = 5; // Limit nesting to 5 levels
-  const renderReplies = (thisReplies: Comment[], depth: number = 0) => {
-    if (depth > maxDepth) {
-      return <p>Replies are too deep to display.</p>; // Optionally show a message
-    }
+  const renderReplies = (thisReplies: Comment[]) => {
     return (
       <ul className="ml-8 space-y-4">
         {thisReplies.map((reply) => (
@@ -353,6 +350,32 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                   Downvote
                 </Button>
               </div>
+
+              {/* Button to show/hide replies */}
+              <Button
+                onClick={() => toggleReplies(reply.commentId)}
+                size="sm"
+                variant="link"
+              >
+                {(replies[reply.commentId] && replies[reply.commentId]!.length > 0) ? "Hide Replies" : "Show Replies"}
+              </Button>
+
+              {/* Render replies */}
+              {replies[reply.commentId] && renderReplies(replies[reply.commentId]!)}
+
+              <form onSubmit={(e) => handleReplySubmit(e, reply.commentId)} className="mt-4">
+                <h2>Reply</h2>
+                <textarea
+                  value={commentContents[reply.commentId]}
+                  onChange={(e) => handleCommentChange(reply.commentId, e.target.value)}
+                  rows={3}
+                  className="w-full p-2 border rounded-md"
+                  placeholder="Write your reply..."
+                />
+                <Button type="submit" disabled={isSubmitting} className="mt-2 px-4 py-2">
+                  {isSubmitting ? "Submitting..." : "Add Reply"}
+                </Button>
+              </form>
 
               <div className="mt-2">
                 <Button
