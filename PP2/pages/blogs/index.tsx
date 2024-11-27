@@ -46,10 +46,37 @@ const Blogs = () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Populate state from query parameters on mount
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
+      const res = await fetch("/api/user/data", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.user.isAdmin) {
+          setIsAdmin(true);
+        }
+      }
+    } catch {
+      return;
+    }
+  };
+
   useEffect(() => {
     const { content, title, tags, templates, page, limit } = router.query;
 
@@ -72,6 +99,8 @@ const Blogs = () => {
   const searchButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
+    fetchUserProfile();
+
     // Trigger the search button click on page load
     setTimeout( () => {
       if (searchButtonRef.current) {
@@ -178,6 +207,18 @@ const Blogs = () => {
             <Button type="submit" disabled={isLoading} ref={searchButtonRef} >
               {isLoading ? "Searching..." : "Search"}
             </Button>
+            
+            {isAdmin && (
+              <Button 
+                type="button" 
+                onClick={(e) => {
+                  e.preventDefault;
+                  router.push("/blogs/reported");
+                }}
+              >
+                View Inappropriate Content
+              </Button>
+            )}
           </div>
         </form>
 
