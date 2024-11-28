@@ -329,7 +329,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
           // If the reply is appropriate, show it normally for everyone
           reply.isAppropriate ? (
             <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-950">
-              <p className="mb-2">{reply.content}</p>
+              <p className="mb-2 whitespace-pre-line">{reply.content}</p>
               <div className="flex justify-between items-center text-sm mb-2">
                 <p>
                   By: <span className="font-medium">{reply.user?.username || "Unknown"}</span>
@@ -425,7 +425,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
           ) : username === reply.user?.username ? (
             // If the reply is inappropriate and the user is the creator, show it with a message indicating it's inappropriate and show the reports
             <li key={reply.commentId} className="border border-gray-200 rounded-lg p-4 bg-gray-50 dark:bg-gray-950">
-              <p className="mb-2">{reply.content}</p>
+              <p className="mb-2 whitespace-pre-line">{reply.content}</p>
               <div className="flex justify-between items-center text-sm">
                 <p>
                   By: <span className="font-medium">{reply.user.username}</span>
@@ -565,7 +565,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         {/* Blog Content */}
         <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
         <p className="text-lg mb-4">{currentBlog.description}</p>
-        <div className="prose lg:prose-xl mb-6">{currentBlog.content}</div>
+        <div className="prose lg:prose-xl mb-6 whitespace-pre-line">{currentBlog.content}</div>
 
         {/* Edit and Delete Buttons */}
         {userId === currentBlog.authorId && ( // Only show if current user is author
@@ -686,7 +686,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                   {comment.isAppropriate ? (
                     // Regular Comment Display
                     <>
-                      <p className="mb-2">{comment.content}</p>
+                      <p className="mb-2 whitespace-pre-line">{comment.content}</p>
                       <div className="flex justify-between items-center text-sm">
                         <p>
                           By: <span className="font-medium">{comment.user.username}</span>
@@ -781,7 +781,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
                   ) : username === comment.user?.username ? (
                     // If the comment is inappropriate and the user is the creator, show the content with the "Inappropriate" message
                     <>
-                      <p className="mb-2">{comment.content}</p>
+                      <p className="mb-2 whitespace-pre-line">{comment.content}</p>
                       <div className="flex justify-between items-center text-sm">
                         <p>
                           By: <span className="font-medium">{comment.user.username}</span>
