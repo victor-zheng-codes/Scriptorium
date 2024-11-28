@@ -886,55 +886,360 @@ await prisma.tag.createMany({
     // Create dummy comments
     await prisma.comment.createMany({
       data: [
-        { userId: 1, content: 'Great post! Very informative.', upvotes: 5, downvotes: 0, blogId: 1 },
-        { userId: 2, content: 'I disagree with some points made here.', upvotes: 0, downvotes: 3, blogId: 1 },
-        { userId: 3, content: 'Thanks for sharing this!', upvotes: 2, downvotes: 0, blogId: 1 },
-        { userId: 4, content: 'This is a useful resource for beginners.', upvotes: 10, downvotes: 1, blogId: 1 },
-        { userId: 5, content: 'I found this article lacking in detail.', upvotes: 1, downvotes: 4, blogId: 2 },
-        { userId: 6, content: 'Interesting take, but I think there could be more examples.', upvotes: 3, downvotes: 2, blogId: 2 },
-        { userId: 7, content: 'Nice breakdown of the topic!', upvotes: 8, downvotes: 0, blogId: 2 },
-        { userId: 8, content: 'I like the simplicity of this explanation.', upvotes: 5, downvotes: 0, blogId: 3 },
-        { userId: 9, content: 'Could have provided more context.', upvotes: 2, downvotes: 3, blogId: 3 },
-        { userId: 10, content: 'Very helpful, thanks!', upvotes: 7, downvotes: 1, blogId: 3 },
-        { userId: 11, content: 'Great post on algorithms, well explained.', upvotes: 6, downvotes: 0, blogId: 4 },
-        { userId: 12, content: 'I think a few more code examples could have been helpful.', upvotes: 4, downvotes: 2, blogId: 4 },
-        { userId: 13, content: 'I learned a lot, but some parts were hard to follow.', upvotes: 3, downvotes: 1, blogId: 4 },
-        { userId: 14, content: 'This was very clear and easy to understand, thanks for the effort!', upvotes: 9, downvotes: 0, blogId: 5 },
-        { userId: 15, content: 'Good explanation, but I would have liked more real-world examples.', upvotes: 2, downvotes: 1, blogId: 5 },
-        { userId: 16, content: 'Excellent write-up! Keep it up!', upvotes: 10, downvotes: 0, blogId: 5 },
-        { userId: 17, content: 'Some points felt too rushed, could have been explained better.', upvotes: 3, downvotes: 2, blogId: 6 },
-        { userId: 18, content: 'Great article, but I would love to see more in-depth discussion.', upvotes: 5, downvotes: 1, blogId: 6 },
-        { userId: 19, content: 'Very informative, helped me understand the basics.', upvotes: 6, downvotes: 0, blogId: 7 },
-        { userId: 20, content: 'Clear and concise explanation, good job!', upvotes: 8, downvotes: 0, blogId: 7 },
-      ],
+        {
+          "commentId": 1,
+          "content": "Great post! Really informative.",
+          "isAppropriate": true,
+          "upvotes": 3,
+          "downvotes": 1,
+          "userId": 3,
+          "blogId": 1,
+          "createdAt": "2024-11-27T00:00:00Z",
+          "updatedAt": "2024-11-27T00:00:00Z"
+        },
+        {
+          "commentId": 2,
+          "content": "I disagree with some points made here.",
+          "isAppropriate": true,
+          "upvotes": 2,
+          "downvotes": 2,
+          "userId": 7,
+          "blogId": 1,
+          "createdAt": "2024-11-27T00:01:00Z",
+          "updatedAt": "2024-11-27T00:01:00Z"
+        },
+        {
+          "commentId": 3,
+          "content": "Interesting perspective, but I need more details.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 8,
+          "blogId": 2,
+          "createdAt": "2024-11-27T00:02:00Z",
+          "updatedAt": "2024-11-27T00:02:00Z"
+        },
+        {
+          "commentId": 4,
+          "content": "I love this! Keep up the great work!",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 1,
+          "blogId": 3,
+          "createdAt": "2024-11-27T00:03:00Z",
+          "updatedAt": "2024-11-27T00:03:00Z"
+        },
+        {
+          "commentId": 5,
+          "content": "Can you provide more sources to back this up?",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 2,
+          "blogId": 3,
+          "createdAt": "2024-11-27T00:04:00Z",
+          "updatedAt": "2024-11-27T00:04:00Z"
+        },
+        {
+          "commentId": 6,
+          "content": "I'm not sure I agree, but I see your point.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 6,
+          "blogId": 4,
+          "createdAt": "2024-11-27T00:05:00Z",
+          "updatedAt": "2024-11-27T00:05:00Z"
+        },
+        {
+          "commentId": 7,
+          "content": "This article changed my mind on the topic!",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 10,
+          "blogId": 5,
+          "createdAt": "2024-11-27T00:06:00Z",
+          "updatedAt": "2024-11-27T00:06:00Z"
+        },
+        {
+          "commentId": 8,
+          "content": "I don't think this is entirely accurate, though.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 4,
+          "blogId": 5,
+          "createdAt": "2024-11-27T00:07:00Z",
+          "updatedAt": "2024-11-27T00:07:00Z"
+        },
+        {
+          "commentId": 9,
+          "content": "Thank you for sharing this! It's really helpful.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 5,
+          "blogId": 6,
+          "createdAt": "2024-11-27T00:08:00Z",
+          "updatedAt": "2024-11-27T00:08:00Z"
+        },
+        {
+          "commentId": 10,
+          "content": "This article is misleading in some ways.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 9,
+          "blogId": 6,
+          "createdAt": "2024-11-27T00:09:00Z",
+          "updatedAt": "2024-11-27T00:09:00Z"
+        },
+        {
+          "commentId": 11,
+          "content": "Fantastic read! I'd love to see more posts like this.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 3,
+          "blogId": 7,
+          "createdAt": "2024-11-27T00:10:00Z",
+          "updatedAt": "2024-11-27T00:10:00Z"
+        },
+        {
+          "commentId": 12,
+          "content": "I'm not convinced, there are too many flaws here.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 7,
+          "blogId": 7,
+          "createdAt": "2024-11-27T00:11:00Z",
+          "updatedAt": "2024-11-27T00:11:00Z"
+        },
+        {
+          "commentId": 13,
+          "content": "This really helped clarify things for me, thanks!",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 8,
+          "blogId": 8,
+          "createdAt": "2024-11-27T00:12:00Z",
+          "updatedAt": "2024-11-27T00:12:00Z"
+        },
+        {
+          "commentId": 14,
+          "content": "I think you missed an important point here.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 1,
+          "blogId": 8,
+          "createdAt": "2024-11-27T00:13:00Z",
+          "updatedAt": "2024-11-27T00:13:00Z"
+        },
+        {
+          "commentId": 15,
+          "content": "Your writing is excellent, but the argument is weak.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 2,
+          "blogId": 9,
+          "createdAt": "2024-11-27T00:14:00Z",
+          "updatedAt": "2024-11-27T00:14:00Z"
+        },
+        {
+          "commentId": 16,
+          "content": "This is exactly what I was looking for! Thank you.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 6,
+          "blogId": 9,
+          "createdAt": "2024-11-27T00:15:00Z",
+          "updatedAt": "2024-11-27T00:15:00Z"
+        },
+        {
+          "commentId": 17,
+          "content": "I don't think this is accurate based on what I know.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 10,
+          "blogId": 10,
+          "createdAt": "2024-11-27T00:16:00Z",
+          "updatedAt": "2024-11-27T00:16:00Z"
+        },
+        {
+          "commentId": 18,
+          "content": "Can you explain this in more detail? It's unclear.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 4,
+          "blogId": 10,
+          "createdAt": "2024-11-27T00:17:00Z",
+          "updatedAt": "2024-11-27T00:17:00Z"
+        },
+        {
+          "commentId": 19,
+          "content": "Your article gave me a new perspective on this.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 5,
+          "blogId": 11,
+          "createdAt": "2024-11-27T00:18:00Z",
+          "updatedAt": "2024-11-27T00:18:00Z"
+        },
+        {
+          "commentId": 20,
+          "content": "I still think there's some confusion around this topic.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 9,
+          "blogId": 11,
+          "createdAt": "2024-11-27T00:19:00Z",
+          "updatedAt": "2024-11-27T00:19:00Z"
+        },
+        {
+          "commentId": 21,
+          "content": "Incredible insights! I learned a lot.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 3,
+          "blogId": 12,
+          "createdAt": "2024-11-27T00:20:00Z",
+          "updatedAt": "2024-11-27T00:20:00Z"
+        },
+        {
+          "commentId": 22,
+          "content": "This is highly inaccurate in my opinion.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 7,
+          "blogId": 12,
+          "createdAt": "2024-11-27T00:21:00Z",
+          "updatedAt": "2024-11-27T00:21:00Z"
+        },
+        {
+          "commentId": 23,
+          "content": "I appreciate the effort, but there are too many inconsistencies.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 8,
+          "blogId": 13,
+          "createdAt": "2024-11-27T00:22:00Z",
+          "updatedAt": "2024-11-27T00:22:00Z"
+        },
+        {
+          "commentId": 24,
+          "content": "This post could use more research and data.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 1,
+          "blogId": 13,
+          "createdAt": "2024-11-27T00:23:00Z",
+          "updatedAt": "2024-11-27T00:23:00Z"
+        },
+        {
+          "commentId": 25,
+          "content": "I don't agree with everything, but this is a good start.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 2,
+          "blogId": 14,
+          "createdAt": "2024-11-27T00:24:00Z",
+          "updatedAt": "2024-11-27T00:24:00Z"
+        },
+        {
+          "commentId": 26,
+          "content": "This is a well-written article, but the data seems flawed.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 6,
+          "blogId": 14,
+          "createdAt": "2024-11-27T00:25:00Z",
+          "updatedAt": "2024-11-27T00:25:00Z"
+        },
+        {
+          "commentId": 27,
+          "content": "Good point, but I believe there's more to consider.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 10,
+          "blogId": 15,
+          "createdAt": "2024-11-27T00:26:00Z",
+          "updatedAt": "2024-11-27T00:26:00Z"
+        },
+        {
+          "commentId": 28,
+          "content": "Very insightful! You've made some strong arguments.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 4,
+          "blogId": 15,
+          "createdAt": "2024-11-27T00:27:00Z",
+          "updatedAt": "2024-11-27T00:27:00Z"
+        },
+        {
+          "commentId": 29,
+          "content": "This was an interesting read, thanks for sharing!",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 5,
+          "blogId": 16,
+          "createdAt": "2024-11-27T00:28:00Z",
+          "updatedAt": "2024-11-27T00:28:00Z"
+        },
+        {
+          "commentId": 30,
+          "content": "I'm skeptical about the conclusions, but it's well-written.",
+          "isAppropriate": true,
+          "upvotes": 0,
+          "downvotes": 0,
+          "userId": 9,
+          "blogId": 16,
+          "createdAt": "2024-11-27T00:29:00Z",
+          "updatedAt": "2024-11-27T00:29:00Z"
+        }
+      ]      
     });
 
 // Create dummy comment replies (Ensuring the replies belong to the same blog post as the original comment)
 await prisma.commentReply.createMany({
   data: [
-    { commentId: 1, replyId: 2 }, // Reply 2 is a reply to Comment 1 on Blog 1
-    { commentId: 1, replyId: 3 }, // Reply 3 is another reply to Comment 1 on Blog 1
-    { commentId: 2, replyId: 4 }, // Reply 4 is a reply to Comment 2 on Blog 1
-    { commentId: 3, replyId: 5 }, // Reply 5 is a reply to Comment 3 on Blog 1
-    { commentId: 4, replyId: 6 }, // Reply 6 is a reply to Comment 4 on Blog 1
-    { commentId: 5, replyId: 7 }, // Reply 7 is a reply to Comment 5 on Blog 2
-    { commentId: 5, replyId: 8 }, // Reply 8 is another reply to Comment 5 on Blog 2
-    { commentId: 6, replyId: 9 }, // Reply 9 is a reply to Comment 6 on Blog 2
-    { commentId: 7, replyId: 10 }, // Reply 10 is a reply to Comment 7 on Blog 2
-    { commentId: 8, replyId: 11 }, // Reply 11 is a reply to Comment 8 on Blog 3
-    { commentId: 9, replyId: 12 }, // Reply 12 is a reply to Comment 9 on Blog 3
-    { commentId: 10, replyId: 13 }, // Reply 13 is a reply to Comment 10 on Blog 3
-    { commentId: 11, replyId: 14 }, // Reply 14 is a reply to Comment 11 on Blog 4
-    { commentId: 12, replyId: 15 }, // Reply 15 is a reply to Comment 12 on Blog 4
-    { commentId: 13, replyId: 16 }, // Reply 16 is a reply to Comment 13 on Blog 4
-    { commentId: 14, replyId: 17 }, // Reply 17 is a reply to Comment 14 on Blog 5
-    { commentId: 15, replyId: 18 }, // Reply 18 is a reply to Comment 15 on Blog 5
-    { commentId: 16, replyId: 19 }, // Reply 19 is a reply to Comment 16 on Blog 5
-    { commentId: 17, replyId: 20 }, // Reply 20 is a reply to Comment 17 on Blog 6
-    { commentId: 18, replyId: 19 }, // Reply 19 is a reply to Comment 18 on Blog 6 (adjusted)
-    { commentId: 19, replyId: 20 }, // Reply 20 is a reply to Comment 19 on Blog 7 (adjusted)
-    { commentId: 20, replyId: 19 }, // Reply 19 is a reply to Comment 20 on Blog 7 (adjusted)
-  ],
+    {
+      "commentId": 1,
+      "replyId": 2
+    },
+    {
+      "commentId": 7,
+      "replyId": 8
+    },
+    {
+      "commentId": 13,
+      "replyId": 14
+    },
+    {
+      "commentId": 4,
+      "replyId": 5
+    }
+  ]
+  ,
 });
 
 
@@ -942,23 +1247,49 @@ await prisma.commentReply.createMany({
     // Create dummy user comment ratings
     await prisma.userCommentRating.createMany({
       data: [
-        { userId: 1, commentId: 1, rating: 1 },  // User 1 upvotes Comment 1
-        { userId: 1, commentId: 2, rating: -1 }, // User 1 downvotes Comment 2
-        { userId: 2, commentId: 1, rating: 1 },  // User 2 upvotes Comment 1
-        { userId: 2, commentId: 3, rating: -1 }, // User 2 downvotes Comment 3
-        { userId: 1, commentId: 3, rating: 1 },  // User 1 upvotes Comment 3
-        { userId: 3, commentId: 4, rating: 1 },  // User 3 upvotes Comment 4
-        { userId: 3, commentId: 5, rating: -1 }, // User 3 downvotes Comment 5
-        { userId: 4, commentId: 4, rating: 1 },  // User 4 upvotes Comment 4
-        { userId: 4, commentId: 6, rating: -1 }, // User 4 downvotes Comment 6
-        { userId: 5, commentId: 5, rating: 1 },  // User 5 upvotes Comment 5
-        { userId: 5, commentId: 7, rating: 1 },  // User 5 upvotes Comment 7
-        { userId: 6, commentId: 6, rating: -1 }, // User 6 downvotes Comment 6
-        { userId: 6, commentId: 7, rating: 1 },  // User 6 upvotes Comment 7
-        { userId: 7, commentId: 8, rating: 1 },  // User 7 upvotes Comment 8
-        { userId: 7, commentId: 9, rating: -1 }, // User 7 downvotes Comment 9
-        { userId: 8, commentId: 8, rating: 1 },  // User 8 upvotes Comment 8
-        { userId: 8, commentId: 10, rating: 1 }, // User 8 upvotes Comment 10
+        // For commentId 1
+        {
+          "userId": 3,
+          "commentId": 1,
+          "rating": 1
+        },
+        {
+          "userId": 4,
+          "commentId": 1,
+          "rating": 1
+        },
+        {
+          "userId": 5,
+          "commentId": 1,
+          "rating": 1
+        },
+        {
+          "userId": 6,
+          "commentId": 1,
+          "rating": -1
+        },
+      
+        // For commentId 2
+        {
+          "userId": 7,
+          "commentId": 2,
+          "rating": 1
+        },
+        {
+          "userId": 8,
+          "commentId": 2,
+          "rating": 1
+        },
+        {
+          "userId": 9,
+          "commentId": 2,
+          "rating": -1
+        },
+        {
+          "userId": 10,
+          "commentId": 2,
+          "rating": -1
+        }
       ],
     });
 
