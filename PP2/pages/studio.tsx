@@ -235,7 +235,7 @@ const Studio = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {templates.map((templateArray) => (
-                  <div key={templateArray.templateId} className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <div key={templateArray.templateId} className="flex flex-col bg-gray-100 dark:bg-gray-925 rounded-lg shadow-md overflow-hidden">
                     <button
                       onClick={() => router.push(`/templates/${templateArray.templateId}`)}
                       className="p-4 bg-sky-400 text-white rounded-t-lg hover:bg-sky-500 transition-colors">
@@ -262,7 +262,7 @@ const Studio = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {blogs.map((blogArray) => (
-                  <div key={blogArray.blogId} className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                  <div key={blogArray.blogId} className="flex flex-col bg-gray-100 dark:bg-gray-925 rounded-lg shadow-md overflow-hidden">
                     <button
                       onClick={() => router.push(`/blogs/${blogArray.blogId}`)}
                       className="p-4 bg-purple-400 text-white rounded-t-lg hover:bg-purple-500 transition-colors">
