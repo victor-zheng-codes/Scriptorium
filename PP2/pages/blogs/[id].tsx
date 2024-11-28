@@ -573,9 +573,9 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
         <p className="text-lg mb-4">{currentBlog.description}</p>
         <div className="prose lg:prose-xl mb-6 whitespace-pre-line">{currentBlog.content}</div>
-        <p className="mb-4">By: {currentBlog.author.username}</p>
-        <p className="mb-4">Created At: {new Date(blog.createdAt).toLocaleString()}</p>
-        <p className="mb-4">Updated At: {new Date(blog.updatedAt).toLocaleString()}</p>
+        <p className="text-sm mb-2 text-gray-500 ">By: {currentBlog.author.username}</p>
+        <p className="text-sm mb-2 text-gray-500 ">Created At: {new Date(blog.createdAt).toLocaleString()}</p>
+        <p className="mb-4 text-sm text-gray-500 ">Updated At: {new Date(blog.updatedAt).toLocaleString()}</p>
 
         {/* Edit and Delete Buttons */}
         {userId === currentBlog.authorId && ( // Only show if current user is author
