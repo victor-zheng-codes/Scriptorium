@@ -14,3 +14,9 @@ Admin level permissions allow users to sort by reports and review reported inapp
 The application is deployed to a Digital Ocean droplet. It utilizes Docker to conduct virtualization and isolation. On the server, NGINX is used as a server manager. We use PM2 for process management. The site is deployed on the server to localhost:3000 and is NGINX redirects output.
 
 The site has a Let's Encrypt SSL which automatically updates so that SSL is maintained. The site is deployed to https://codeshare.ca/. 
+
+Digital ocean steps
+- git pull latest changes
+- npm run build
+- pm2 restart scriptorium-app
+- sudo systemctl restart nginx
