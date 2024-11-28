@@ -31,6 +31,8 @@ type Blog = {
   upvotes: number;
   downvotes: number;
   author: User
+  createdAt: string;
+  updatedAt: string;
 };
 
 type ApiResponse = {
@@ -269,6 +271,12 @@ const Blogs = () => {
               </div>
               <div>
                 <strong>Downvotes:</strong> {blog.downvotes}
+              </div>
+              <div>
+                <strong>Created At:</strong> {new Date(blog.createdAt).toLocaleString()}
+              </div>
+              <div>
+                <strong>Updated At:</strong> {new Date(blog.updatedAt).toLocaleString()}
               </div>
             </div>
           ))

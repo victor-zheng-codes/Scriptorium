@@ -48,6 +48,8 @@ type Blog = {
   BlogTags: { tag: { tagId: number; tagName: string; } }[];
   BlogTemplate: { template: { templateId: number; title: string; } }[];
   BlogReport: { explanation: string }[];
+  createdAt: string;
+  updatedAt: string;
 };
 
 type BlogPageProps = {
@@ -572,6 +574,8 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         <p className="text-lg mb-4">{currentBlog.description}</p>
         <div className="prose lg:prose-xl mb-6 whitespace-pre-line">{currentBlog.content}</div>
         <p className="mb-4">By: {currentBlog.author.username}</p>
+        <p className="mb-4">Created At: {new Date(blog.createdAt).toLocaleString()}</p>
+        <p className="mb-4">Updated At: {new Date(blog.updatedAt).toLocaleString()}</p>
 
         {/* Edit and Delete Buttons */}
         {userId === currentBlog.authorId && ( // Only show if current user is author
