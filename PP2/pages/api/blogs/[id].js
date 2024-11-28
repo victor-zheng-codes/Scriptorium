@@ -388,6 +388,9 @@ export default async function handler(req, res) {
                 BlogReport: {
                     select: { explanation: true }
                 },
+                author: {
+                    select: { username: true }
+                }
             }
         });
 

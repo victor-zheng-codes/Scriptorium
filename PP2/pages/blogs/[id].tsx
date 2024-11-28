@@ -28,9 +28,14 @@ type CommentReply = {
   reply: Comment;
 }
 
+type User = {
+  username: string;
+}
+
 type Blog = {
   blogId: number;
   authorId: number;
+  author: User;
   title: string;
   content: string;
   description: string;
@@ -566,6 +571,7 @@ const BlogPage: React.FC<BlogPageProps> = ({ blog }) => {
         <h1 className="text-4xl font-bold mb-4">{currentBlog.title}</h1>
         <p className="text-lg mb-4">{currentBlog.description}</p>
         <div className="prose lg:prose-xl mb-6 whitespace-pre-line">{currentBlog.content}</div>
+        <p className="mb-4">By: {currentBlog.author.username}</p>
 
         {/* Edit and Delete Buttons */}
         {userId === currentBlog.authorId && ( // Only show if current user is author
