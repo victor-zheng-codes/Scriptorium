@@ -327,7 +327,7 @@ const Templates = () => {
               <p className="text-sm text-gray-500 mt-2">
                 Language: {template.language} | Created: {new Date(template.createdAt).toLocaleString()} | Author: {template.owner.username}
               </p>
-                {template.templatesTags?.length > 0 && (
+                {/* {template.templatesTags?.length > 0 && (
                   <div>
                    <ul className="flex gap-2 mt-4">
                     {template.templatesTags.map(( tagVal ) => (
@@ -337,7 +337,21 @@ const Templates = () => {
                     ))}
                   </ul>
                 </div>
-                )}
+                )} */}
+              {template.templatesTags?.length > 0 && (
+                <div className="mt-4">
+                  <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                    {template.templatesTags.map((tagVal) => (
+                      <li
+                        key={tagVal.tag.tagId}
+                        className="bg-gray-200 px-3 py-1 rounded-full text-center dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+                      >
+                        {tagVal.tag.tagName}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* buttons to edit or delete */}
               <div className="mt-4">

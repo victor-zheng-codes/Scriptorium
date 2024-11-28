@@ -512,9 +512,12 @@ const TemplatePage = () => {
         {templateTags && templateTags?.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-2">Tags</h2>
-             <ul className="flex gap-2 p-2">
-              {templateTags.map(( tagVal ) => (
-                <li key={tagVal.tag.tagid} className="bg-gray-200 px-3 py-1 rounded-full dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700">
+            <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 p-2">
+              {templateTags.map((tagVal) => (
+                <li
+                  key={tagVal.tag.tagid}
+                  className="bg-gray-200 px-3 py-1 rounded-full text-center dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+                >
                   {tagVal.tag.tagName}
                 </li>
               ))}
@@ -526,12 +529,12 @@ const TemplatePage = () => {
         {linkedBlogs && linkedBlogs.length > 0 && (
           <div>
             <h2 className="text-2xl font-bold mb-4 mt-4">Blogs</h2>
-            <div className="flex space-x-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {linkedBlogs.map((blogArray) => (
                 <button
                   onClick={() => router.push(`/blogs/${blogArray.blog.blogId}`)}
                   key={blogArray.blog.blogId}
-                  className="px-3 py-1 rounded bg-teal-500 text-white"
+                  className="px-3 py-2 rounded bg-teal-500 text-white hover:bg-teal-600 text-center"
                 >
                   {blogArray.blog.title}
                 </button>
