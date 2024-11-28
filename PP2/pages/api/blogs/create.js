@@ -11,13 +11,13 @@ function isValidBlogTitle(title) {
 
 function isValidBlogDescription(description) {
     // Description should be between 0 and 100 characters, allowing alphanumeric, spaces, and basic punctuation
-    const descriptionRegex = /^[a-zA-Z0-9\s.,!?'@%&()-]{0,100}$/;
+    const descriptionRegex = /^[a-zA-Z0-9\s.,!?'@%&()\u2018\u2019\u2013-]{0,100}$/;
     return descriptionRegex.test(description);
 }
 
 function isValidBlogContent(content) {
     // Content should be between 20 and 1000 characters, allowing alphanumeric, spaces, and basic punctuation
-    const contentRegex = /^[a-zA-Z0-9\s.,!?'@%&()-]{20,1000}$/;
+    const contentRegex = /^[a-zA-Z0-9\s.,!?'@%&()\u2018\u2019\u2013-]{20,1000}$/;
     return contentRegex.test(content);
 }
 
