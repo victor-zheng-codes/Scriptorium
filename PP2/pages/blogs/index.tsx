@@ -250,7 +250,7 @@ const Blogs = () => {
             </div>
           ) : (
           blogs.map((blog) => (
-            <div key={blog.blogId} className="mb-8 p-6 bg-white dark:bg-gray-925 rounded-lg shadow-md">
+            <div key={blog.blogId} className="mb-8 p-6 bg-white dark:text-gray-300 dark:bg-gray-925 rounded-lg shadow-md">
               <h2 className="text-xl font-bold">
                 <Link href={`/blogs/${blog.blogId}`} className="text-blue-500 hover:underline">
                   {blog.title}
