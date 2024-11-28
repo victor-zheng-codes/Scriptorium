@@ -248,13 +248,16 @@ const Code = () => {
 
       <div className="flex gap-1 text-gray-600 dark:text-gray-300 pr-8 pl-8">
         {/* Code textarea */}
-        <Editor
-          // id="code-editor"
-          className="w-1/2 h-[38rem] p-4 font-mono text-lg leading-6 bg-gray-100 dark:bg-gray-925 border border-gray-500 rounded-md resize-none placeholder-gray-400"
+           <Editor
+          className="w-1/2 p-4 font-mono text-lg leading-6 bg-gray-100 dark:bg-gray-925 border border-gray-500 rounded-md resize-none placeholder-gray-400"
           value={code} // Bind code state to textarea value
           highlight={code => highlight(code, languages.js, selectedLanguage)}
           onValueChange={code => setCode(code)}
           padding={10}
+          placeholder="Program code"
+          style={{
+            fontFamily: 'monospace',
+          }}
         />
 
         <div className="flex flex-col w-1/2 gap-1">
