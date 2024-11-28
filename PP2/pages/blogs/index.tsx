@@ -207,7 +207,7 @@ const Blogs = () => {
               className="p-2 border border-gray-500 rounded-md"
             />
           </div>
-          <div className="flex items-center space-x-4 text-gray-600 dark:text-gray-300">
+          <div className="flex justify-center items-center space-x-4 text-gray-600 dark:text-gray-300">
             <Label>
               Items Per Page:
             </Label>
@@ -225,7 +225,8 @@ const Blogs = () => {
             <Button type="submit" disabled={isLoading} ref={searchButtonRef} >
               {isLoading ? "Searching..." : "Search"}
             </Button>
-            
+          </div>
+          <div className="flex justify-center items-center space-x-4 text-gray-600 dark:text-gray-300">
             {isAdmin && (
               <Button 
                 type="button" 
